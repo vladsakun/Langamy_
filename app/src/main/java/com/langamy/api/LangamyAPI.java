@@ -45,6 +45,9 @@ public interface LangamyAPI {
     @GET("api/get/studysetsnames/{user_email}/")
     Call<List<StudySet>> getStudySetsNamesOfCurrentUser(@Path("user_email") String user_email);
 
+    @GET("api/get/random/dictation/{user_email}")
+    Call<List<Dictation>> getRandomDictation(@Path("user_email") String user_email);
+
     @GET("api/get/dictationsnames/{user_email}/")
     Call<List<Dictation>> getDictationsOfCurrentUser(@Path("user_email") String user_email);
 

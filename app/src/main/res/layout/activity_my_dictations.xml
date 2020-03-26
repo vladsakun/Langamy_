@@ -10,6 +10,16 @@
     <include layout="@layout/custom_progress_bar" />
 
     <TextView
+        android:id="@+id/your_dictations"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/your_dictations"
+        android:textColor="@color/darkColor"
+        android:layout_centerHorizontal="true">
+
+    </TextView>
+
+    <TextView
         android:id="@+id/no_dictations_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,13 +30,11 @@
         android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@+id/your_dictations"
         android:id="@+id/dictations_RV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_alignParentBottom="true" />
 </RelativeLayout>

@@ -95,5 +95,6 @@
     <string name="create_studyset">Create first \n studyset</string>
     <string name="add_timer">Add timer</string>
     <string name="add_timer_dictation_mode">You are able to add timer only in quiz</string>
+    <string name="your_dictations">Your dictations</string>
 
 </resources>

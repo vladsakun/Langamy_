@@ -52,6 +52,7 @@ import com.langamy.activities.SpecificStudySetActivity;
 import com.langamy.activities.UserDoneDictationsActivity;
 import com.langamy.api.LangamyAPI;
 import com.langamy.base.classes.BaseVariables;
+import com.langamy.base.classes.Dictation;
 import com.langamy.base.classes.NetworkMonitor;
 import com.langamy.base.classes.StudySet;
 import com.langamy.database.StudySetCursorWrapper;
@@ -89,6 +90,7 @@ public class StudySetsFragment extends Fragment {
     private ProgressBar mProgressBar;
     private RelativeLayout searchDictationRl;
     private AdView adView;
+    private ImageButton mDictations, mRandomDictation, mRecentDictations;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +123,9 @@ public class StudySetsFragment extends Fragment {
         mProgressBar = view.findViewById(R.id.progressBar);
         searchDictationRl = view.findViewById(R.id.searchDictation);
         createStudySetBtn = view.findViewById(R.id.create_study_set_BTN);
+        mDictations = view.findViewById(R.id.dictations);
+        mRecentDictations = view.findViewById(R.id.recent_dictations);
+        mRandomDictation = view.findViewById(R.id.randomDictation);
 
         mStudySetsNamesList = new ArrayList<>();
 
@@ -150,24 +155,30 @@ public class StudySetsFragment extends Fragment {
             }
         });
 
+        mRecentDictations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!BaseVariables.checkNetworkConnection(getContext())) {
+                    Toast.makeText(getContext(), getString(R.string.you_need_an_internet_connection), Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(getActivity(), UserDoneDictationsActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+        mDictations.setOnClickListener(v -> {
+            if (!BaseVariables.checkNetworkConnection(getContext())) {
+                Toast.makeText(getContext(), getString(R.string.you_need_an_internet_connection), Toast.LENGTH_SHORT).show();
+            } else {
+                Intent intent = new Intent(getActivity(), MyDictationsActivity.class);
+                startActivity(intent);
+            }
+        });
+        mRandomDictation.setOnClickListener(v -> {
+            randomDictation();
+        });
+
         return view;
-    }
-
-    public void playOfflineHelp() {
-
-        FancyShowCaseQueue fq = new FancyShowCaseQueue();
-
-        FancyShowCaseView offlineHelp = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
-                    @Override
-                    public void onViewInflated(View view) {
-                        BaseVariables.setCustomFancyCaseView(view, getString(R.string.abilities_in_offline_mode), fq);
-                    }
-                })
-                .backgroundColor(getContext().getColor(R.color.blueForFancy))
-                .build();
-        fq.add(offlineHelp);
-        fq.show();
     }
 
     private void noStudySets(){
@@ -210,32 +221,37 @@ public class StudySetsFragment extends Fragment {
 
         int id = item.getItemId();
 
-        if (id == R.id.dictations) {
-            if (!BaseVariables.checkNetworkConnection(getContext())) {
-                Toast.makeText(getContext(), getString(R.string.you_need_an_internet_connection), Toast.LENGTH_SHORT).show();
-                return super.onOptionsItemSelected(item);
-            } else {
-                Intent intent = new Intent(getActivity(), MyDictationsActivity.class);
-                startActivity(intent);
-            }
-        }
-
         if (id == R.id.help) {
             playHelp();
         }
 
-        if (id == R.id.done_dictations) {
-            if (!BaseVariables.checkNetworkConnection(getContext())) {
-                Toast.makeText(getContext(), getString(R.string.you_need_an_internet_connection), Toast.LENGTH_SHORT).show();
-                return super.onOptionsItemSelected(item);
-            } else {
-                Intent intent = new Intent(getActivity(), UserDoneDictationsActivity.class);
-                startActivity(intent);
-            }
-
-        }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    private void randomDictation(){
+
+        if (BaseVariables.checkNetworkConnection(getContext())) {
+            Call<List<Dictation>> call = mLangamyAPI.getRandomDictation(acct.getEmail());
+            call.enqueue(new Callback<List<Dictation>>() {
+                @Override
+                public void onResponse(Call<List<Dictation>> call, Response<List<Dictation>> response) {
+                    if (!response.isSuccessful()) {
+                        Toast.makeText(getContext(), String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Intent intent = new Intent(getActivity(), SpecificDictationActivity.class);
+                    intent.putExtra(BaseVariables.DICTATION_ID_MESSAGE, response.body().get(0).getId());
+                    startActivity(intent);
+                }
+
+                @Override
+                public void onFailure(Call<List<Dictation>> call, Throwable t) {
+
+                }
+            });
+        }else{
+            Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void getStudySetsNames() {

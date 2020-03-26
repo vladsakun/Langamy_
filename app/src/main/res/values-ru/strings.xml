@@ -96,6 +96,8 @@
     <string name="create_studyset">Создать первый\n учебный сэт</string>
     <string name="add_timer">Таймер</string>
     <string name="add_timer_dictation_mode">Вы можете добавлять таймер только в викторины</string>
+    <string name="your_dictations">Ваши диктанты</string>
+
 
 
 </resources>
