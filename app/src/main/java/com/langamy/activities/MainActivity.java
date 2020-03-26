@@ -1,61 +1,49 @@
 package com.langamy.activities;
 
-import android.app.ActionBar;
 import android.content.BroadcastReceiver;
-import android.content.ContentValues;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PorterDuff;
 import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
-import android.widget.Toolbar;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bignerdranch.android.main.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.material.appbar.MaterialToolbar;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.langamy.api.LangamyAPI;
+import com.langamy.base.classes.ConnectionModel;
+import com.langamy.retrofit.LangamyAPI;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.NetworkMonitor;
-import com.langamy.base.classes.StudySet;
-import com.langamy.database.StudySetCursorWrapper;
 import com.langamy.database.StudySetsBaseHelper;
-import com.langamy.database.StudySetsScheme;
 import com.langamy.fragments.CreateStudySetsFragment;
 import com.langamy.fragments.ProfileFragment;
 import com.langamy.fragments.StudySetsFragment;
+import com.langamy.viewmodel.MainViewModel;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import me.toptas.fancyshowcase.FancyShowCaseQueue;
+import me.toptas.fancyshowcase.FancyShowCaseView;
+import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import retrofit2.Retrofit;
-
-import static com.langamy.database.StudySetsScheme.*;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -73,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private GoogleSignInAccount acct;
     private ViewPager2 mViewPager;
     private TabLayout tabLayout;
+    private RelativeLayout mOfflineRelativeLayout;
+    private ImageButton infoBtn;
 
     private int[] tabIcons = {
             R.drawable.ic_my_studysets,
@@ -106,13 +96,29 @@ public class MainActivity extends AppCompatActivity {
         if (acct == null) {
             Intent intent = new Intent(this, GoogleSignInActivity.class);
             startActivity(intent);
+            finish();
             return;
         }
+
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        viewModel.getConnectionLiveData().observe(this, new Observer<ConnectionModel>() {
+            @Override
+            public void onChanged(ConnectionModel connectionModel) {
+                if(connectionModel.getIsConnected()){
+                    disableOfflineMode();
+                }else{
+                    enableOfflineMode();
+                }
+            }
+        });
 
         setContentView(R.layout.start_activity);
 
         mViewPager = findViewById(R.id.pager);
         tabLayout = findViewById(R.id.tab_layout);
+        mOfflineRelativeLayout = findViewById(R.id.offline_mode_RL);
+        infoBtn = findViewById(R.id.offline_mode_IB);
 
         //Fragment inizialization
         mProfileFragment = new ProfileFragment();
@@ -177,6 +183,33 @@ public class MainActivity extends AppCompatActivity {
 
         broadcastReceiver = new NetworkMonitor();
     }
+
+    private void playOfflineHelp() {
+
+        FancyShowCaseQueue fq = new FancyShowCaseQueue();
+
+        FancyShowCaseView offlineHelp = new FancyShowCaseView.Builder(this)
+                .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
+                    @Override
+                    public void onViewInflated(View view) {
+                        BaseVariables.setCustomFancyCaseView(view, getString(R.string.abilities_in_offline_mode), fq);
+                    }
+                })
+                .backgroundColor(getColor(R.color.blueForFancy))
+                .build();
+        fq.add(offlineHelp);
+        fq.show();
+    }
+
+    private void enableOfflineMode() {
+        mOfflineRelativeLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void disableOfflineMode() {
+        mStudySetsFragment.disableOfflineMode();
+        mOfflineRelativeLayout.setVisibility(View.GONE);
+    }
+
 
     public TabLayout getNavigationView() {
         return tabLayout;

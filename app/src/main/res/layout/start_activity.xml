@@ -7,11 +7,16 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical">
 
+    <include
+        layout="@layout/offline_mode"
+        android:visibility="gone" />
+
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/tab_layout" />
+        android:layout_above="@+id/tab_layout"
+        android:layout_below="@+id/offline_mode_RL" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"

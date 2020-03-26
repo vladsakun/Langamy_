@@ -86,10 +86,8 @@ public class StudySetsFragment extends Fragment {
     private StudySetAdapter mAdapter;
     private MaterialButton searchDictationBtn, createStudySetBtn;
     private EditText searchDictationET;
-    private ImageButton infoBtn;
     private ProgressBar mProgressBar;
-    private RelativeLayout searchDictationRl, offlineRL;
-    private BroadcastReceiver broadcastReceiver;
+    private RelativeLayout searchDictationRl;
     private AdView adView;
 
     @Override
@@ -108,8 +106,6 @@ public class StudySetsFragment extends Fragment {
 
     }
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -118,25 +114,12 @@ public class StudySetsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_study_sets, container, false);
         acct = GoogleSignIn.getLastSignedInAccount(getContext());
 
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (BaseVariables.checkNetworkConnection(getContext())) {
-                    disableOfflineMode();
-                } else {
-                    enableOfflineMode();
-                }
-            }
-        };
-
         adView = (AdView) view.findViewById(R.id.banner_ad);
         recyclerView = view.findViewById(R.id.recycler_view);
         searchDictationBtn = view.findViewById(R.id.search_dictation_btn);
         searchDictationET = view.findViewById(R.id.search_dictation_ET);
         mProgressBar = view.findViewById(R.id.progressBar);
         searchDictationRl = view.findViewById(R.id.searchDictation);
-        offlineRL = view.findViewById(R.id.offline_mode_RL);
-        infoBtn = view.findViewById(R.id.offline_mode_IB);
         createStudySetBtn = view.findViewById(R.id.create_study_set_BTN);
 
         mStudySetsNamesList = new ArrayList<>();
@@ -157,19 +140,6 @@ public class StudySetsFragment extends Fragment {
                 Toast.makeText(getContext(), "Code must be numeric", Toast.LENGTH_SHORT).show();
             }
         });
-
-        infoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playOfflineHelp();
-            }
-        });
-
-        if (BaseVariables.checkNetworkConnection(getContext())) {
-            disableOfflineMode();
-        } else {
-            enableOfflineMode();
-        }
 
         createStudySetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,25 +170,11 @@ public class StudySetsFragment extends Fragment {
         fq.show();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        getContext().registerReceiver(broadcastReceiver, new IntentFilter("com.langamy.fragments"));
-    }
-
     private void noStudySets(){
         createStudySetBtn.setVisibility(View.VISIBLE);
     }
 
-    public void enableOfflineMode() {
-        searchDictationRl.setVisibility(View.GONE);
-        offlineRL.setVisibility(View.VISIBLE);
-    }
-
     public void disableOfflineMode() {
-        offlineRL.setVisibility(View.GONE);
-        searchDictationRl.setVisibility(View.VISIBLE);
-
         AdRequest adRequest = new AdRequest.Builder()
                 .build();
 

@@ -10,8 +10,6 @@
         android:layout_height="wrap_content"
         android:animateLayoutChanges="true">
 
-        <include layout="@layout/offline_mode" />
-
         <RelativeLayout
             android:id="@+id/searchDictation"
             android:layout_width="match_parent"

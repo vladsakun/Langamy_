@@ -152,8 +152,6 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
     private Spinner languageFromSpinner, languageToSpinner;
     private SQLiteDatabase mDatabase;
     private RewardedVideoAd mAd;
-    private ImageButton infoBtn;
-    private RelativeLayout offlineRL;
     private BroadcastReceiver broadcastReceiver;
 
     private static final int CAMERA_REQUEST_CODE = 200;
@@ -188,26 +186,6 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_study_set, container, false);
 
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (BaseVariables.checkNetworkConnection(getContext())) {
-                    disableOfflineMode();
-                } else {
-                    enableOfflineMode();
-                }
-            }
-        };
-
-        try {
-            StudySet studySet = (StudySet) getActivity().getIntent().getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE);
-            mStudySet = studySet;
-            studySetId = studySet.getId();
-
-        } catch (NullPointerException e) {
-            mStudySet = null;
-        }
-
         progressBar = view.findViewById(R.id.progressBar);
         mResultEt = view.findViewById(R.id.resultEt);
         mTitleEt = view.findViewById(R.id.title_edittext);
@@ -218,18 +196,8 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
         autoTranslateSwitch = view.findViewById(R.id.auto_translate_switch);
         wordScrollView = view.findViewById(R.id.word_scrollview);
         mResultCardView = view.findViewById(R.id.result_LL);
-        infoBtn = view.findViewById(R.id.offline_mode_IB);
-        offlineRL = view.findViewById(R.id.offline_mode_RL);
         languageFromSpinner = view.findViewById(R.id.language_form_spinner);
         languageToSpinner = view.findViewById(R.id.language_to_spinner);
-
-        progressBar.setVisibility(View.GONE);
-
-        if (BaseVariables.checkNetworkConnection(getContext())) {
-            disableOfflineMode();
-        } else {
-            enableOfflineMode();
-        }
 
         MobileAds.initialize(getContext(), BaseVariables.REWARDED_VIDEO_TEST);
         mAd = MobileAds.getRewardedVideoAdInstance(getContext());
@@ -245,7 +213,6 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, baseVariables.getLANGUAGES());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-
         languageFromSpinner.setAdapter(adapter);
         languageToSpinner.setAdapter(adapter);
 
@@ -253,52 +220,15 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
         languageFromSpinner.setPrompt("Language from");
         languageToSpinner.setPrompt("Language to");
 
-        //Edit StudySet
-        if (this.mStudySet != null) {
+        //Create StudySet
 
-            sendEditRequest = true;
+        // выделяем элемент
+        languageFromSpinner.setSelection(0);
+        languageToSpinner.setSelection(1);
 
-            mTitleEt.setText(mStudySet.getName());
-            int indexOfLanguageFrom = baseVariables.getLANGUAGES_SHORT().indexOf(mStudySet.getLanguage_from());
-            int indexOfLanguageTo = baseVariables.getLANGUAGES_SHORT().indexOf(mStudySet.getLanguage_to());
-            languageFromSpinner.setSelection(indexOfLanguageFrom);
-            languageToSpinner.setSelection(indexOfLanguageTo);
-
-            ArrayList<Word> mWordList = new ArrayList<>();
-
-            String words = mStudySet.getWords();
-            try {
-                JSONArray jsonArray = new JSONArray(words);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-                    Word word = new Word(jsonObject.getString("term"),
-                            jsonObject.getString("translation"));
-                    mWordList.add(word);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-            for (int i = 1; i < mWordList.size(); i++) {
-
-                View listWordView = createListWordItem();
-                EditText term = listWordView.findViewById(R.id.term_TV);
-                mWordsLinearLayout.addView(listWordView, mWordsLinearLayout.getChildCount());
-                showKeyboard(term);
-            }
-
-            //Create StudySet
-        } else {
-
-            // выделяем элемент
-            languageFromSpinner.setSelection(0);
-            languageToSpinner.setSelection(1);
-
-            for (int i = 1; i <= 2; i++) {
-                View listWordView = createListWordItem();
-                mWordsLinearLayout.addView(listWordView, mWordsLinearLayout.getChildCount());
-            }
-
+        for (int i = 1; i <= 2; i++) {
+            View listWordView = createListWordItem();
+            mWordsLinearLayout.addView(listWordView, mWordsLinearLayout.getChildCount());
         }
 
         languageFromSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -370,19 +300,13 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
             }
         });
 
-        infoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playOfflineHelp();
-            }
-        });
 
         wordsForSuggestions = save();
 
         return view;
     }
 
-    private void playOfflineHelp(){
+    private void playOfflineHelp() {
 
         FancyShowCaseQueue fq = new FancyShowCaseQueue();
 
@@ -398,14 +322,6 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
         fq.add(offlineHelp);
         fq.show();
 
-    }
-
-    private void disableOfflineMode() {
-        offlineRL.setVisibility(View.GONE);
-    }
-
-    private void enableOfflineMode() {
-        offlineRL.setVisibility(View.VISIBLE);
     }
 
     private void manyTranslate(String words) {
