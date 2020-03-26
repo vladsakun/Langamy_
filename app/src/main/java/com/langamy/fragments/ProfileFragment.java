@@ -2,8 +2,10 @@ package com.langamy.fragments;
 
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,7 @@ import com.langamy.activities.GoogleSignInActivity;
 import com.langamy.activities.MyDictationsActivity;
 import com.langamy.base.classes.BaseVariables;
 
+import java.io.IOException;
 import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -68,16 +71,17 @@ public class ProfileFragment extends Fragment {
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(getContext());
         if (acct != null) {
-            String personName = acct.getDisplayName();
-            String personGivenName = acct.getGivenName();
-            String personFamilyName = acct.getFamilyName();
             String personEmail = acct.getEmail();
-            String personId = acct.getId();
             Uri personPhoto = acct.getPhotoUrl();
             String personImage = Objects.requireNonNull(acct.getPhotoUrl()).toString();
             Glide.with(getActivity()).load(personImage).into(accountImage);
             mDetailTextView.setText(personEmail);
-            accountImage.setImageURI(personPhoto);
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), personPhoto);
+                accountImage.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
 

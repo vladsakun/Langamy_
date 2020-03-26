@@ -182,6 +182,12 @@ public class MainActivity extends AppCompatActivity {
                 });
 
         broadcastReceiver = new NetworkMonitor();
+        infoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playOfflineHelp();
+            }
+        });
     }
 
     private void playOfflineHelp() {

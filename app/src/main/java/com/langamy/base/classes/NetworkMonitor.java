@@ -79,12 +79,11 @@ public class NetworkMonitor extends BroadcastReceiver {
                 @Override
                 public void onResponse(Call<StudySet> call, Response<StudySet> response) {
                     if (!response.isSuccessful()) {
-                        Toast.makeText(context, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                        Log.d("NetworkFailure", "onResponse: " + response.code());
                         return;
                     }
                     mDatabase.update(StudySetsScheme.StudySetsTable.NAME, BaseVariables.getContentValuesForStudyset(studySet, true)
                             , Cols.id + "=?", new String[]{String.valueOf(studySet.getId())});
-                    Log.d("SyncStatus", "Successful");
                 }
 
                 @Override
