@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    tools:context="com.langamy.activities.DictationResultActivity">
+
+
+    <ImageView
+        android:id="@+id/result_emoji"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        app:srcCompat="@drawable/ic_cool_emoji"
+        android:layout_marginBottom="20dp"/>
+    <TextView
+        android:id="@+id/dictation_result_TV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/result_emoji"
+        android:text="@string/result"
+        android:textColor="@color/darkColor"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp">
+
+    </TextView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/retake_dictation_BTN"
+        style="@style/WhiteButtonWithBlueBorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dictation_result_TV"
+        android:text="Retake dictation"
+        android:textSize="20sp">
+
+    </com.google.android.material.button.MaterialButton>
+
+    <RelativeLayout
+        android:id="@+id/answers_RL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/retake_dictation_BTN">
+
+        <androidx.viewpager.widget.ViewPager
+
+            android:id="@+id/answers_VP"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+
+</RelativeLayout>

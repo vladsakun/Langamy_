@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.langamy.fragments.FinishedLearningFragment"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/cool_emoji_IV"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/ic_cool_emoji"
+        android:layout_centerHorizontal="true"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_below="@+id/cool_emoji_IV"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:id="@+id/go_back_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/green"
+        android:text="Go back to StudySet"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_below="@+id/go_back_BTN"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:id="@+id/study_again_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blue"
+        android:text="Study again"/>
+
+</RelativeLayout>

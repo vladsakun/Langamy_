@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:id="@+id/study_sets_header"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true">
+
+        <include layout="@layout/offline_mode" />
+
+        <RelativeLayout
+            android:id="@+id/searchDictation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/search_dictation_ET"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_toStartOf="@+id/search_dictation_btn"
+                android:backgroundTint="@color/darkColor"
+                android:ems="10"
+                android:hint="@string/enter_dictation_code"
+                android:inputType="textPersonName" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/search_dictation_btn"
+                style="@style/WhiteButtonWithBlueBorder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="4dp"
+                android:text="@string/action_search"
+                app:cornerRadius="3dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/banner_ad"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/study_sets_header"
+        android:layout_centerHorizontal="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
+
+    </com.google.android.gms.ads.AdView>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_studyset"
+        android:id="@+id/create_study_set_BTN"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:backgroundTint="@color/blue"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/banner_ad"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:scrollbars="vertical">
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <include layout="@layout/custom_progress_bar" />
+</RelativeLayout>

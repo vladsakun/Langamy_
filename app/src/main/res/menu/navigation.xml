@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navigation_studysets"
+        android:checked="true"
+        android:icon="@drawable/ic_icon_my_studysets"
+        android:title="@string/study_sets" />
+
+    <item
+        android:id="@+id/navigation_create_studyset"
+        android:icon="@drawable/ic_icon_create_studyset"
+        android:title="@string/create_study_set" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_icon_profile"
+        android:title="@string/profile" />
+
+</menu>

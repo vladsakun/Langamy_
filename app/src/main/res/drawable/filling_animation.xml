@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:oneshot="true">
+
+    <item
+        android:duration="50"
+        android:drawable="@drawable/ic_greeting_new"/>
+
+    <item
+        android:duration="50"
+        android:drawable="@drawable/greeting1_2"/>
+
+    <item
+        android:duration="50"
+        android:drawable="@drawable/greeting1_5"/>
+
+    <item
+        android:duration="50"
+        android:drawable="@drawable/greeting2"/>
+
+    <item
+        android:duration="50"
+        android:drawable="@drawable/greeting3"/>
+
+    <item
+        android:duration="50"
+        android:drawable="@drawable/blue_rect"/>
+
+</animation-list>

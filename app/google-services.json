@@ -1,0 +1,80 @@
+{
+  "project_info": {
+    "project_number": "307770807279",
+    "firebase_url": "https://noglasses-34da1.firebaseio.com",
+    "project_id": "noglasses-34da1",
+    "storage_bucket": "noglasses-34da1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:307770807279:android:a741b3901042c137a99c1a",
+        "android_client_info": {
+          "package_name": "com.bignerdranch.android.scanfromcameraandgallery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "307770807279-mnaffo3bisqp43a7qjbjfbj1850dguvq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bignerdranch.android.scanfromcameraandgallery",
+            "certificate_hash": "65799b4ed5a6271cf4d415a4da2912a61ad9e96d"
+          }
+        },
+        {
+          "client_id": "307770807279-5f610hpprpqjaikj4n2b1h2k8215ldon.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bignerdranch.android.scanfromcameraandgallery",
+            "certificate_hash": "25ab5ee5698a6ab2e0f3e3a25765d4d6a2c2ba45"
+          }
+        },
+        {
+          "client_id": "307770807279-skcuasphhe3elu283fod1jcdrk72ukso.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bignerdranch.android.scanfromcameraandgallery",
+            "certificate_hash": "a74ad10039b189d8b4c03ff0f564ee57ef602f7d"
+          }
+        },
+        {
+          "client_id": "307770807279-fmn0fc70tb226p6ndudtkei12oja1s3c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bignerdranch.android.scanfromcameraandgallery",
+            "certificate_hash": "d3111f52f24181334bea143121e9b3029b5b49a9"
+          }
+        },
+        {
+          "client_id": "307770807279-ctcc0ghrrv4o42135kdo2r4r7p6tjtt6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.bignerdranch.android.scanfromcameraandgallery",
+            "certificate_hash": "7ca3a32b4310fae059b442459daea6375de9bca8"
+          }
+        },
+        {
+          "client_id": "307770807279-5dulqfqhpvkatqvm966ta5klbvd8d0ij.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9EeTmtmwJTjOiSmCSjvxy0OLVe3nTT_0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "307770807279-oe2pb221fvlvnan0t43b9iud0vmncn5a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

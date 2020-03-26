@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="result">Результат</string>
+    <string name="dictation_result">Результат: %1$s / %2$s</string>
+    <string name="click_button_to_add_image">Нажмите кнопку, чтобы добавить изображение</string>
+    <string name="term">Термин</string>
+    <string name="translation">Перевод</string>
+    <string name="commit_study_set">Подтвердить</string>
+    <string name="title_activity_study_sets">StudySetsActivity</string>
+    <string name="title_home">Дом</string>
+    <string name="title_profile">Профиль</string>
+    <string name="create_study_set">Создать studyset</string>
+    <string name="study_sets">Учебные наборы</string>
+    <string name="profile">Профиль</string>
+    <string name="amount">Количество слово</string>
+
+    <string name="action_settings">Настройки</string>
+    <string name="toolbar_title">Контакты</string>
+    <string name="action_search">Поиск</string>
+    <string name="search_hint">Введите имя …</string>
+    <string name="no_internet_connection">Нет соединения с интернетом</string>
+
+    <string name="account_title_text">Учетная запись</string>
+    <string name="google_title_text">Войти в Google</string>
+    <string name="sign_out">Выход</string>
+
+    <string name="error_sign_in_failed">Вход не выполнен, подробности смотрите в журналах.</string>
+    <string name="title">Название</string>
+    <string name="scan_document">Сканирование документа</string>
+    <string name="amount_of_words">Количество слов:</string>
+    <string name="enable_auto_translate">Включить автоматический перевод</string>
+
+    <string name="commit_words">Подтвердить слова</string>
+    <string name="hello_blank_fragment">Привет пустой фрагмент</string>
+    <string name="enter_dictation_code">Введите код диктанта</string>
+    <string name="make_dictation">Создать диктант</string>
+    <string name="translation_nterm">Перевод - \ nТермин</string>
+    <string name="term_ntranslation">Термин - \ n Перевод</string>
+    <string name="quiz_n_test">Викторина</string>
+    <string name="question_count">Количество вопросов</string>
+    <string name="creator">Создатель</string>
+    <string name="my_dictations">Мои диктанты</string>
+    <string name="dictation_code">Код диктанты: %1$s</string>
+    <string name="do_you_want_to_delete">Вы хотите удалить?</string>
+    <string name="start_dictation">Начать диктант</string>
+    <string name="name">Имя</string>
+    <string name="type_of_questions">Тип вопросов</string>
+    <string name="show_marks">Оценки</string>
+    <string name="update_marks">Обновить оценки</string>
+    <string name="code">Код:</string>
+    <string name="submit_words">Отправить слова</string>
+    <string name="review_cards">Карточки</string>
+    <string name="cards">Карты</string>
+    <string name="learn">Учить</string>
+    <string name="correct_answer">Правильный ответ:</string>
+    <string name="continue_text">Продолжить</string>
+    <string name="i_am_right">Я прав</string>
+    <string name="study_all">Учить все</string>
+    <string name="study_marked">Выделенные</string>
+    <string name="dictation_doesn_t_exist">Диктант не существует</string>
+    <string name="skip">Пропустить</string>
+    <string name="title_is_empty">Название пустое</string>
+    <string name="min_words_in_studyset">Study set должен иметь 4 или более слов</string>
+    <string name="from">Язык с </string>
+    <string name="to">Язык на</string>
+
+    <string name="fancy_create_studyset">Создадим первый studyset</string>
+    <string name="fancy_done_dictations">Здесь храняться последние 20 диктантов, которые Вы прошли</string>
+    <string name="fancy_my_dictations">Тут будут сохраняться все созданные Вами диктанты</string>
+    <string name="fancy_help_btn">Вы можете найти кнопку помощи на каждом экране</string>
+    <string name="fancy_title">Сначала задайте имя</string>
+    <string name="fancy_from_lang">Выбирите язык _С_  которого переводить</string>
+    <string name="fancy_to_lang">Выбирите язык  _НА_  какой переводить</string>
+    <string name="fancy_scan_btn">Отсканируйте документы с камеры или галереи</string>
+    <string name="fancy_make_dictation_btn">Вы можете создать диктант для кого-угодно и посмотреть их оценки</string>
+    <string name="fancy_edit">Чтобы изменить studyset нажмите на перо в навигационной панели сверху</string>
+    <string name="fancy_star">Нажмите на звезду, чтобы отметить слово</string>
+    <string name="fancy_study_marked">Потом Вы можете изучать только помеченные слова</string>
+    <string name="can_not_listen">Не могу слушать</string>
+    <string name="fancy_question_count">Задайте количество вопросов</string>
+    <string name="fancy_types_of_questions">Выбирите тип вопросов на диктанте</string>
+    <string name="fancy_quiz">Спрашивает перевод и показывает 4 варианта ответов</string>
+    <string name="fancy_term">Показывает термин и справшивает перевод</string>
+    <string name="fancy_translation">Показывает перевод и спрашивает термин</string>
+    <string name="fancy_mark_dication_word">Отметьте слово и оно 100% будет в диктанте \n Все диктанты случайно перемешаны</string>
+    <string name="nice">Отлично !</string>
+    <string name="wrong">Ошибка</string>
+    <string name="you_need_an_internet_connection">Вам нужно подключение к интернету</string>
+    <string name="abilities_in_offline_mode">Вы можете только изучать созданные учебные сэты в оффлайн режиме</string>
+    <string name="learn_greeting">Изучайте слова 4 способами</string>
+    <string name="add_study_set_to_dictation">Вы можете добавить слова с других учебных сэтов в один диктант</string>
+    <string name="scan_greeting">Отсканируйте изображение с неизвестными словами и создайте учебный сэт</string>
+    <string name="submit">Подтвердить</string>
+    <string name="you_don_t_have_any_dictations">У вас еще нету диктантов</string>
+    <string name="create_studyset">Создать первый\n учебный сэт</string>
+    <string name="add_timer">Таймер</string>
+    <string name="add_timer_dictation_mode">Вы можете добавлять таймер только в викторины</string>
+
+
+</resources>

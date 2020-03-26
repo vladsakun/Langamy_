@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:animateLayoutChanges="true"
+    tools:context="com.langamy.activities.CardModeActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:id="@+id/card_mode_action_RL"
+        android:layout_alignParentTop="true">
+
+        <ImageButton
+            android:id="@+id/volume_up_IB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_volume_off_blue_34dp"
+            android:background="@null"/>
+
+        <TextView
+            android:id="@+id/card_amount_TV"
+            android:layout_toStartOf="@+id/volume_up_IB"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/grey_500"
+            android:text="23/32"/>
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/undo_card_IB"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@+id/card_amount_TV"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_undo_blue_34dp"
+            android:background="@null"/>
+
+
+    </RelativeLayout>
+
+    <link.fls.swipestack.SwipeStack
+        android:layout_below="@+id/card_mode_action_RL"
+        android:id="@+id/swipeStack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="20dp"
+        app:stack_rotation="0">
+
+    </link.fls.swipestack.SwipeStack>
+
+    <ImageButton
+        android:id="@+id/refresh_IB"
+        style="@android:style/Widget.Material.ImageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:backgroundTint="@color/blue"
+        android:contentDescription="@string/review_cards"
+        android:padding="20dp"
+        android:visibility="gone"
+        app:srcCompat="@drawable/ic_refresh_white" />
+
+
+
+</RelativeLayout>

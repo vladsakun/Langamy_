@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/MyNoMaterialCardView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/term_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:textColor="@color/darkColor"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/translation_TV"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/term_TV"
+                android:layout_marginTop="100dp"
+                android:gravity="center"
+                android:textColor="@color/darkColor"
+                android:textSize="40sp" />
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/volume_up_IB"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:src="@drawable/ic_volume_up_blue_60dp" />
+    </RelativeLayout>
+
+
+</androidx.cardview.widget.CardView>

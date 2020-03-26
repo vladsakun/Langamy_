@@ -1,0 +1,96 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp">
+
+    <Chronometer
+        android:visibility="invisible"
+        android:layout_alignParentEnd="true"
+        android:layout_width="wrap_content"
+        android:textSize="20sp"
+        android:layout_height="wrap_content"
+        android:id="@+id/quiz_chronometer"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/answers_LL"
+        android:layout_marginBottom="50dp">
+
+        <TextView
+            android:id="@+id/term_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="TextView"
+            android:textColor="@color/darkColor"
+            android:textSize="20sp" />
+
+        <ImageButton
+            android:background="@null"
+            android:id="@+id/volume_up_IB"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_toEndOf="@+id/term_TV"
+            android:src="@drawable/ic_volume_up_blue_34dp" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/answers_LL"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/answer1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/customborder"
+            android:onClick="checkAnswerFirstStage"
+            android:padding="10dp"
+            android:text="TextView"
+            android:textColor="@color/darkColor"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/answer2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/customborder"
+            android:onClick="checkAnswerFirstStage"
+            android:padding="10dp"
+            android:text="TextView"
+            android:textColor="@color/darkColor"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/answer3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/customborder"
+            android:onClick="checkAnswerFirstStage"
+            android:padding="10dp"
+            android:text="TextView"
+            android:textColor="@color/darkColor"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/answer4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/customborder"
+            android:onClick="checkAnswerFirstStage"
+            android:padding="10dp"
+            android:text="TextView"
+            android:textColor="@color/darkColor"
+            android:textSize="20sp" />
+    </LinearLayout>
+</RelativeLayout>

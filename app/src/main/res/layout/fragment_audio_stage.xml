@@ -1,0 +1,75 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    tools:context="com.langamy.activities.LearnActivity">
+
+    <LinearLayout
+        android:id="@+id/speak_RL"
+        android:layout_width="wrap_content"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/speak_term_slow_IB"
+            android:layout_width="100dp"
+            android:layout_height="70dp"
+            android:layout_marginEnd="20dp"
+            android:backgroundTint="#ffffff"
+            android:src="@drawable/ic_volume_up_turtle" />
+
+        <ImageButton
+            android:id="@+id/speak_term_IB"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:backgroundTint="#ffffff"
+            android:src="@drawable/ic_volume_up_blue_60dp" />
+
+    </LinearLayout>
+
+
+    <EditText
+        android:id="@+id/definition_audiostage_ET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cannot_speak_BTN"
+        android:layout_marginTop="50dp"
+        android:ems="10"
+        android:inputType="textPersonName|textNoSuggestions" />
+
+    <TextView
+        android:id="@+id/translationHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/definition_audiostage_ET"
+        android:letterSpacing="0.3"
+        android:text="@string/translation"
+        android:textColor="@color/darkColor" />
+
+    <ImageButton
+        android:id="@+id/next_page_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/definition_audiostage_ET"
+        android:layout_alignParentEnd="true"
+        android:background="@null"
+        android:onClick="checkAnswerAudioStage"
+        android:padding="10dp"
+        app:srcCompat="@drawable/ic_arrow_forward_blue_24dp" />
+
+    <Button
+        android:id="@+id/cannot_speak_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/speak_RL"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/green"
+        android:onClick="checkAnswerAudioStage"
+        android:text="@string/can_not_listen"
+        android:textSize="12sp" />
+</RelativeLayout>
