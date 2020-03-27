@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -66,6 +67,8 @@ import com.langamy.base.classes.NetworkMonitor;
 import com.langamy.base.classes.StudySet;
 import com.langamy.base.classes.TranslationResponse;
 import com.langamy.base.classes.Word;
+import com.langamy.database.StudySetsBaseHelper;
+import com.langamy.database.StudySetsScheme;
 import com.langamy.fragments.CreateStudySetsFragment;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -108,7 +111,6 @@ public class CreateStudySetActivity extends AppCompatActivity {
     private int studySetId = 0;
 
     private EditText mResultEt, mTitleEt;
-    private RelativeLayout offlineRL;
     private TextToSpeech tts;
     private Button mScanDocumentBtn, mCommitWordsBtn;
     private FloatingActionButton mAddWordBtn;
@@ -118,8 +120,7 @@ public class CreateStudySetActivity extends AppCompatActivity {
     ScrollView wordScrollView;
     private LayoutInflater wordsInflater;
     private HashMap<String, ArrayList<String>> wordsForSuggestions;
-    private BroadcastReceiver broadcastReceiver;
-    private ImageButton infoBtn;
+    private SQLiteDatabase mDatabase;
 
     private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_REQUEST_CODE = 400;
@@ -130,12 +131,6 @@ public class CreateStudySetActivity extends AppCompatActivity {
     String[] storagePermission;
 
     Uri image_uri;
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        registerReceiver(broadcastReceiver, new IntentFilter("com.langamy.fragments"));
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,38 +160,14 @@ public class CreateStudySetActivity extends AppCompatActivity {
         mWordsLinearLayout = findViewById(R.id.main_linearlayout);
         autoTranslateSwitch = findViewById(R.id.auto_translate_switch);
         wordScrollView = findViewById(R.id.word_scrollview);
-        offlineRL = findViewById(R.id.offline_mode_RL);
-        infoBtn = findViewById(R.id.offline_mode_IB);
+
+        mDatabase = new StudySetsBaseHelper(this).getWritableDatabase();
 
         wordsInflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         progressBar.setVisibility(View.GONE);
 
-        broadcastReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-                if (BaseVariables.checkNetworkConnection(CreateStudySetActivity.this)) {
-                    disableOfflineMode();
-                } else {
-                    enableOfflineMode();
-                }
-            }
-        };
-
         //Inflater for adding words
         final LayoutInflater wordsInflater = LayoutInflater.from(this);
-
-        if (BaseVariables.checkNetworkConnection(this)) {
-            disableOfflineMode();
-        } else {
-            enableOfflineMode();
-        }
-
-        infoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                playOfflineHelp();
-            }
-        });
 
         // адаптер
         final BaseVariables baseVariables = new BaseVariables();
@@ -241,7 +212,7 @@ public class CreateStudySetActivity extends AppCompatActivity {
             }
 
             for (int i = 0; i < mWordList.size(); i++) {
-                View wordView =createListWordItem();
+                View wordView = createListWordItem();
 
                 final EditText term = wordView.findViewById(R.id.term_TV);
                 final EditText translation = wordView.findViewById(R.id.translation_TV);
@@ -348,14 +319,6 @@ public class CreateStudySetActivity extends AppCompatActivity {
 
     }
 
-    private void disableOfflineMode() {
-        offlineRL.setVisibility(View.GONE);
-    }
-
-    private void enableOfflineMode() {
-        offlineRL.setVisibility(View.VISIBLE);
-    }
-
     private void manyTranslate(String words) {
         ArrayList<Word> wordArrayList = new ArrayList<>();
         String stringsToBeTranslated = words.replaceAll("\\r?\\n", ";")
@@ -414,25 +377,6 @@ public class CreateStudySetActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void playOfflineHelp(){
-
-        FancyShowCaseQueue fq = new FancyShowCaseQueue();
-
-        FancyShowCaseView offlineHelp = new FancyShowCaseView.Builder(this)
-                .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
-                    @Override
-                    public void onViewInflated(View view) {
-                        BaseVariables.setCustomFancyCaseView(view, getString(R.string.abilities_in_offline_mode), fq);
-                    }
-                })
-                .backgroundColor(getColor(R.color.blueForFancy))
-                .build();
-        fq.add(offlineHelp);
-        fq.show();
-
-    }
-
 
     public View createListWordItem() {
 
@@ -634,6 +578,9 @@ public class CreateStudySetActivity extends AppCompatActivity {
                     return;
                 }
 
+                ContentValues cv = BaseVariables.getContentValuesForStudyset(response.body(), true);
+                mDatabase.update(StudySetsScheme.StudySetsTable.NAME, cv, "_id=?", new String[]{String.valueOf(response.body().getId())});
+
                 Intent intent = new Intent(CreateStudySetActivity.this, SpecificStudySetActivity.class);
                 intent.putExtra(BaseVariables.STUDY_SET_ID_MESSAGE, id);
                 startActivity(intent);
@@ -648,8 +595,6 @@ public class CreateStudySetActivity extends AppCompatActivity {
             }
         });
 
-        NetworkMonitor networkMonitor = new NetworkMonitor();
-        networkMonitor.syncDb(this);
     }
 
     private void showImageImportDialog() {

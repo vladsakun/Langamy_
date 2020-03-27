@@ -212,7 +212,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void disableOfflineMode() {
-        mStudySetsFragment.disableOfflineMode();
         mOfflineRelativeLayout.setVisibility(View.GONE);
     }
 

@@ -33,6 +33,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -52,11 +54,13 @@ import com.langamy.activities.SpecificStudySetActivity;
 import com.langamy.activities.UserDoneDictationsActivity;
 import com.langamy.api.LangamyAPI;
 import com.langamy.base.classes.BaseVariables;
+import com.langamy.base.classes.ConnectionModel;
 import com.langamy.base.classes.Dictation;
 import com.langamy.base.classes.NetworkMonitor;
 import com.langamy.base.classes.StudySet;
 import com.langamy.database.StudySetCursorWrapper;
 import com.langamy.database.StudySetsBaseHelper;
+import com.langamy.viewmodel.MainViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -178,10 +182,21 @@ public class StudySetsFragment extends Fragment {
             randomDictation();
         });
 
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
+
+        viewModel.getConnectionLiveData().observe(getActivity(), new Observer<ConnectionModel>() {
+            @Override
+            public void onChanged(ConnectionModel connectionModel) {
+                if (connectionModel.getIsConnected()) {
+                    disableOfflineMode();
+                }
+            }
+        });
+
         return view;
     }
 
-    private void noStudySets(){
+    private void noStudySets() {
         createStudySetBtn.setVisibility(View.VISIBLE);
     }
 
@@ -228,7 +243,7 @@ public class StudySetsFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
-    private void randomDictation(){
+    private void randomDictation() {
 
         if (BaseVariables.checkNetworkConnection(getContext())) {
             Call<List<Dictation>> call = mLangamyAPI.getRandomDictation(acct.getEmail());
@@ -249,7 +264,7 @@ public class StudySetsFragment extends Fragment {
 
                 }
             });
-        }else{
+        } else {
             Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
         }
     }
@@ -283,7 +298,7 @@ public class StudySetsFragment extends Fragment {
                         editor.commit();
                     }
 
-                    if(response.body().size()==0){
+                    if (response.body().size() == 0) {
                         noStudySets();
                     }
 

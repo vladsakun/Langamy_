@@ -23,10 +23,20 @@ import retrofit2.http.Path;
 
 public interface LangamyAPI {
 
-    @POST("api/create/studyset/?format=json")
+    //StudySet
+    @POST("api/create/studyset/")
     Call<StudySet> createStudySet(@Body StudySet studySet);
 
-    @POST("api/create/dictation/?format=json")
+    @GET("api/studyset/{study_set_id}/")
+    Call<StudySet> getSpecificStudySet(@Path("study_set_id") int study_set_id);
+
+    @PATCH("api/studyset/{id}/")
+    Call<StudySet> patchStudySet(@Path("id") int id, @Body StudySet studySet);
+
+    @DELETE("api/studyset/{id}/")
+    Call<Void> deleteStudySet(@Path("id") int id);
+
+    @POST("api/create/dictation/")
     Call<Dictation> createDictation(@Body Dictation dictation);
 
     @POST("api/create/user/")
@@ -57,8 +67,6 @@ public interface LangamyAPI {
     @GET("api/get/user/completed/dictations/{email}/")
     Call<ArrayList<Dictation>> getUserCompletedDictations(@Path("email") String email);
 
-    @GET("api/get/studyset/{study_set_id}/")
-    Call<StudySet> getSpecificStudySet(@Path("study_set_id") int study_set_id);
 
     @GET("api/get/dictation/{dictation_code}/{mode}")
     Call<Dictation> getSpecificDictation(@Path("dictation_code") int dictation_code, @Path("mode") String mode);
@@ -66,17 +74,12 @@ public interface LangamyAPI {
     @GET("api/get/user/{user_email}/")
     Call<User> getUser(@Path("user_email") String user_email);
 
-    @PATCH("api/patch/studyset/{id}/")
-    Call<StudySet> patchStudySet(@Path("id") int id, @Body StudySet studySet);
-
     @PATCH("api/patch/dictation/{id}/id/")
     Call<Dictation> patchDictation(@Path("id") int id, @Body Dictation dictation);
 
     @PATCH("api/patch/user/mark/{email}/")
     Call<Void> patchUserMark(@Path("email") String email, @Body String mark);
 
-    @DELETE("api/delete/studyset/{id}/")
-    Call<Void> deleteStudySet(@Path("id") int id);
 
     @DELETE("api/delete/dictation/{id}/id/")
     Call<Void> deleteDictation(@Path("id") int id);

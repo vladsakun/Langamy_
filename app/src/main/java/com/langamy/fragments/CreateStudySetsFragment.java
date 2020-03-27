@@ -152,7 +152,6 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
     private Spinner languageFromSpinner, languageToSpinner;
     private SQLiteDatabase mDatabase;
     private RewardedVideoAd mAd;
-    private BroadcastReceiver broadcastReceiver;
 
     private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_REQUEST_CODE = 400;
@@ -171,13 +170,6 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
         // Confirm this fragment has menu items.
         setHasOptionsMenu(true);
         mDatabase = new StudySetsBaseHelper(getContext()).getWritableDatabase();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        getContext().registerReceiver(broadcastReceiver, new IntentFilter("com.langamy.fragments"));
-
     }
 
     @Override
@@ -304,24 +296,6 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
         wordsForSuggestions = save();
 
         return view;
-    }
-
-    private void playOfflineHelp() {
-
-        FancyShowCaseQueue fq = new FancyShowCaseQueue();
-
-        FancyShowCaseView offlineHelp = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
-                    @Override
-                    public void onViewInflated(View view) {
-                        BaseVariables.setCustomFancyCaseView(view, getContext().getString(R.string.abilities_in_offline_mode), fq);
-                    }
-                })
-                .backgroundColor(getContext().getColor(R.color.blueForFancy))
-                .build();
-        fq.add(offlineHelp);
-        fq.show();
-
     }
 
     private void manyTranslate(String words) {
@@ -676,9 +650,9 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
                 Toast.makeText(getContext(), t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
-
-        NetworkMonitor networkMonitor = new NetworkMonitor();
-        networkMonitor.syncDb(getContext());
+//
+//        NetworkMonitor networkMonitor = new NetworkMonitor();
+//        networkMonitor.syncDb(getContext());
     }
 
     @Override
