@@ -51,6 +51,7 @@ public final class BaseVariables {
     final public static String TITLE_MESSAGE = "title";
     final public static String AMOUNT_OF_CORRECT_ANSWERS_MESSAGE = "amount_of_correct_answers";
     final public static String DICTATION_ID_MESSAGE = "dictation_id";
+    final public static String RANDOM_DICTATION_MESSAGE = "random_dictation";
     final public static String DICTATION_CODE_MESSAGE = "dictation_code";
     public static final String DICTATION_TYPE_OF_QUESTIONS_MESSAGE = "type_of_questions";
     public static final String USER_ANSWERS_MESSAGE = "user_answers";

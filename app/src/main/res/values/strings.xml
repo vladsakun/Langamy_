@@ -67,6 +67,7 @@
     <string name="fancy_create_studyset">Let\'s create your first studyset</string>
     <string name="fancy_done_dictations">There you can find last 20 dictations, which you have completed</string>
     <string name="fancy_my_dictations">There will be stored all your dictations</string>
+    <string name="fancy_random_dictations">Challenge yourself and pass random dictation</string>
     <string name="fancy_help_btn">You can find help button on each page</string>
     <string name="fancy_title">Firstly set a title</string>
     <string name="fancy_from_lang">Choose language  _FROM_  translate</string>

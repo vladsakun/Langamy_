@@ -2,16 +2,12 @@ package com.langamy.fragments;
 
 
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -55,7 +51,6 @@ import com.langamy.activities.UserDoneDictationsActivity;
 import com.langamy.api.LangamyAPI;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.ConnectionModel;
-import com.langamy.base.classes.Dictation;
 import com.langamy.base.classes.NetworkMonitor;
 import com.langamy.base.classes.StudySet;
 import com.langamy.database.StudySetCursorWrapper;
@@ -246,26 +241,11 @@ public class StudySetsFragment extends Fragment {
     private void randomDictation() {
 
         if (BaseVariables.checkNetworkConnection(getContext())) {
-            Call<List<Dictation>> call = mLangamyAPI.getRandomDictation(acct.getEmail());
-            call.enqueue(new Callback<List<Dictation>>() {
-                @Override
-                public void onResponse(Call<List<Dictation>> call, Response<List<Dictation>> response) {
-                    if (!response.isSuccessful()) {
-                        Toast.makeText(getContext(), String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    Intent intent = new Intent(getActivity(), SpecificDictationActivity.class);
-                    intent.putExtra(BaseVariables.DICTATION_ID_MESSAGE, response.body().get(0).getId());
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onFailure(Call<List<Dictation>> call, Throwable t) {
-
-                }
-            });
+            Intent intent = new Intent(getActivity(), SpecificDictationActivity.class);
+            intent.putExtra(BaseVariables.RANDOM_DICTATION_MESSAGE, true);
+            startActivity(intent);
         } else {
-            Toast.makeText(getContext(), "Error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getString(R.string.you_need_an_internet_connection), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -533,24 +513,39 @@ public class StudySetsFragment extends Fragment {
                 .build();
 
         FancyShowCaseView myDictations = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.fancyshowcase_with_image, new OnViewInflateListener() {
+                .focusOn(mDictations)
+                .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
                     @Override
                     public void onViewInflated(View view) {
-                        BaseVariables.setImage(view,
+                        BaseVariables.setCustomFancyCaseView(view,
                                 getString(R.string.fancy_my_dictations),
-                                fq, getContext().getDrawable(R.drawable.ic_dictation_30dp));
+                                fq);
+                    }
+                })
+                .backgroundColor(Color.parseColor("#E621618C"))
+                .build();
+
+        FancyShowCaseView randomDictations = new FancyShowCaseView.Builder(getActivity())
+                .focusOn(mRandomDictation)
+                .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
+                    @Override
+                    public void onViewInflated(View view) {
+                        BaseVariables.setCustomFancyCaseView(view,
+                                getString(R.string.fancy_random_dictations),
+                                fq);
                     }
                 })
                 .backgroundColor(Color.parseColor("#E621618C"))
                 .build();
 
         FancyShowCaseView doneDictations = new FancyShowCaseView.Builder(getActivity())
-                .customView(R.layout.fancyshowcase_with_image, new OnViewInflateListener() {
+                .focusOn(mRecentDictations)
+                .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
                     @Override
                     public void onViewInflated(View view) {
-                        BaseVariables.setImage(view,
+                        BaseVariables.setCustomFancyCaseView(view,
                                 getString(R.string.fancy_done_dictations),
-                                fq, getContext().getDrawable(R.drawable.ic_done_dictations_white_30dp));
+                                fq);
                     }
                 })
                 .backgroundColor(Color.parseColor("#E621618C"))
@@ -589,6 +584,7 @@ public class StudySetsFragment extends Fragment {
 
         fq.add(helpBtn)
                 .add(myDictations)
+                .add(randomDictations)
                 .add(doneDictations)
                 .add(createStudySet);
 

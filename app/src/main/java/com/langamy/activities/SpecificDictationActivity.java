@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bignerdranch.android.main.R;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.material.button.MaterialButton;
 import com.langamy.adapters.MarksAdapter;
 import com.langamy.adapters.SpecificStudySetAdapter;
@@ -98,6 +99,8 @@ public class SpecificDictationActivity extends AppCompatActivity {
 
         startDictationBtn.setEnabled(false);
 
+        boolean randomDictation = getIntent().getBooleanExtra(BaseVariables.RANDOM_DICTATION_MESSAGE, false);
+
         code = getIntent().getIntExtra(BaseVariables.DICTATION_CODE_MESSAGE, 0);
         dictationId = getIntent().getIntExtra(BaseVariables.DICTATION_ID_MESSAGE, 0);
 
@@ -126,7 +129,7 @@ public class SpecificDictationActivity extends AppCompatActivity {
 
         }
 
-        getSpecificDictation(dictationDataForAPI, mode);
+        getSpecificDictation(dictationDataForAPI, mode, randomDictation);
         getDictationMarks(dictationDataForAPI, mode);
 
         inizializeRecyclerView(mWords);
@@ -249,64 +252,126 @@ public class SpecificDictationActivity extends AppCompatActivity {
     }
 
 
-    public void getSpecificDictation(int code, String mode) {
-        Call<Dictation> call = mLangamyAPI.getSpecificDictation(code, mode);
-        call.enqueue(new Callback<Dictation>() {
-            @Override
-            public void onResponse(Call<Dictation> call, Response<Dictation> response) {
-                if (response.code() == 500) {
-                    error = true;
+    public void getSpecificDictation(int code, String mode, boolean randomDictation) {
 
-                    specificDictation_VIEW.setVisibility(View.GONE);
+        if (randomDictation) {
+
+            Call<List<Dictation>> call = mLangamyAPI.getRandomDictation(GoogleSignIn.getLastSignedInAccount(this).getEmail());
+            call.enqueue(new Callback<List<Dictation>>() {
+                @Override
+                public void onResponse(Call<List<Dictation>> call, Response<List<Dictation>> response) {
+                    if (response.code() == 500) {
+                        error = true;
+
+                        specificDictation_VIEW.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                        error_RL.setVisibility(View.VISIBLE);
+
+                        return;
+                    }
+                    Dictation dictation = response.body().get(0);
+                    String otherWords = dictation.getWords();
+                    String markedWords = dictation.getMarked_words();
+                    List<Word> allWords = new ArrayList<>();
+                    try {
+                        JSONArray otherWordsJSONArray = new JSONArray(otherWords);
+                        JSONArray markedWordsJSONArray = new JSONArray(markedWords);
+                        List<Word> otherWordsList = convertJsonToWordObject(otherWordsJSONArray);
+                        List<Word> markedWordsList = convertJsonToWordObject(markedWordsJSONArray);
+                        globalMarkedWordsList.addAll(markedWordsList);
+                        globalOtherWordsList.addAll(otherWordsList);
+                        allWords.addAll(otherWordsList);
+                        allWords.addAll(markedWordsList);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    mWords.addAll(allWords);
+                    mAdapter.notifyDataSetChanged();
+
+                    dictationName.setText(dictation.getName());
+                    typeOfQuestions.setText(dictation.getType_of_questions());
+                    questionAmount.setText(String.valueOf(dictation.getAmount_of_words_for_dictation()));
+                    creator.setText(dictation.getCreator());
+                    dictationCode.setText(String.valueOf(dictation.getCode()));
+
+                    intent.putExtra(BaseVariables.DICTATION_MESSAGE, dictation);
+                    intent.putExtra(BaseVariables.DICTATION_ID_MESSAGE, dictation.getId());
+                    intent.putExtra(BaseVariables.DICTATION_TYPE_OF_QUESTIONS_MESSAGE, dictation.getType_of_questions());
+                    intent.putExtra(BaseVariables.FROM_LANG_MESSAGE, dictation.getLanguage_from());
+                    intent.putExtra(BaseVariables.TO_LANG_MESSAGE, dictation.getLanguage_to());
+
                     progressBar.setVisibility(View.GONE);
-                    error_RL.setVisibility(View.VISIBLE);
 
-                    return;
+                    startDictationBtn.setEnabled(true);
+
+                    specificDictation_VIEW.setVisibility(View.VISIBLE);
+
                 }
-                Dictation dictation = response.body();
-                String otherWords = dictation.getWords();
-                String markedWords = dictation.getMarked_words();
-                List<Word> allWords = new ArrayList<>();
-                try {
-                    JSONArray otherWordsJSONArray = new JSONArray(otherWords);
-                    JSONArray markedWordsJSONArray = new JSONArray(markedWords);
-                    List<Word> otherWordsList = convertJsonToWordObject(otherWordsJSONArray);
-                    List<Word> markedWordsList = convertJsonToWordObject(markedWordsJSONArray);
-                    globalMarkedWordsList.addAll(markedWordsList);
-                    globalOtherWordsList.addAll(otherWordsList);
-                    allWords.addAll(otherWordsList);
-                    allWords.addAll(markedWordsList);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+
+                @Override
+                public void onFailure(Call<List<Dictation>> call, Throwable t) {
+
                 }
-                mWords.addAll(allWords);
-                mAdapter.notifyDataSetChanged();
+            });
+        } else {
+            Call<Dictation> call = mLangamyAPI.getSpecificDictation(code, mode);
+            call.enqueue(new Callback<Dictation>() {
+                @Override
+                public void onResponse(Call<Dictation> call, Response<Dictation> response) {
+                    if (response.code() == 500) {
+                        error = true;
 
-                dictationName.setText(dictation.getName());
-                typeOfQuestions.setText(dictation.getType_of_questions());
-                questionAmount.setText(String.valueOf(dictation.getAmount_of_words_for_dictation()));
-                creator.setText(dictation.getCreator());
-                dictationCode.setText(String.valueOf(dictation.getCode()));
+                        specificDictation_VIEW.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
+                        error_RL.setVisibility(View.VISIBLE);
 
-                intent.putExtra(BaseVariables.DICTATION_MESSAGE, dictation);
-                intent.putExtra(BaseVariables.DICTATION_ID_MESSAGE, dictation.getId());
-                intent.putExtra(BaseVariables.DICTATION_TYPE_OF_QUESTIONS_MESSAGE, dictation.getType_of_questions());
-                intent.putExtra(BaseVariables.FROM_LANG_MESSAGE, dictation.getLanguage_from());
-                intent.putExtra(BaseVariables.TO_LANG_MESSAGE, dictation.getLanguage_to());
+                        return;
+                    }
+                    Dictation dictation = response.body();
+                    String otherWords = dictation.getWords();
+                    String markedWords = dictation.getMarked_words();
+                    List<Word> allWords = new ArrayList<>();
+                    try {
+                        JSONArray otherWordsJSONArray = new JSONArray(otherWords);
+                        JSONArray markedWordsJSONArray = new JSONArray(markedWords);
+                        List<Word> otherWordsList = convertJsonToWordObject(otherWordsJSONArray);
+                        List<Word> markedWordsList = convertJsonToWordObject(markedWordsJSONArray);
+                        globalMarkedWordsList.addAll(markedWordsList);
+                        globalOtherWordsList.addAll(otherWordsList);
+                        allWords.addAll(otherWordsList);
+                        allWords.addAll(markedWordsList);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    mWords.addAll(allWords);
+                    mAdapter.notifyDataSetChanged();
 
-                progressBar.setVisibility(View.GONE);
+                    dictationName.setText(dictation.getName());
+                    typeOfQuestions.setText(dictation.getType_of_questions());
+                    questionAmount.setText(String.valueOf(dictation.getAmount_of_words_for_dictation()));
+                    creator.setText(dictation.getCreator());
+                    dictationCode.setText(String.valueOf(dictation.getCode()));
 
-                startDictationBtn.setEnabled(true);
+                    intent.putExtra(BaseVariables.DICTATION_MESSAGE, dictation);
+                    intent.putExtra(BaseVariables.DICTATION_ID_MESSAGE, dictation.getId());
+                    intent.putExtra(BaseVariables.DICTATION_TYPE_OF_QUESTIONS_MESSAGE, dictation.getType_of_questions());
+                    intent.putExtra(BaseVariables.FROM_LANG_MESSAGE, dictation.getLanguage_from());
+                    intent.putExtra(BaseVariables.TO_LANG_MESSAGE, dictation.getLanguage_to());
 
-                specificDictation_VIEW.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
 
-            }
+                    startDictationBtn.setEnabled(true);
 
-            @Override
-            public void onFailure(Call<Dictation> call, Throwable t) {
+                    specificDictation_VIEW.setVisibility(View.VISIBLE);
+
+                }
+
+                @Override
+                public void onFailure(Call<Dictation> call, Throwable t) {
 //                Toast.makeText(SpecificDictationActivity.this, String.valueOf(t), Toast.LENGTH_SHORT).show();
-            }
-        });
+                }
+            });
+        }
     }
 
 }
