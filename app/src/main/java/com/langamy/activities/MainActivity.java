@@ -2,11 +2,9 @@ package com.langamy.activities;
 
 import android.content.BroadcastReceiver;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.PorterDuff;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -26,14 +24,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-import com.langamy.base.classes.ConnectionModel;
-import com.langamy.retrofit.LangamyAPI;
 import com.langamy.base.classes.BaseVariables;
+import com.langamy.base.classes.ConnectionModel;
 import com.langamy.base.classes.NetworkMonitor;
 import com.langamy.database.StudySetsBaseHelper;
 import com.langamy.fragments.CreateStudySetsFragment;
 import com.langamy.fragments.ProfileFragment;
 import com.langamy.fragments.StudySetsFragment;
+import com.langamy.retrofit.LangamyAPI;
 import com.langamy.viewmodel.MainViewModel;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
@@ -69,14 +67,6 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.ic_create_studyset,
             R.drawable.ic_account
     };
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        IntentFilter intentFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        intentFilter.addAction(Intent.ACTION_AIRPLANE_MODE_CHANGED);
-        registerReceiver(broadcastReceiver, intentFilter);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

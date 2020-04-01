@@ -252,6 +252,18 @@ public class MakeDictationActivity extends AppCompatActivity{
                 .backgroundColor(getColor(R.color.blueForFancy))
                 .build();
 
+        FancyShowCaseView timer = new FancyShowCaseView.Builder(this)
+                .focusOn(findViewById(R.id.add_time_LL))
+                .focusShape(FocusShape.ROUNDED_RECTANGLE)
+                .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
+                    @Override
+                    public void onViewInflated(View view) {
+                        BaseVariables.setCustomFancyCaseView(view, getString(R.string.fancy_timer), fq);
+                    }
+                })
+                .backgroundColor(getColor(R.color.blueForFancy))
+                .build();
+
         FancyShowCaseView typeOfQuestions = new FancyShowCaseView.Builder(this)
                 .focusOn(typesOfQuestions)
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
@@ -324,6 +336,7 @@ public class MakeDictationActivity extends AppCompatActivity{
 
         fq.add(amountOfQuestions)
                 .add(typeOfQuestions)
+                .add(timer)
                 .add(quiz)
                 .add(term)
                 .add(translation)

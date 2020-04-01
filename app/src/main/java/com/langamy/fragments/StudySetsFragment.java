@@ -183,7 +183,10 @@ public class StudySetsFragment extends Fragment {
             @Override
             public void onChanged(ConnectionModel connectionModel) {
                 if (connectionModel.getIsConnected()) {
-                    disableOfflineMode();
+                    AdRequest adRequest = new AdRequest.Builder()
+                            .build();
+
+                    adView.loadAd(adRequest);
                 }
             }
         });

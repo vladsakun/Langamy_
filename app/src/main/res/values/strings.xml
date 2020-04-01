@@ -78,6 +78,7 @@
     <string name="fancy_star">Press on a star to mark a word</string>
     <string name="fancy_study_marked">Then you can learn only marked words</string>
     <string name="fancy_question_count">Set amount of questions</string>
+    <string name="fancy_timer">Set time limit for answering (only for quiz)</string>
     <string name="fancy_types_of_questions">Choose type of questions for dictation</string>
     <string name="fancy_quiz">Ask translation with 4 answer options</string>
     <string name="fancy_term">Show term and ask translation</string>
