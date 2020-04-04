@@ -6,12 +6,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/logotext2" />
-    </item>
-    <item>
-        <bitmap
-            android:gravity="bottom"
-            android:src="@drawable/test" />
+            android:src="@drawable/langamy_logo" />
     </item>
 
 </layer-list>

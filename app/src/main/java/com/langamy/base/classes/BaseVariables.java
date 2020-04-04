@@ -78,8 +78,20 @@ public final class BaseVariables {
     public static final String GET_DICTATION_HOST_URL = HOST_URL + "get/dictation/";
     public static final String STUDY_SET_HOST_URL = HOST_URL + "studyset/";
 
-    private String[] languages = {"English", "Russian", "French", "Spanish", "German", "Ukrainian"};
-    private String[] languagesShort = {"en", "ru", "fr", "sp", "de", "uk"};
+    private String[] languages = {
+            "English", "Russian", "French", "Spanish", "German", "Ukrainian",
+            "Italian", "Chinese", "Hungarian", "Norwegian",
+            "Arabic", "Malay", "Portuguese", "Czech", "Dutch",
+            "Swedish", "Japanese", "Polish", "Korean", "Turkish",
+            "Azerbaijan", "Albanian", "Armenian", "Macedonian", "Belarusian",
+            "Welsh", "Greek", "Georgian", "Slovakian", "Slovenian",
+            "Icelandic", "Kazakh", "Uzbek", "Croatian", "Latin"};
+    private String[] languagesShort = {
+            "en", "ru", "fr", "sp", "de", "uk",
+            "it", "zh", "hu", "no", "ar", "ms", "pt", "cs",
+            "nl", "sv", "ja", "pl", "ko", "tr",
+            "az", "sq", "hy", "mk", "be", "cy", "el", "ka", "sk", "sl",
+            "is", "kk", "uz", "hr", "la"};
 
     final public List<String> LANGUAGES = Arrays.asList(languages);
     final public List<String> LANGUAGES_SHORT = Arrays.asList(languagesShort);
@@ -242,7 +254,7 @@ public final class BaseVariables {
         return wordArrayList;
     }
 
-    public static void offlineHelp(Activity activity, Context context){
+    public static void offlineHelp(Activity activity, Context context) {
 
         FancyShowCaseQueue fq = new FancyShowCaseQueue();
 
