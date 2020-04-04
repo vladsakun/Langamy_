@@ -3,13 +3,11 @@ package com.langamy.api;
 import com.langamy.base.classes.Dictation;
 import com.langamy.base.classes.Mark;
 import com.langamy.base.classes.StudySet;
-import com.langamy.base.classes.StudySetsNames;
 import com.langamy.base.classes.TranslationResponse;
 import com.langamy.base.classes.User;
 
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,24 +34,34 @@ public interface LangamyAPI {
     @DELETE("api/studyset/{id}/")
     Call<Void> deleteStudySet(@Path("id") int id);
 
-    @POST("api/create/dictation/")
-    Call<Dictation> createDictation(@Body Dictation dictation);
-
-    @POST("api/create/user/")
-    Call<User> createUser(@Body User user);
-
     @POST("api/finish/studyset/{studyset_id}/{mode}/")
     Call<Void> finishStudyset(@Path("studyset_id") int studyset_id, @Path("mode") String mode);
 
     @POST("api/clone/studyset/{studyset_id}/{email}/")
     Call<String> cloneStudySet(@Path("studyset_id") int studyset_id, @Path("email") String email);
 
-    @POST("api/translate/{from_lang}/{to_lang}/{mode}/")
-    Call<TranslationResponse> translate(@Body JSONObject stringToTranslate, @Path("from_lang") String fromLang,
-                                        @Path("to_lang") String toLang, @Path("mode") String mode);
-
     @GET("api/get/studysetsnames/{user_email}/")
     Call<List<StudySet>> getStudySetsNamesOfCurrentUser(@Path("user_email") String user_email);
+
+    //User
+    @GET("api/get/user/{user_email}/")
+    Call<User> getUser(@Path("user_email") String user_email);
+
+    @POST("api/create/user/")
+    Call<User> createUser(@Body User user);
+
+    @PATCH("api/patch/user/mark/{email}/")
+    Call<Void> patchUserMark(@Path("email") String email, @Body String mark);
+
+    //Dictation
+    @GET("api/get/dictation/{dictation_code}/{mode}/")
+    Call<Dictation> getSpecificDictation(@Path("dictation_code") int dictation_code, @Path("mode") String mode);
+
+    @POST("api/create/dictation/")
+    Call<Dictation> createDictation(@Body Dictation dictation);
+
+    @DELETE("api/delete/dictation/{id}/")
+    Call<Void> deleteDictation(@Path("id") int id);
 
     @GET("api/get/random/dictation/{user_email}")
     Call<List<Dictation>> getRandomDictation(@Path("user_email") String user_email);
@@ -67,21 +75,9 @@ public interface LangamyAPI {
     @GET("api/get/user/completed/dictations/{email}/")
     Call<ArrayList<Dictation>> getUserCompletedDictations(@Path("email") String email);
 
-
-    @GET("api/get/dictation/{dictation_code}/{mode}")
-    Call<Dictation> getSpecificDictation(@Path("dictation_code") int dictation_code, @Path("mode") String mode);
-
-    @GET("api/get/user/{user_email}/")
-    Call<User> getUser(@Path("user_email") String user_email);
-
-    @PATCH("api/patch/dictation/{id}/id/")
-    Call<Dictation> patchDictation(@Path("id") int id, @Body Dictation dictation);
-
-    @PATCH("api/patch/user/mark/{email}/")
-    Call<Void> patchUserMark(@Path("email") String email, @Body String mark);
-
-
-    @DELETE("api/delete/dictation/{id}/id/")
-    Call<Void> deleteDictation(@Path("id") int id);
+    //Translate
+    @POST("api/translate/{from_lang}/{to_lang}/{mode}/")
+    Call<TranslationResponse> translate(@Body JSONObject stringToTranslate, @Path("from_lang") String fromLang,
+                                        @Path("to_lang") String toLang, @Path("mode") String mode);
 
 }

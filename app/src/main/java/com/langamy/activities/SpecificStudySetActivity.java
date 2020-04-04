@@ -23,7 +23,6 @@ import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,7 +30,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bignerdranch.android.main.R;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -296,6 +294,7 @@ public class SpecificStudySetActivity extends AppCompatActivity {
 
         mAdapter = new SpecificStudySetAdapterInActivity(words);
         wordsRecyclerView.setAdapter(mAdapter);
+        wordsRecyclerView.setNestedScrollingEnabled(false);
     }
 
     private void playHelp() {

@@ -1,140 +1,151 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/grey_100"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/custom_progress_bar" />
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/buttons_card"
-        style="@style/MyCardView"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:contentPadding="10dp">
-
-        <TextView
-            android:id="@+id/title_of_studyset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:gravity="center"
-            android:text="TextView"
-            android:textColor="@color/darkColor"
-            android:textSize="20sp" />
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/adView">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/grey_100"
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/make_dictation_btn"
-                style="@style/WhiteButtonWithBlueBorder"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:text="@string/make_dictation" />
-
-            <LinearLayout
-                android:id="@+id/dictation_buttons_RL"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/make_dictation_btn"
-                android:layout_centerHorizontal="true">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/card_mode_btn"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:layout_weight="0.5"
-                    android:backgroundTint="@color/green"
-                    android:text="@string/cards" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/learn_btn"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:backgroundTint="@color/orange"
-                    android:text="@string/learn" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/study_categories_LL"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/buttons_card"
+                style="@style/MyCardView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/dictation_buttons_RL"
-                android:orientation="horizontal"
-                android:visibility="visible">
+                app:contentPadding="10dp">
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/study_all_MBTN"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/title_of_studyset"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:backgroundTint="@color/blue"
-                    android:text="@string/study_all"
-                    android:textColor="#fff"
-                    android:textSize="12sp"
-                    app:cornerRadius="0dp"
-                    app:strokeColor="@color/blue" />
+                    android:layout_marginBottom="10dp"
+                    android:gravity="center"
+                    android:text="TextView"
+                    android:textColor="@color/darkColor"
+                    android:textSize="20sp" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/study_marked_MBTN"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/make_dictation_btn"
+                        style="@style/WhiteButtonWithBlueBorder"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/make_dictation" />
+
+                    <LinearLayout
+                        android:id="@+id/dictation_buttons_RL"
+                        android:layout_width="200dp"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/make_dictation_btn"
+                        android:layout_centerHorizontal="true">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/card_mode_btn"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="5dp"
+                            android:layout_weight="0.5"
+                            android:backgroundTint="@color/green"
+                            android:text="@string/cards" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/learn_btn"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:backgroundTint="@color/orange"
+                            android:text="@string/learn" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/study_categories_LL"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/dictation_buttons_RL"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/study_all_MBTN"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:backgroundTint="@color/blue"
+                            android:text="@string/study_all"
+                            android:textColor="#fff"
+                            android:textSize="12sp"
+                            app:cornerRadius="0dp"
+                            app:strokeColor="@color/blue" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/study_marked_MBTN"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:text="@string/study_marked"
+                            android:textSize="12sp"
+                            app:cornerRadius="0dp"
+                            app:strokeColor="@color/blue" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <RelativeLayout
+                android:id="@+id/recycler_view_parent_RL"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/adView"
+                android:layout_below="@+id/buttons_card">
+
+                <FrameLayout
+                    android:id="@+id/parent_for_container"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="@string/study_marked"
-                    android:textSize="12sp"
-                    app:cornerRadius="0dp"
-                    app:strokeColor="@color/blue" />
-            </LinearLayout>
+                    android:visibility="gone">
+
+                    <FrameLayout
+                        android:id="@+id/container_for_recycler"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </FrameLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/words_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/parent_for_container"
+                    android:visibility="visible" />
+            </RelativeLayout>
+
         </RelativeLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </ScrollView>
 
-    <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
+    <include layout="@layout/custom_progress_bar" />
+
+    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/buttons_card"
         ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
-    </com.google.android.gms.ads.AdView>
-
-    <RelativeLayout
-        android:id="@+id/recycler_view_parent_RL"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/adView">
-
-        <FrameLayout
-            android:id="@+id/parent_for_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone">
-
-            <FrameLayout
-                android:id="@+id/container_for_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </FrameLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/words_recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/parent_for_container"
-            android:visibility="visible" />
-
-    </RelativeLayout>
-
-
+        ads:adUnitId="ca-app-pub-3940256099942544/6300978111" />
 </RelativeLayout>

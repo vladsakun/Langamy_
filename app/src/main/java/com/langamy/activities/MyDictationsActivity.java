@@ -1,17 +1,7 @@
 package com.langamy.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,23 +13,24 @@ import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bignerdranch.android.main.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.card.MaterialCardView;
-import com.langamy.adapters.SpecificStudySetAdapter;
 import com.langamy.api.LangamyAPI;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.Dictation;
-import com.langamy.base.classes.StudySetsNames;
-import com.langamy.base.classes.Word;
-import com.langamy.fragments.StudySetsFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +50,7 @@ public class MyDictationsActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private RelativeLayout mContent;
     private ProgressBar mProgressBar;
-    private TextView noDictations;
+    private TextView noDictations, myDictations;
 
     private List<Dictation> mDictationList;
 
@@ -74,16 +65,17 @@ public class MyDictationsActivity extends AppCompatActivity {
         mContent = findViewById(R.id.content);
         mProgressBar = findViewById(R.id.progressBar);
         noDictations= findViewById(R.id.no_dictations_TV);
+        myDictations = findViewById(R.id.your_dictations);
 
         initializeRecyclerView(mDictationList);
 
-        GetDictationsTask getDictationsTask = new GetDictationsTask();
-        getDictationsTask.execute();
+        getDictationsOfCurrentUser();
 
     }
 
     private void noDictations(){
         noDictations.setVisibility(View.VISIBLE);
+        myDictations.setVisibility(View.GONE);
     }
 
     private void initializeRecyclerView(List<Dictation> dictations) {
@@ -165,25 +157,25 @@ public class MyDictationsActivity extends AppCompatActivity {
     }
 
 
-    private class GetDictationsTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            getDictationsOfCurrentUser();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-        }
-
-    }
+//    private class GetDictationsTask extends AsyncTask<Void, Void, Void> {
+//
+//        @Override
+//        protected void onPreExecute() {
+//            super.onPreExecute();
+//        }
+//
+//        @Override
+//        protected Void doInBackground(Void... voids) {
+//            getDictationsOfCurrentUser();
+//            return null;
+//        }
+//
+//        @Override
+//        protected void onPostExecute(Void aVoid) {
+//            super.onPostExecute(aVoid);
+//        }
+//
+//    }
 
     public class DictationsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

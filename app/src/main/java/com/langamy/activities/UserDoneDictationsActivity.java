@@ -1,15 +1,14 @@
 package com.langamy.activities;
 
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.bignerdranch.android.main.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -20,7 +19,6 @@ import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.Dictation;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,6 +33,7 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ProgressBar progressBar;
+    private TextView recentDictation, noRecentDictations;
 
     private ArrayList<Dictation> mDictations = new ArrayList<>();
 
@@ -48,11 +47,18 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.done_dictations_recyclerview);
         progressBar = findViewById(R.id.progressBar);
+        recentDictation = findViewById(R.id.recent_dictations_TV);
+        noRecentDictations = findViewById(R.id.no_recent_dictations_TV);
 
         adapter = new DoneDictationsAdapter(mDictations, this);
 
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void noRecentDictations() {
+        recentDictation.setVisibility(View.GONE);
+        noRecentDictations.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -61,14 +67,14 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
         getDoneDictations();
     }
 
-    private void getDoneDictations(){
+    private void getDoneDictations() {
 
         GoogleSignInAccount acc = GoogleSignIn.getLastSignedInAccount(this);
         Call<ArrayList<Dictation>> call = mLangamyAPI.getUserCompletedDictations(acc.getEmail());
         call.enqueue(new Callback<ArrayList<Dictation>>() {
             @Override
             public void onResponse(Call<ArrayList<Dictation>> call, Response<ArrayList<Dictation>> response) {
-                if(!response.isSuccessful()){
+                if (!response.isSuccessful()) {
                     Toast.makeText(UserDoneDictationsActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -76,6 +82,9 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
                 mDictations.addAll(response.body());
                 adapter.notifyDataSetChanged();
                 progressBar.setVisibility(View.GONE);
+                if (response.body().size() == 0) {
+                    noRecentDictations();
+                }
             }
 
             @Override
