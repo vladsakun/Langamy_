@@ -13,3 +13,7 @@
 |Learn| Cards |Make dictation|
 | --- | --- | --- |
 |<img src="/README/learn.jpg" height="600">|<img src="/README/card.jpg" height="600">|<img src="/README/make_dictation.jpg" height="600">|
+
+|Your dictations| Recent dictations | Edit studyset |
+| --- | --- | --- |
+|<img src="/README/yout_dictations.jpg" height="600">|<img src="/README/recent_dictations.jpg" height="600">|<img src="/README/edit.jpg" height="600">|
