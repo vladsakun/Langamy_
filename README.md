@@ -2,7 +2,9 @@
   Langamy is an app for learning foreigh words 
 </p>
 <br/>
-<a href="https://github.com/vladsakun/Langamy_2/apk/app-debug.apk" download="app-debug.apk">Download APK</a>
+<p align="center">
+<a href="https://github.com/vladsakun/Langamy_2/tree/master/apk/app-debug.apk" download="app-debug.apk">Download APK</a>
+</p>
 <br/>
 <p align="center">
   <img src="/README/logo.png" width="200">
