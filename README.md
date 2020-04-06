@@ -11,4 +11,9 @@ List of your studysets
 Create new list of words  
   
   <img src="/README/create.jpg" height="600">
-
+View specific studyset  
+  
+  <img src="/README/study_set.jpg" height="600">
+Learn
+  
+  <img src="/README/learn.jpg" height="600">
