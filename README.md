@@ -8,9 +8,7 @@
 
 |List of your studysets|  Create new list of words |  View specific studyset  |
 | --- | --- | --- |
-|<img src="/README/study_sets.jpg">|
-|<img src="/README/create.jpg">|
-|<img src="/README/study_set.jpg" height="600">|
+|<img src="/README/study_sets.jpg">|<img src="/README/create.jpg">|<img src="/README/study_set.jpg" height="600">|
 Learn
   
   <img src="/README/learn.jpg" height="600">
