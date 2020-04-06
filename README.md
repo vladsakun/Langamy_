@@ -1,3 +1,3 @@
-Langamy is an app for learning foreigh words \n
+Langamy is an app for learning foreigh words <br/>
 <img src="/README/logo.png" width="200">
 
