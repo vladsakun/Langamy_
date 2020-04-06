@@ -7,7 +7,7 @@
 </p>
 <br/>
 <p align="center">
-  <img src="https://imgur.com/q6mAWKC" width="200">
+  <img src="https://i.imgur.com/q6mAWKC.png" width="200">
 </p>
 
 |List of your studysets|  Create new list of words |  View specific studyset  |
