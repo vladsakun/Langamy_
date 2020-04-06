@@ -5,7 +5,8 @@
 <p align="center">
   <img src="/README/logo.png" width="200">
 </p>
-<p align="center">
-  <img src="/README/study_sets.jpg">
-</p>
+<div>
+  <img src="/README/study_sets.jpg" height="400" style="margin-left=10px">
+  <img src="/README/create.jpg" height="400">
+</div>
 
