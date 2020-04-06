@@ -6,6 +6,6 @@
   <img src="/README/logo.png" width="200">
 </p>
 <p align="center">
-  <img src="/README/study_sets.png">
+  <img src="/README/study_sets.jpg">
 </p>
 
