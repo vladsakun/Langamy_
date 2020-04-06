@@ -119,6 +119,7 @@ public class MyDictationsActivity extends AppCompatActivity {
             public void onResponse(Call<List<Dictation>> call, Response<List<Dictation>> response) {
                 if (!response.isSuccessful()) {
                     Toast.makeText(MyDictationsActivity.this, response.code(), Toast.LENGTH_SHORT).show();
+                    return;
                 }
                 mDictationList.clear();
                 mDictationList.addAll(response.body());
