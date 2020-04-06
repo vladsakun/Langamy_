@@ -6,7 +6,7 @@
   <img src="/README/logo.png" width="200">
 </p>
 <div>
-  <img src="/README/study_sets.jpg" height="400" style="margin-right=10px">
+  <img src="/README/study_sets.jpg" height="400" style="margin-right=40px">
   <img src="/README/create.jpg" height="400">
 </div>
 
