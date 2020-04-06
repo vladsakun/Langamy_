@@ -110,7 +110,9 @@ public class MyDictationsActivity extends AppCompatActivity {
     }
 
     private void getDictationsOfCurrentUser() {
+
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+
         Call<List<Dictation>> call = mLangamyAPI.getDictationsOfCurrentUser(acct.getEmail());
         call.enqueue(new Callback<List<Dictation>>() {
             @Override
