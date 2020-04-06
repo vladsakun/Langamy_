@@ -5,4 +5,7 @@
 <p align="center">
   <img src="/README/logo.png" width="200">
 </p>
+<p align="center">
+  <img src="/README/study_sets.png">
+</p>
 
