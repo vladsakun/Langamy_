@@ -33,8 +33,6 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
-import me.toptas.fancyshowcase.FancyShowCaseView;
-import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -252,23 +250,6 @@ public final class BaseVariables {
             e.printStackTrace();
         }
         return wordArrayList;
-    }
-
-    public static void offlineHelp(Activity activity, Context context) {
-
-        FancyShowCaseQueue fq = new FancyShowCaseQueue();
-
-        FancyShowCaseView offlineHelp = new FancyShowCaseView.Builder(activity)
-                .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
-                    @Override
-                    public void onViewInflated(View view) {
-                        BaseVariables.setCustomFancyCaseView(view, context.getString(R.string.abilities_in_offline_mode), fq);
-                    }
-                })
-                .backgroundColor(context.getColor(R.color.blueForFancy))
-                .build();
-        fq.add(offlineHelp);
-
     }
 
 }

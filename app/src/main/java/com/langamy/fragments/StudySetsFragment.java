@@ -198,13 +198,6 @@ public class StudySetsFragment extends Fragment {
         createStudySetBtn.setVisibility(View.VISIBLE);
     }
 
-    public void disableOfflineMode() {
-        AdRequest adRequest = new AdRequest.Builder()
-                .build();
-
-        adView.loadAd(adRequest);
-    }
-
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
 
@@ -298,7 +291,7 @@ public class StudySetsFragment extends Fragment {
         }
     }
 
-    private class StudySetHolder extends RecyclerView.ViewHolder
+    public class StudySetHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
         private StudySet mStudySet;
@@ -345,7 +338,7 @@ public class StudySetsFragment extends Fragment {
         }
     }
 
-    private class StudySetAdapter extends RecyclerView.Adapter<StudySetHolder> implements Filterable {
+    public class StudySetAdapter extends RecyclerView.Adapter<StudySetHolder> implements Filterable {
 
         private List<StudySet> mStudySets;
         private List<StudySet> studySetsListFull;

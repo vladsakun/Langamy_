@@ -30,7 +30,7 @@ import com.langamy.base.classes.NetworkMonitor;
 import com.langamy.database.StudySetsBaseHelper;
 import com.langamy.fragments.CreateStudySetsFragment;
 import com.langamy.fragments.ProfileFragment;
-import com.langamy.fragments.StudySetsFragment;
+import com.langamy.fragments.StudySetsKotlinFragment;
 import com.langamy.retrofit.LangamyAPI;
 import com.langamy.viewmodel.MainViewModel;
 
@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     //    Fragments
     ProfileFragment mProfileFragment;
-    StudySetsFragment mStudySetsFragment;
+    StudySetsKotlinFragment mStudySetsFragment;
     CreateStudySetsFragment createStudySetsFragment;
 
     private ArrayList<Fragment> fragments;
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Fragment inizialization
         mProfileFragment = new ProfileFragment();
-        mStudySetsFragment = new StudySetsFragment();
+        mStudySetsFragment = new StudySetsKotlinFragment();
         createStudySetsFragment = new CreateStudySetsFragment();
 
         fragments = new ArrayList<>();

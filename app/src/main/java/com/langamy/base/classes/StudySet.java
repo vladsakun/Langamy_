@@ -1,8 +1,16 @@
 package com.langamy.base.classes;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
 import java.io.Serializable;
 
+@Entity(tableName = "study_set_table")
 public class StudySet implements Serializable {
+
+    @PrimaryKey
+    private int id;
 
     private String creator;
     private String name;
@@ -11,7 +19,6 @@ public class StudySet implements Serializable {
     private String language_from;
     private boolean sync_status;
     private int amount_of_words;
-    private int id;
 
     public void setWords(String words) {
         this.words = words;
@@ -69,12 +76,12 @@ public class StudySet implements Serializable {
         this.language_from = language_from;
         this.amount_of_words = amount_of_words;
     }
-
+    @Ignore
     public StudySet(String words, int amount_of_words){
         this.words = words;
         this.amount_of_words = amount_of_words;
     }
-
+    @Ignore
     public StudySet(int id, String words, int amount_of_words){
         this.words = words;
         this.id = id;
