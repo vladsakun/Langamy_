@@ -2,17 +2,22 @@ package com.langamy.repositories
 
 import androidx.lifecycle.LiveData
 import com.langamy.base.classes.StudySet
+import com.langamy.base.classes.User
 import com.langamy.database.DaoStudySet
+import com.langamy.database.UserDao
+import com.langamy.provider.UserProvider
 import com.langamy.retrofit.LangamyNetworkDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class StudySetsRepositoryImpl (
+class StudySetsRepositoryImpl(
         private val daoStudySet: DaoStudySet,
-        private val langamyNetworkDataSource: LangamyNetworkDataSource
-): StudySetsRepository {
+        private val userDao: UserDao,
+        private val langamyNetworkDataSource: LangamyNetworkDataSource,
+        private val userProvider: UserProvider
+) : StudySetsRepository {
 
     init {
         langamyNetworkDataSource.downloadedStudySets.observeForever { newStudySetsList ->
@@ -27,23 +32,33 @@ class StudySetsRepositoryImpl (
         }
     }
 
-    private fun persistFetchedStudySetsList(fetchedStudySetsList: List<StudySet>){
+
+    private fun persistFetchedStudySetsList(fetchedStudySetsList: List<StudySet>) {
         GlobalScope.launch(Dispatchers.IO) {
             daoStudySet.upsert(fetchedStudySetsList)
+            userDao.upsert(User(userProvider.getUserEmail()))
         }
     }
 
-    private suspend fun initStudySetsData(){
-        if(isFetchStudySetsNeeded()){
+    override suspend fun deleteAllStudySets() {
+        GlobalScope.launch(Dispatchers.IO) {
+            daoStudySet.deleteAll()
+        }
+    }
+
+    private suspend fun initStudySetsData() {
+
+        if (isFetchStudySetsNeeded()) {
             fetchStudySetsList()
         }
     }
 
-    private suspend fun fetchStudySetsList(){
-        langamyNetworkDataSource.fetchStudySets("vlad120403@gmail.com")
+    private suspend fun fetchStudySetsList() {
+        langamyNetworkDataSource.fetchStudySets(userProvider.getUserEmail())
     }
 
-    private fun isFetchStudySetsNeeded() : Boolean{
+    private fun isFetchStudySetsNeeded(): Boolean {
         return true
     }
+
 }

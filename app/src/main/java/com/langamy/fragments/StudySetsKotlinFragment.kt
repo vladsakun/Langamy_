@@ -2,14 +2,18 @@ package com.langamy.fragments
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bignerdranch.android.main.R
+import com.langamy.activities.SpecificStudySetActivity
 import com.langamy.adapters.StudySetsAdapter
+import com.langamy.base.classes.BaseVariables
 import com.langamy.base.classes.StudySet
 import com.langamy.base.kotlin.ScopedFragment
 import com.langamy.viewmodel.StudySetsViewModel
@@ -50,14 +54,16 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
             }
 
             override fun onItemClicked(item: StudySet) {
-                TODO("Not yet implemented")
+                val intent = Intent(context, SpecificStudySetActivity::class.java)
+                intent.putExtra(BaseVariables.STUDY_SET_ID_MESSAGE, item.id)
+                startActivity(intent)
             }
         })
 
         recycler_view.setHasFixedSize(true)
         recycler_view.layoutManager = LinearLayoutManager(context)
         recycler_view.adapter = mAdapter
-
+        updateActionBar()
         bindUI()
     }
 
@@ -67,10 +73,18 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
         studySetsList.observe(activity!!, Observer {
             if(it == null) return@Observer
 
-            mAdapter.filterListResult = it
-            mAdapter.notifyDataSetChanged()
+            updateStudySetsList(it)
             progressBar.visibility = View.GONE
         })
+    }
+
+    private fun updateActionBar(){
+        (activity as? AppCompatActivity)?.supportActionBar?.title = "Study Sets"
+    }
+
+    private fun updateStudySetsList(studySetsList: List<StudySet>){
+        mAdapter.filterListResult = studySetsList
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

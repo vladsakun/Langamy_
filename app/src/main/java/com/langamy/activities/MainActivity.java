@@ -30,6 +30,7 @@ import com.langamy.base.classes.NetworkMonitor;
 import com.langamy.database.StudySetsBaseHelper;
 import com.langamy.fragments.CreateStudySetsFragment;
 import com.langamy.fragments.ProfileFragment;
+import com.langamy.fragments.ProfileKotlinFragment;
 import com.langamy.fragments.StudySetsKotlinFragment;
 import com.langamy.retrofit.LangamyAPI;
 import com.langamy.viewmodel.MainViewModel;
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
         fragments.add(mStudySetsFragment);
         fragments.add(createStudySetsFragment);
-        fragments.add(mProfileFragment);
+        fragments.add(new ProfileKotlinFragment());
 
         mViewPager.setAdapter(createCardAdapter());
         mViewPager.setOffscreenPageLimit(2);
