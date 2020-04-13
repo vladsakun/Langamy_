@@ -93,7 +93,7 @@
             android:name="com.langamy.activities.LearnActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.langamy.activities.CreateStudySetActivity"
+            android:name="com.langamy.activities.EditStudySetActivity"
             android:parentActivityName="com.langamy.activities.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize" />

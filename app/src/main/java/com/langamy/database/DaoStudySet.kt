@@ -10,8 +10,11 @@ interface DaoStudySet {
     @Query("DELETE FROM study_set_table WHERE id=:id")
     fun deleteById(id:Int)
 
+    @Query("SELECT * FROM study_set_table WHERE id=:id")
+    fun getSpecificStudySet(id: Int): LiveData<StudySet>
+
     @Update
-    fun update(studySet: StudySet?)
+    fun update(studySet: StudySet)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsert(studySets: List<StudySet>)

@@ -7,7 +7,9 @@ import com.langamy.provider.UserProviderImpl
 import com.langamy.repositories.StudySetsRepository
 import com.langamy.repositories.StudySetsRepositoryImpl
 import com.langamy.retrofit.*
+import com.langamy.viewmodel.EditStudySetViewModelFactory
 import com.langamy.viewmodel.ProfileViewModelFactory
+import com.langamy.viewmodel.SpecificStudySetsViewModelFactory
 import com.langamy.viewmodel.StudySetsViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
@@ -44,6 +46,8 @@ class LangamyApplication : Application(), KodeinAware {
         //ViewModel Factories
         bind() from provider { StudySetsViewModelFactory(instance(), instance(), instance()) }
         bind() from provider { ProfileViewModelFactory(instance(), instance()) }
+        bind() from provider { EditStudySetViewModelFactory(instance()) }
+        bind() from provider { SpecificStudySetsViewModelFactory(instance()) }
 
     }
 }

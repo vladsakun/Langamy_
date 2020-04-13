@@ -1,6 +1,5 @@
 package com.langamy.repositories
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.User
@@ -27,14 +26,6 @@ class StudySetsRepositoryImpl(
             downloadedStudySets.observeForever { newStudySetsList ->
                 persistFetchedStudySetsList(newStudySetsList)
             }
-
-//            deleteStatus.observeForever {
-//                Log.d("DELETE", it["status"].toString())
-//                if (it["status"] as Boolean) {
-//                    deleteLocalStudySet(it["id"] as Int)
-//                }
-//            }
-
         }
     }
 
@@ -42,6 +33,12 @@ class StudySetsRepositoryImpl(
         return withContext(Dispatchers.IO) {
             initStudySetsData()
             return@withContext daoStudySet.getAll()
+        }
+    }
+
+    override suspend fun getStudySet(id: Int): LiveData<StudySet> {
+        return withContext(Dispatchers.IO) {
+            return@withContext daoStudySet.getSpecificStudySet(id)
         }
     }
 
@@ -67,6 +64,12 @@ class StudySetsRepositoryImpl(
     override suspend fun deleteLocalStudySet(id: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             daoStudySet.deleteById(id)
+        }
+    }
+
+    override suspend fun updateStudySet(studySet: StudySet) {
+        GlobalScope.launch(Dispatchers.IO){
+            daoStudySet.update(studySet)
         }
     }
 
