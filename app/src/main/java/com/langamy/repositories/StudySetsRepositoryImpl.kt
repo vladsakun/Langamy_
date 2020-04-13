@@ -1,5 +1,6 @@
 package com.langamy.repositories
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.User
@@ -19,9 +20,21 @@ class StudySetsRepositoryImpl(
         private val userProvider: UserProvider
 ) : StudySetsRepository {
 
+
     init {
-        langamyNetworkDataSource.downloadedStudySets.observeForever { newStudySetsList ->
-            persistFetchedStudySetsList(newStudySetsList)
+        langamyNetworkDataSource.apply {
+
+            downloadedStudySets.observeForever { newStudySetsList ->
+                persistFetchedStudySetsList(newStudySetsList)
+            }
+
+//            deleteStatus.observeForever {
+//                Log.d("DELETE", it["status"].toString())
+//                if (it["status"] as Boolean) {
+//                    deleteLocalStudySet(it["id"] as Int)
+//                }
+//            }
+
         }
     }
 
@@ -32,7 +45,6 @@ class StudySetsRepositoryImpl(
         }
     }
 
-
     private fun persistFetchedStudySetsList(fetchedStudySetsList: List<StudySet>) {
         GlobalScope.launch(Dispatchers.IO) {
             daoStudySet.upsert(fetchedStudySetsList)
@@ -40,9 +52,21 @@ class StudySetsRepositoryImpl(
         }
     }
 
-    override suspend fun deleteAllStudySets() {
+    override suspend fun deleteAllLocalStudySets() {
         GlobalScope.launch(Dispatchers.IO) {
             daoStudySet.deleteAll()
+        }
+    }
+
+    override suspend fun deleteStudySet(id: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+            deleteRemoteStudySet(id)
+        }
+    }
+
+    override suspend fun deleteLocalStudySet(id: Int) {
+        GlobalScope.launch(Dispatchers.IO) {
+            daoStudySet.deleteById(id)
         }
     }
 
@@ -55,6 +79,10 @@ class StudySetsRepositoryImpl(
 
     private suspend fun fetchStudySetsList() {
         langamyNetworkDataSource.fetchStudySets(userProvider.getUserEmail())
+    }
+
+    private suspend fun deleteRemoteStudySet(id: Int) {
+        langamyNetworkDataSource.deleteStudySet(id)
     }
 
     private fun isFetchStudySetsNeeded(): Boolean {

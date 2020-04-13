@@ -170,6 +170,7 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
         // Confirm this fragment has menu items.
         setHasOptionsMenu(true);
         mDatabase = new StudySetsBaseHelper(getContext()).getWritableDatabase();
+        wordsForSuggestions = save();
     }
 
     @Override
@@ -291,9 +292,6 @@ public class CreateStudySetsFragment extends Fragment implements RewardedVideoAd
                 autoTranslate = b;
             }
         });
-
-
-        wordsForSuggestions = save();
 
         return view;
     }

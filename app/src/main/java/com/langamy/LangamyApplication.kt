@@ -42,7 +42,7 @@ class LangamyApplication : Application(), KodeinAware {
         bind<UserProvider>() with singleton { UserProviderImpl(instance()) }
 
         //ViewModel Factories
-        bind() from provider { StudySetsViewModelFactory(instance(), instance()) }
+        bind() from provider { StudySetsViewModelFactory(instance(), instance(), instance()) }
         bind() from provider { ProfileViewModelFactory(instance(), instance()) }
 
     }

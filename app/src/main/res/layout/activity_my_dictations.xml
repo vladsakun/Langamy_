@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
     android:layout_width="match_parent"
@@ -8,16 +7,6 @@
     tools:context="com.langamy.activities.MyDictationsActivity">
 
     <include layout="@layout/custom_progress_bar" />
-
-    <TextView
-        android:id="@+id/your_dictations"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/your_dictations"
-        android:textColor="@color/darkColor"
-        android:layout_centerHorizontal="true">
-
-    </TextView>
 
     <TextView
         android:id="@+id/no_dictations_TV"

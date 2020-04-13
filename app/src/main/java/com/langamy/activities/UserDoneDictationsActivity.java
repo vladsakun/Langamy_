@@ -15,10 +15,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.langamy.adapters.DoneDictationsAdapter;
 import com.langamy.api.LangamyAPI;
+import com.langamy.base.classes.BaseFunctionsKt;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.Dictation;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,6 +44,8 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_done_dictations);
+
+        BaseFunctionsKt.updateSupportActionBar(Objects.requireNonNull(getSupportActionBar()), getString(R.string.recent_dictations));
 
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(this);
 

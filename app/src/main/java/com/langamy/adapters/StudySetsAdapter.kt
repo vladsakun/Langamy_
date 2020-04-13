@@ -37,7 +37,7 @@ class StudySetsAdapter(itemsList: ArrayList<StudySet>,
 
             delete.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION)
-                    callback.onDeleteClicked(filterListResult[adapterPosition])
+                    callback.onDeleteClicked(filterListResult[adapterPosition], adapterPosition)
             }
 
             itemView.setOnClickListener {
@@ -49,7 +49,7 @@ class StudySetsAdapter(itemsList: ArrayList<StudySet>,
     }
 
     interface Callback {
-        fun onDeleteClicked(item: StudySet)
+        fun onDeleteClicked(item: StudySet, itemId:Int)
         fun onItemClicked(item: StudySet)
     }
 

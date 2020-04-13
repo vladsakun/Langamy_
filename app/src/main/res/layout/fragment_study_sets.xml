@@ -1,122 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout>
+    <data>
+        <variable
+            name="viewModel"
+            type="com.langamy.viewmodel.StudySetsViewModel" />
+    </data>
 
-    <RelativeLayout
-        android:id="@+id/study_sets_header"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="5dp"
-        android:animateLayoutChanges="true">
+        android:layout_height="match_parent">
 
         <RelativeLayout
-            android:id="@+id/searchDictation"
+            android:id="@+id/study_sets_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp">
+            android:layout_marginBottom="5dp"
+            android:animateLayoutChanges="true">
 
-            <EditText
-                android:id="@+id/search_dictation_ET"
+            <RelativeLayout
+                android:id="@+id/searchDictation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp">
+
+                <EditText
+                    android:id="@+id/search_dictation_ET"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_toStartOf="@+id/search_dictation_btn"
+                    android:backgroundTint="@color/darkColor"
+                    android:ems="10"
+                    android:hint="@string/enter_dictation_code"
+                    android:inputType="textPersonName" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/search_dictation_btn"
+                    style="@style/WhiteButtonWithBlueBorder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="4dp"
+                    android:text="@string/action_search"
+                    app:cornerRadius="3dp" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/create_study_set_BTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:backgroundTint="@color/blue"
+            android:text="@string/create_studyset"
+            android:visibility="gone" />
+
+        <RelativeLayout
+            android:id="@+id/study_sets_action_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/study_sets_header"
+            android:paddingStart="50dp"
+            android:paddingEnd="50dp">
+
+            <ImageButton
+                android:id="@+id/dictations"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_toStartOf="@+id/search_dictation_btn"
-                android:backgroundTint="@color/darkColor"
-                android:ems="10"
-                android:hint="@string/enter_dictation_code"
-                android:inputType="textPersonName" />
+                android:background="@drawable/bottom_border"
+                android:src="@drawable/ic_dictation_30dp"
+                android:tint="@color/lightDark">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/search_dictation_btn"
-                style="@style/WhiteButtonWithBlueBorder"
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/randomDictation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/bottom_border"
+                android:src="@drawable/ic_dice_black"
+                android:tint="@color/lightDark">
+
+            </ImageButton>
+
+            <ImageButton
+                android:id="@+id/recent_dictations"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="4dp"
-                android:text="@string/action_search"
-                app:cornerRadius="3dp" />
+                android:background="@drawable/bottom_border"
+                android:src="@drawable/ic_done_dictations_white_30dp"
+                android:tint="@color/lightDark">
+
+            </ImageButton>
+
         </RelativeLayout>
-    </RelativeLayout>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/create_study_set_BTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:backgroundTint="@color/blue"
-        android:text="@string/create_studyset"
-        android:visibility="gone" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/banner_ad"
+            android:layout_below="@id/study_sets_action_buttons"
+            android:layout_marginBottom="10dp"
+            android:scrollbars="vertical">
 
-    <RelativeLayout
-        android:id="@+id/study_sets_action_buttons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/study_sets_header"
-        android:paddingStart="50dp"
-        android:paddingEnd="50dp">
+        </androidx.recyclerview.widget.RecyclerView>
 
-        <ImageButton
-            android:id="@+id/dictations"
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/banner_ad"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:background="@drawable/bottom_border"
-            android:src="@drawable/ic_dictation_30dp"
-            android:tint="@color/lightDark">
-
-        </ImageButton>
-
-        <ImageButton
-            android:id="@+id/randomDictation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/banner_ad_height"
+            android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/bottom_border"
-            android:src="@drawable/ic_dice_black"
-            android:tint="@color/lightDark">
+            ads:adSize="BANNER"
+            ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
 
-        </ImageButton>
+        </com.google.android.gms.ads.AdView>
 
-        <ImageButton
-            android:id="@+id/recent_dictations"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/bottom_border"
-            android:src="@drawable/ic_done_dictations_white_30dp"
-            android:tint="@color/lightDark">
-
-        </ImageButton>
-
+        <include layout="@layout/custom_progress_bar" />
     </RelativeLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/banner_ad"
-        android:layout_below="@id/study_sets_action_buttons"
-        android:layout_marginBottom="10dp"
-        android:scrollbars="vertical">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
-    <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/banner_ad"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/banner_ad_height"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-3940256099942544/6300978111">
-
-    </com.google.android.gms.ads.AdView>
-
-    <include layout="@layout/custom_progress_bar" />
-</RelativeLayout>
+</layout>

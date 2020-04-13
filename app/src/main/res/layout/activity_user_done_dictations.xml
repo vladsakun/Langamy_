@@ -8,14 +8,6 @@
     <include layout="@layout/custom_progress_bar" />
 
     <TextView
-        android:id="@+id/recent_dictations_TV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/darkColor"
-        android:text="@string/recent_dictations" />
-
-    <TextView
         android:id="@+id/no_recent_dictations_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

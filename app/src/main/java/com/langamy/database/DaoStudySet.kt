@@ -7,8 +7,8 @@ import com.langamy.base.classes.StudySet
 @Dao
 interface DaoStudySet {
 
-    @Delete
-    fun delete(studySet: StudySet)
+    @Query("DELETE FROM study_set_table WHERE id=:id")
+    fun deleteById(id:Int)
 
     @Update
     fun update(studySet: StudySet?)

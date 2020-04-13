@@ -11,7 +11,7 @@ class ProfileViewModel(
 ) : ViewModel() {
 
     suspend fun deleteAllStudySets(){
-        studySetsRepository.deleteAllStudySets()
+        studySetsRepository.deleteAllLocalStudySets()
     }
 
     fun getUserPhotoUrl(): Uri?{

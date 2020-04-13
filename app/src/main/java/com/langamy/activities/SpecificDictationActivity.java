@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -176,6 +177,11 @@ public class SpecificDictationActivity extends AppCompatActivity {
         return true;
     }
 
+    private void updateActionBar(String dictationName) {
+        Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.dictation));
+        getSupportActionBar().setSubtitle(dictationName);
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -261,50 +267,11 @@ public class SpecificDictationActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<List<Dictation>> call, Response<List<Dictation>> response) {
                     if (response.code() == 500) {
-                        error = true;
-
-                        specificDictation_VIEW.setVisibility(View.GONE);
-                        progressBar.setVisibility(View.GONE);
-                        error_RL.setVisibility(View.VISIBLE);
+                        noDictation();
 
                         return;
                     }
-                    Dictation dictation = response.body().get(0);
-                    String otherWords = dictation.getWords();
-                    String markedWords = dictation.getMarked_words();
-                    List<Word> allWords = new ArrayList<>();
-                    try {
-                        JSONArray otherWordsJSONArray = new JSONArray(otherWords);
-                        JSONArray markedWordsJSONArray = new JSONArray(markedWords);
-                        List<Word> otherWordsList = convertJsonToWordObject(otherWordsJSONArray);
-                        List<Word> markedWordsList = convertJsonToWordObject(markedWordsJSONArray);
-                        globalMarkedWordsList.addAll(markedWordsList);
-                        globalOtherWordsList.addAll(otherWordsList);
-                        allWords.addAll(otherWordsList);
-                        allWords.addAll(markedWordsList);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    mWords.addAll(allWords);
-                    mAdapter.notifyDataSetChanged();
-
-                    dictationName.setText(dictation.getName());
-                    typeOfQuestions.setText(dictation.getType_of_questions());
-                    questionAmount.setText(String.valueOf(dictation.getAmount_of_words_for_dictation()));
-                    creator.setText(dictation.getCreator());
-                    dictationCode.setText(String.valueOf(dictation.getCode()));
-
-                    intent.putExtra(BaseVariables.DICTATION_MESSAGE, dictation);
-                    intent.putExtra(BaseVariables.DICTATION_ID_MESSAGE, dictation.getId());
-                    intent.putExtra(BaseVariables.DICTATION_TYPE_OF_QUESTIONS_MESSAGE, dictation.getType_of_questions());
-                    intent.putExtra(BaseVariables.FROM_LANG_MESSAGE, dictation.getLanguage_from());
-                    intent.putExtra(BaseVariables.TO_LANG_MESSAGE, dictation.getLanguage_to());
-
-                    progressBar.setVisibility(View.GONE);
-
-                    startDictationBtn.setEnabled(true);
-
-                    specificDictation_VIEW.setVisibility(View.VISIBLE);
+                    prepareDictation(response.body().get(0));
 
                 }
 
@@ -319,51 +286,10 @@ public class SpecificDictationActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<Dictation> call, Response<Dictation> response) {
                     if (response.code() == 500) {
-                        error = true;
-
-                        specificDictation_VIEW.setVisibility(View.GONE);
-                        progressBar.setVisibility(View.GONE);
-                        error_RL.setVisibility(View.VISIBLE);
-
+                        noDictation();
                         return;
                     }
-                    Dictation dictation = response.body();
-                    String otherWords = dictation.getWords();
-                    String markedWords = dictation.getMarked_words();
-                    List<Word> allWords = new ArrayList<>();
-                    try {
-                        JSONArray otherWordsJSONArray = new JSONArray(otherWords);
-                        JSONArray markedWordsJSONArray = new JSONArray(markedWords);
-                        List<Word> otherWordsList = convertJsonToWordObject(otherWordsJSONArray);
-                        List<Word> markedWordsList = convertJsonToWordObject(markedWordsJSONArray);
-                        globalMarkedWordsList.addAll(markedWordsList);
-                        globalOtherWordsList.addAll(otherWordsList);
-                        allWords.addAll(otherWordsList);
-                        allWords.addAll(markedWordsList);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    mWords.addAll(allWords);
-                    mAdapter.notifyDataSetChanged();
-
-                    dictationName.setText(dictation.getName());
-                    typeOfQuestions.setText(dictation.getType_of_questions());
-                    questionAmount.setText(String.valueOf(dictation.getAmount_of_words_for_dictation()));
-                    creator.setText(dictation.getCreator());
-                    dictationCode.setText(String.valueOf(dictation.getCode()));
-
-                    intent.putExtra(BaseVariables.DICTATION_MESSAGE, dictation);
-                    intent.putExtra(BaseVariables.DICTATION_ID_MESSAGE, dictation.getId());
-                    intent.putExtra(BaseVariables.DICTATION_TYPE_OF_QUESTIONS_MESSAGE, dictation.getType_of_questions());
-                    intent.putExtra(BaseVariables.FROM_LANG_MESSAGE, dictation.getLanguage_from());
-                    intent.putExtra(BaseVariables.TO_LANG_MESSAGE, dictation.getLanguage_to());
-
-                    progressBar.setVisibility(View.GONE);
-
-                    startDictationBtn.setEnabled(true);
-
-                    specificDictation_VIEW.setVisibility(View.VISIBLE);
-
+                    prepareDictation(response.body());
                 }
 
                 @Override
@@ -372,6 +298,59 @@ public class SpecificDictationActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void noDictation() {
+
+        error = true;
+
+        specificDictation_VIEW.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        error_RL.setVisibility(View.VISIBLE);
+
+    }
+
+    private void prepareDictation(Dictation dictation) {
+
+        String otherWords = dictation.getWords();
+        String markedWords = dictation.getMarked_words();
+        List<Word> allWords = new ArrayList<>();
+        try {
+            JSONArray otherWordsJSONArray = new JSONArray(otherWords);
+            JSONArray markedWordsJSONArray = new JSONArray(markedWords);
+            List<Word> otherWordsList = convertJsonToWordObject(otherWordsJSONArray);
+            List<Word> markedWordsList = convertJsonToWordObject(markedWordsJSONArray);
+            globalMarkedWordsList.addAll(markedWordsList);
+            globalOtherWordsList.addAll(otherWordsList);
+            allWords.addAll(otherWordsList);
+            allWords.addAll(markedWordsList);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mWords.addAll(allWords);
+        mAdapter.notifyDataSetChanged();
+
+        dictationName.setText(dictation.getName());
+        typeOfQuestions.setText(dictation.getType_of_questions());
+        questionAmount.setText(String.valueOf(dictation.getAmount_of_words_for_dictation()));
+        creator.setText(dictation.getCreator());
+        dictationCode.setText(String.valueOf(dictation.getCode()));
+
+        intent.putExtra(BaseVariables.DICTATION_MESSAGE, dictation);
+        intent.putExtra(BaseVariables.DICTATION_ID_MESSAGE, dictation.getId());
+        intent.putExtra(BaseVariables.DICTATION_TYPE_OF_QUESTIONS_MESSAGE, dictation.getType_of_questions());
+        intent.putExtra(BaseVariables.FROM_LANG_MESSAGE, dictation.getLanguage_from());
+        intent.putExtra(BaseVariables.TO_LANG_MESSAGE, dictation.getLanguage_to());
+
+        progressBar.setVisibility(View.GONE);
+
+        startDictationBtn.setEnabled(true);
+
+        updateActionBar(dictation.getName());
+
+        specificDictation_VIEW.setVisibility(View.VISIBLE);
+
+
     }
 
 }

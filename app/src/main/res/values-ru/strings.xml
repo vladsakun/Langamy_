@@ -64,7 +64,7 @@
     <string name="min_words_in_studyset">Study set должен иметь 4 или более слов</string>
     <string name="from">Язык с </string>
     <string name="to">Язык на</string>
-
+    <string name="dictation">Диктант</string>
     <string name="fancy_create_studyset">Создадим первый studyset</string>
     <string name="fancy_done_dictations">Здесь храняться последние 20 диктантов, которые Вы прошли</string>
     <string name="fancy_my_dictations">Тут будут сохраняться все созданные Вами диктанты</string>
@@ -99,6 +99,9 @@
     <string name="your_dictations">Ваши диктанты</string>
     <string name="fancy_random_dictations">Испытай себе и пройди случайный диктант</string>
     <string name="fancy_timer">Установить временной лимит для ответа (только для викторины)</string>
+    <string name="recent_dictations">Последние диктанты</string>
+    <string name="you_have_not_passed_any_dictation">Пока здесь нету диктантов. Пройдите случайный</string>
+    <string name="code_must_be_numeric">Код должен состоять только из цифр</string>
 
 
 </resources>

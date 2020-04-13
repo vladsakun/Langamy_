@@ -59,21 +59,6 @@ class ProfileKotlinFragment : ScopedFragment(), KodeinAware {
 
         Glide.with(this).load(personPhoto).into(account_image);
 
-//        personPhoto?.let {
-//            try {
-//                if (Build.VERSION.SDK_INT < 28) {
-//                    val bitmap = MediaStore.Images.Media.getBitmap(activity!!.contentResolver, personPhoto)
-//                    account_image.setImageBitmap(bitmap)
-//                } else {
-//                    val source = ImageDecoder.createSource(activity!!.contentResolver, personPhoto)
-//                    val bitmap = ImageDecoder.decodeBitmap(source)
-//                    account_image.setImageBitmap(bitmap)
-//                }
-//            } catch (e: IOException) {
-//                e.printStackTrace()
-//            }
-//        }
-
         sign_out_btn.setOnClickListener { signOut() }
     }
 
