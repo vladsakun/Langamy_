@@ -7,10 +7,7 @@ import com.langamy.provider.UserProviderImpl
 import com.langamy.repositories.StudySetsRepository
 import com.langamy.repositories.StudySetsRepositoryImpl
 import com.langamy.retrofit.*
-import com.langamy.viewmodel.EditStudySetViewModelFactory
-import com.langamy.viewmodel.ProfileViewModelFactory
-import com.langamy.viewmodel.SpecificStudySetsViewModelFactory
-import com.langamy.viewmodel.StudySetsViewModelFactory
+import com.langamy.viewmodel.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
@@ -48,6 +45,7 @@ class LangamyApplication : Application(), KodeinAware {
         bind() from provider { ProfileViewModelFactory(instance(), instance()) }
         bind() from provider { EditStudySetViewModelFactory(instance()) }
         bind() from provider { SpecificStudySetsViewModelFactory(instance()) }
+        bind() from provider { LearnActivityViewModelFactory(instance()) }
 
     }
 }

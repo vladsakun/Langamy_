@@ -14,8 +14,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.langamy.activities.MainActivity
 import com.langamy.base.kotlin.ScopedFragment
-import com.langamy.viewmodel.ProfileViewModel
 import com.langamy.viewmodel.ProfileViewModelFactory
+import com.langamy.viewmodelSpecificStudySets.ProfileViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware

@@ -68,7 +68,7 @@ class StudySetsRepositoryImpl(
     }
 
     override suspend fun updateStudySet(studySet: StudySet) {
-        GlobalScope.launch(Dispatchers.IO){
+        GlobalScope.launch(Dispatchers.IO) {
             daoStudySet.update(studySet)
         }
     }
@@ -81,7 +81,23 @@ class StudySetsRepositoryImpl(
     }
 
     private suspend fun fetchStudySetsList() {
-        langamyNetworkDataSource.fetchStudySets(userProvider.getUserEmail())
+        patchUnsyncedStudySets()
+//        langamyNetworkDataSource.fetchStudySets(userProvider.getUserEmail())
+    }
+
+    private suspend fun patchUnsyncedStudySets() {
+
+        GlobalScope.launch(Dispatchers.IO) {
+
+            val studySetsList = daoStudySet.getUnsyncedStudySet()
+
+            for (studySet in studySetsList) {
+                studySet.isSync_status = true
+                langamyNetworkDataSource.patchStudySet(studySet)
+            }
+
+            langamyNetworkDataSource.fetchStudySets(userProvider.getUserEmail())
+        }
     }
 
     private suspend fun deleteRemoteStudySet(id: Int) {

@@ -1,4 +1,4 @@
-package com.langamy.viewmodel
+package com.langamy.viewmodelSpecificStudySets
 
 import android.net.Uri
 import androidx.lifecycle.ViewModel

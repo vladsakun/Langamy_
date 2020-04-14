@@ -11,4 +11,6 @@ interface LangamyNetworkDataSource {
             userEmail:String
     )
     suspend fun deleteStudySet(id:Int)
+
+    suspend fun patchStudySet(studySet: StudySet)
 }

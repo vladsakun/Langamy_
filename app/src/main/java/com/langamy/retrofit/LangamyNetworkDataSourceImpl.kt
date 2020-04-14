@@ -37,4 +37,12 @@ class LangamyNetworkDataSourceImpl(
         }
     }
 
+    override suspend fun patchStudySet(studySet: StudySet) {
+        try{
+            langamyApiService.patchStudySet(studySet.id, studySet).await()
+        }catch (e: NoConnectivityException){
+            Log.e("Connectivity", "No internet connection")
+        }
+    }
+
 }

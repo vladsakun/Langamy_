@@ -4,7 +4,6 @@ import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterF
 import com.langamy.base.classes.StudySet
 import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
-import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -19,7 +18,7 @@ interface LangamyApiService {
     fun getSpecificStudySet(@Path("study_set_id") study_set_id: Int): Deferred<StudySet?>?
 
     @PATCH("api/studyset/{id}/")
-    fun patchStudySet(@Path("id") id: Int, @Body studySet: StudySet?): Deferred<StudySet?>?
+    fun patchStudySet(@Path("id") id: Int, @Body studySet: StudySet?): Deferred<StudySet>
 
     @DELETE("api/studyset/{id}/")
     fun deleteStudySet(@Path("id") id: Int): Deferred<Void>
