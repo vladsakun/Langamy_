@@ -28,7 +28,7 @@
     <string name="error_sign_in_failed">Вход не выполнен, подробности смотрите в журналах.</string>
     <string name="title">Название</string>
     <string name="scan_document">Сканирование документа</string>
-    <string name="amount_of_words">Количество слов:</string>
+    <string name="amount_of_words">Количество слов: %1$s</string>
     <string name="enable_auto_translate">Включить автоматический перевод</string>
 
     <string name="commit_words">Подтвердить слова</string>

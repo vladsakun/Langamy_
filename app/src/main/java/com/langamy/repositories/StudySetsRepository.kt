@@ -10,4 +10,5 @@ interface StudySetsRepository {
     suspend fun deleteStudySet(id:Int)
     suspend fun deleteLocalStudySet(id:Int)
     suspend fun updateStudySet(studySet: StudySet)
+    suspend fun insertStudySet(studySet: StudySet)
 }

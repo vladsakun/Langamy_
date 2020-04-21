@@ -3,7 +3,7 @@ package com.langamy.viewmodel
 import androidx.lifecycle.ViewModel
 import com.langamy.base.classes.StudySet
 import com.langamy.repositories.StudySetsRepository
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -12,8 +12,14 @@ class EditStudySetViewModel(
 ): ViewModel() {
 
     fun updateStudySet(studySet:StudySet){
-        GlobalScope.launch(Dispatchers.IO){
+        GlobalScope.launch(IO){
             studySetsRepository.updateStudySet(studySet)
+        }
+    }
+
+    fun insertStudySet(studySet: StudySet){
+        GlobalScope.launch(IO){
+            studySetsRepository.insertStudySet(studySet)
         }
     }
 }

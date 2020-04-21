@@ -73,6 +73,12 @@ class StudySetsRepositoryImpl(
         }
     }
 
+    override suspend fun insertStudySet(studySet: StudySet) {
+        GlobalScope.launch(Dispatchers.IO) {
+            daoStudySet.insertStudySet(studySet)
+        }
+    }
+
     private suspend fun initStudySetsData() {
 
         if (isFetchStudySetsNeeded()) {

@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.bignerdranch.android.main.R
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
@@ -42,12 +43,13 @@ import com.langamy.base.classes.TranslationResponse
 import com.langamy.base.classes.Word
 import com.langamy.base.kotlin.ScopedFragment
 import com.langamy.database.StudySetsBaseHelper
-import com.langamy.viewmodel.StudySetsViewModel
-import com.langamy.viewmodel.StudySetsViewModelFactory
+import com.langamy.viewmodel.EditStudySetViewModel
+import com.langamy.viewmodel.EditStudySetViewModelFactory
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.custom_progress_bar.*
 import kotlinx.android.synthetic.main.fragment_create_study_set.*
+import kotlinx.coroutines.launch
 import me.toptas.fancyshowcase.FancyShowCaseQueue
 import me.toptas.fancyshowcase.FancyShowCaseView
 import me.toptas.fancyshowcase.FocusShape
@@ -73,8 +75,8 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
 
     override val kodein by closestKodein()
 
-    private val viewModelFactory by instance<StudySetsViewModelFactory>()
-    private lateinit var viewModel: StudySetsViewModel
+    private val viewModelFactory by instance<EditStudySetViewModelFactory>()
+    private lateinit var viewModel: EditStudySetViewModel
 
     private var mStudySet: StudySet? = null
     var retrofit = BaseVariables.retrofit
@@ -114,6 +116,16 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
         wordsForSuggestions = save()
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(EditStudySetViewModel::class.java)
+
+    }
+
+    private fun insertLocalStudySet(studySet: StudySet) = launch {
+        viewModel.insertStudySet(studySet)
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -130,6 +142,8 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
         MobileAds.initialize(context, BaseVariables.REWARDED_VIDEO_TEST)
         mAd = MobileAds.getRewardedVideoAdInstance(context)
         mAd.rewardedVideoAdListener = this
+        val languageFromSpinner = view.findViewById<Spinner>(R.id.language_form_spinner)
+        val languageToSpinner = view.findViewById<Spinner>(R.id.language_to_spinner)
         loadRewardedVideoAd()
 
         //Inflater for adding words
@@ -139,23 +153,23 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
         val baseVariables = BaseVariables()
         val adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_item, baseVariables.languages)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        language_form_spinner.adapter = adapter
-        language_to_spinner.adapter = adapter
+        languageFromSpinner.adapter = adapter
+        languageToSpinner.adapter = adapter
 
         // заголовок
-        language_form_spinner.setPrompt("Language from")
-        language_to_spinner.setPrompt("Language to")
+        languageFromSpinner.prompt = ("Language from")
+        languageToSpinner.prompt = ("Language to")
 
         //Create StudySet
 
         // выделяем элемент
-        language_form_spinner.setSelection(0)
-        language_to_spinner.setSelection(1)
+        languageFromSpinner.setSelection(0)
+        languageToSpinner.setSelection(1)
         for (i in 1..2) {
             val listWordView = createListWordItem()
             mWordsLinearLayout.addView(listWordView, mWordsLinearLayout.getChildCount())
         }
-        language_form_spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        languageFromSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View,
                                         position: Int, id: Long) {
                 languageFromTranslate = baseVariables.languageS_SHORT[position]
@@ -163,7 +177,7 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
 
             override fun onNothingSelected(arg0: AdapterView<*>?) {}
         })
-        language_to_spinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        languageToSpinner.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View,
                                         position: Int, id: Long) {
                 languageToTranslate = baseVariables.languageS_SHORT[position]
@@ -280,11 +294,7 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
                 if (wordList.length() < 4) {
                     Toast.makeText(context, getString(R.string.min_words_in_studyset), Toast.LENGTH_SHORT).show()
                 } else {
-                    if (sendEditRequest) {
-                        updateStudySet(studySetId, wordList)
-                    } else {
-                        createStudySet(mTitleEt!!.text.toString(), wordList)
-                    }
+                    createStudySet(mTitleEt.text.toString(), wordList)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -459,12 +469,14 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
         val acct = GoogleSignIn.getLastSignedInAccount(context)
         val studySet = StudySet(acct!!.email, name, wordList.toString(), languageToTranslate, languageFromTranslate, wordList.length())
         val call = mLangamyAPI.createStudySet(studySet)
+
         call.enqueue(object : Callback<StudySet> {
             override fun onResponse(call: Call<StudySet>, response: Response<StudySet>) {
                 if (!response.isSuccessful) {
                     Toast.makeText(context, response.code().toString(), Toast.LENGTH_SHORT).show()
                     return
                 }
+                insertLocalStudySet(response.body()!!)
                 val intent = Intent(context, SpecificStudySetActivity::class.java)
                 intent.putExtra(BaseVariables.STUDY_SET_ID_MESSAGE, response.body()!!.id)
                 startActivity(intent)
@@ -480,9 +492,6 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
                 Toast.makeText(context, t.toString(), Toast.LENGTH_SHORT).show()
             }
         })
-        //
-//        NetworkMonitor networkMonitor = new NetworkMonitor();
-//        networkMonitor.syncDb(getContext());
     }
 
     override fun onResume() {

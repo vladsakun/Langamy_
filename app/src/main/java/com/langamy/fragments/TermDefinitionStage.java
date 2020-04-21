@@ -3,9 +3,6 @@ package com.langamy.fragments;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.speech.tts.TextToSpeech;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
 
 import com.bignerdranch.android.main.R;
 import com.langamy.base.classes.Answer;
@@ -49,6 +48,11 @@ public class TermDefinitionStage extends Fragment  {
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        textToSpeech.shutdown();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -18,9 +18,6 @@ class StudySetsAdapter(itemsList: ArrayList<StudySet>,
         RecyclerView.Adapter<StudySetsAdapter.StudySetsHolder>(), Filterable {
 
     internal var mItemList = itemsList
-        set(value) {
-            field = value
-        }
 
     internal var filterListResult: List<StudySet> = itemsList
 
@@ -33,7 +30,7 @@ class StudySetsAdapter(itemsList: ArrayList<StudySet>,
         fun bind(item: StudySet) {
 
             title.text = item.name
-            amountOfWords.text = item.amount_of_words.toString()
+            amountOfWords.text = context?.getString(R.string.amount_of_words, item.amount_of_words.toString())
 
             delete.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION)

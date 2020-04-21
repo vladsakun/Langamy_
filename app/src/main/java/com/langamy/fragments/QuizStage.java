@@ -99,6 +99,11 @@ public class QuizStage extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        textToSpeech.shutdown();
+    }
 
     public Answer checkAnswer(String text) {
 

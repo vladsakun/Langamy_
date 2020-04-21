@@ -31,6 +31,12 @@ public class DefinitionTermStage extends Fragment {
         this.word = word;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        textToSpeech.shutdown();
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

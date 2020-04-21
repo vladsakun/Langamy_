@@ -27,7 +27,7 @@
     <string name="error_sign_in_failed">Sign in failed, see logs for details.</string>
     <string name="title">Title</string>
     <string name="scan_document">Scan document</string>
-    <string name="amount_of_words">Amount of words:</string>
+    <string name="amount_of_words">Amount of words: %1$s</string>
     <string name="enable_auto_translate">Enable auto translate</string>
 
     <string name="commit_words">Commit words</string>
