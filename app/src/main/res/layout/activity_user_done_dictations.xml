@@ -7,19 +7,43 @@
 
     <include layout="@layout/custom_progress_bar" />
 
-    <TextView
-        android:id="@+id/no_recent_dictations_TV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="@string/you_have_not_passed_any_dictation"
-        android:textColor="@color/blue"
-        android:textSize="20sp"
-        android:visibility="gone" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/done_dictations_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/recent_dictations_TV" />
+
+
+    <LinearLayout
+        android:id="@+id/no_recent_dictations_LL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/no_recent_dictations_TV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/you_have_not_passed_any_dictation"
+            android:textColor="@color/blue"
+            android:textSize="20sp" />
+
+
+        <ImageButton
+            android:padding="10dp"
+            android:clickable="true"
+            android:id="@+id/randomDictation"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@null"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_dice_black"
+            android:tint="@color/lightDark"
+            android:focusable="true" />
+    </LinearLayout>
+
 </RelativeLayout>

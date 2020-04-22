@@ -115,6 +115,11 @@ public class CardModeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        textToSpeech.shutdown();
+    }
 
     private void setCardStackAdapter() {
         cardItems = new ArrayList<>();

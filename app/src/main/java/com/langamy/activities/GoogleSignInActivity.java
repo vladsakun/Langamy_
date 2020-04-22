@@ -2,35 +2,14 @@ package com.langamy.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.transition.Scene;
-import androidx.transition.Slide;
-import androidx.transition.Transition;
-import androidx.transition.TransitionManager;
-import androidx.transition.TransitionSet;
-import androidx.viewpager.widget.ViewPager;
-import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.material.tabs.TabLayout;
-import com.langamy.adapters.SliderAdapterExample;
-import com.langamy.api.LangamyAPI;
 import com.bignerdranch.android.main.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -45,6 +24,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.langamy.adapters.SliderAdapterExample;
+import com.langamy.api.LangamyAPI;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.GreetingItem;
 import com.langamy.base.classes.User;
@@ -52,18 +33,11 @@ import com.smarteist.autoimageslider.IndicatorAnimations;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
-import me.toptas.fancyshowcase.FancyShowCaseView;
-import me.toptas.fancyshowcase.listener.DismissListener;
-import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 //import com.google.firebase.quickstart.auth.R;
 
 /**
@@ -124,40 +98,6 @@ public class GoogleSignInActivity extends BaseActivity implements
         mAuth = FirebaseAuth.getInstance();
         // [END initialize_auth]
     }
-
-    private void playHelp(Intent intent) {
-
-        View greeting = findViewById(R.id.greeting_RL);
-        ViewGroup parent = findViewById(R.id.main_layout);
-        RelativeLayout main_RL = findViewById(R.id.google_sign_in);
-
-        TransitionSet set = new TransitionSet();
-
-        set.setOrdering(TransitionSet.ORDERING_TOGETHER);
-
-        Transition transitionTop = new Slide(Gravity.TOP);
-        transitionTop.setDuration(200);
-        transitionTop.addTarget(main_RL);
-
-        Transition transition = new Slide(Gravity.BOTTOM);
-        transition.setDuration(600);
-        transition.addTarget(R.id.greeting_RL);
-
-        set.addTransition(transitionTop);
-        set.addTransition(transition);
-
-        TransitionManager.go(new Scene(parent), set);
-        greeting.setVisibility(View.VISIBLE);
-        main_RL.setVisibility(View.GONE);
-
-        greeting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(intent);
-            }
-        });
-    }
-
     // [START on_start_check_user]
     @Override
     public void onStart() {

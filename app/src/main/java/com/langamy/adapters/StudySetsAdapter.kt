@@ -11,15 +11,19 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.main.R
 import com.langamy.base.classes.StudySet
+import java.util.*
+import kotlin.collections.ArrayList
 
-class StudySetsAdapter(itemsList: ArrayList<StudySet>,
+class StudySetsAdapter(var itemsList: ArrayList<StudySet>,
                        var context: Context?,
                        val callback: Callback) :
         RecyclerView.Adapter<StudySetsAdapter.StudySetsHolder>(), Filterable {
 
-    internal var mItemList = itemsList
+    var filterListResult = ArrayList<StudySet>()
 
-    internal var filterListResult: List<StudySet> = itemsList
+    init {
+        filterListResult = itemsList
+    }
 
     inner class StudySetsHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -63,22 +67,23 @@ class StudySetsAdapter(itemsList: ArrayList<StudySet>,
             override fun performFiltering(charString: CharSequence?): FilterResults {
                 val charSearch = charString.toString()
                 if (charSearch.isEmpty())
-                    filterListResult = mItemList
+                    filterListResult = itemsList
                 else {
                     val resultList = ArrayList<StudySet>()
-                    for (row in mItemList) {
-                        if (row.name!!.toLowerCase().contains(charSearch.toLowerCase()))
-                            resultList.add(row)
+                    for (row in itemsList) {
+                        if (row.name!!.toLowerCase(Locale.ROOT).contains(charSearch.toLowerCase(Locale.ROOT)))
+                        resultList.add(row)
                     }
                     filterListResult = resultList
                 }
-                val filterResults = Filter.FilterResults()
+                val filterResults = FilterResults()
                 filterResults.values = filterListResult
                 return filterResults
             }
 
+            @Suppress("UNCHECKED_CAST")
             override fun publishResults(charSequence: CharSequence?, filterResults: FilterResults?) {
-                filterListResult = filterResults!!.values as List<StudySet>
+                filterListResult = filterResults?.values as ArrayList<StudySet>
                 notifyDataSetChanged()
             }
 

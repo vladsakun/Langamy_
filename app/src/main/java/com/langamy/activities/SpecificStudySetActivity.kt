@@ -51,7 +51,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
     private var learnIntent: Intent? = null
     private var cardIntent: Intent? = null
     private lateinit var mProgressBar: ProgressBar
-    private lateinit var studySetTitle: TextView
+    private lateinit var studySetName: String
     private lateinit var containerForRecylcler: FrameLayout
     private lateinit var parentForContainer: FrameLayout
     private lateinit var studyCategories_LL: LinearLayout
@@ -87,7 +87,6 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
 
         //Views
         mProgressBar = findViewById(R.id.progressBar)
-        studySetTitle = findViewById(R.id.title_of_studyset)
         learnBtn = findViewById(R.id.learn_btn)
         cardMode_BTN = findViewById(R.id.card_mode_btn)
         createDictationBtn = findViewById(R.id.make_dictation_btn)
@@ -119,6 +118,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         fragment = MarkedWordsFragment(mWordList)
         fragmentTransaction.add(R.id.container_for_recycler, fragment!!)
         fragmentTransaction.commit()
+
         inizializeRecyclerView(mWordList!!)
         learnBtn.setOnClickListener(View.OnClickListener {
             if (studyMarked) {
@@ -146,7 +146,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         })
         createDictationBtn.setOnClickListener(View.OnClickListener {
             makeDictationIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, mWordList)
-            makeDictationIntent!!.putExtra(BaseVariables.TITLE_MESSAGE, studySetTitle.getText().toString())
+            makeDictationIntent!!.putExtra(BaseVariables.TITLE_MESSAGE, studySetName)
             startActivity(makeDictationIntent)
             finish()
         })
@@ -156,10 +156,10 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
             studyAll_MBTN.setTextColor(getColor(R.color.white))
             studyMarked_MBTN.setBackgroundColor(getColor(R.color.white))
             studyMarked_MBTN.setTextColor(getColor(R.color.blue))
-            studyAll_MBTN.setClickable(false)
-            studyMarked_MBTN.setClickable(true)
-            parentForContainer.setVisibility(View.GONE)
-            wordsRecyclerView.setVisibility(View.VISIBLE)
+            studyAll_MBTN.isClickable = false
+            studyMarked_MBTN.isClickable = true
+            parentForContainer.visibility = View.GONE
+            wordsRecyclerView.visibility = View.VISIBLE
         })
         studyMarked_MBTN.setOnClickListener(View.OnClickListener {
             studyMarked = true
@@ -177,25 +177,6 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         bindUI(cloned)
 
     }
-
-//    private fun cloneStudySet(studySet_id: Int) {
-//        val account = GoogleSignIn.getLastSignedInAccount(this)
-//        val call = mLangamyAPI.cloneStudySet(studySet_id, account!!.email)
-//        call.enqueue(object : Callback<String> {
-//            override fun onResponse(call: Call<String>, response: Response<String>) {
-//                if (!response.isSuccessful) {
-//                    Toast.makeText(this@SpecificStudySetActivity, response.code().toString(), Toast.LENGTH_SHORT).show()
-//                    return
-//                }
-//                studySetId = response.body()!!.toInt()
-//                getSpecificStudySet(response.body()!!.toInt())
-//            }
-//
-//            override fun onFailure(call: Call<String>, t: Throwable) {
-//                Toast.makeText(this@SpecificStudySetActivity, t.toString(), Toast.LENGTH_SHORT).show()
-//            }
-//        })
-//    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
@@ -233,11 +214,12 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
     }
 
     private fun inizializeRecyclerView(words: List<Word>) {
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-        wordsRecyclerView!!.layoutManager = layoutManager
+        wordsRecyclerView.isNestedScrollingEnabled = false
+        wordsRecyclerView.setHasFixedSize(true)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        wordsRecyclerView.layoutManager = layoutManager
         mAdapter = SpecificStudySetAdapterInActivity(words)
-        wordsRecyclerView!!.adapter = mAdapter
-        wordsRecyclerView!!.isNestedScrollingEnabled = false
+        wordsRecyclerView.adapter = mAdapter
     }
 
     private fun playHelp() {
@@ -253,17 +235,6 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
                 })
                 .backgroundColor(getColor(R.color.blueForFancy))
                 .build()
-        //
-//        FancyShowCaseView mark = new FancyShowCaseView.Builder(this)
-//                .focusOn(wordsRecyclerView.getChildAt(0).findViewById(R.id.starBtn))
-//                .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
-//                    @Override
-//                    public void onViewInflated(View view) {
-//                        BaseVariables.setCustomFancyCaseView(view, getString(R.string.fancy_star), fq);
-//                    }
-//                })
-//                .backgroundColor(getColor(R.color.blueForFancy))
-//                .build();
         val studyMarked = FancyShowCaseView.Builder(this)
                 .focusOn(studyMarked_MBTN)
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
@@ -290,33 +261,6 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         fq.show()
     }
 
-//    fun getSpecificStudySet(studySet_id: Int) {
-//        if (BaseVariables.checkNetworkConnection(this)) {
-//
-//            val call = mLangamyAPI.getSpecificStudySet(studySet_id)
-//            call.enqueue(object : Callback<StudySet?> {
-//
-//                override fun onResponse(call: Call<StudySet?>, response: Response<StudySet?>) {
-//                    if (!response.isSuccessful) {
-//                        Log.d("SPECIFIC_RESPONSE", response.code().toString())
-//                        return
-//                    }
-//                    initializeStudySetActivity(response.body())
-//                }
-//
-//                override fun onFailure(call: Call<StudySet?>, t: Throwable) {
-//                    Toast.makeText(this@SpecificStudySetActivity, t.toString(), Toast.LENGTH_SHORT).show()
-//                }
-//            })
-//        } else {
-//            initializeStudySetActivity(readDataFromLocaleStorage(studySet_id))
-//            createDictationBtn!!.setOnClickListener {
-//                Toast.makeText(this@SpecificStudySetActivity, "To make a dictation" +
-//                        " you need an internet connection", Toast.LENGTH_SHORT).show()
-//            }
-//        }
-//    }
-
     fun initializeStudySetActivity(studySet: StudySet?) {
         mWordList!!.clear()
 
@@ -334,14 +278,14 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         }
         fragment!!.words = mWordList
         mAdapter!!.notifyDataSetChanged()
-        studyCategories_LL!!.visibility = View.VISIBLE
-        studySetTitle!!.text = studySet.name
+        studyCategories_LL.visibility = View.VISIBLE
+        studySetName = studySet.name
         editStudySetActivityIntent!!.putExtra(BaseVariables.STUDY_SET_MESSAGE, studySet)
         learnIntent!!.putExtra(BaseVariables.STUDY_SET_MESSAGE, studySet)
         cardIntent!!.putExtra(BaseVariables.FROM_LANG_MESSAGE, studySet.language_from as Serializable)
         makeDictationIntent!!.putExtra(BaseVariables.FROM_LANG_MESSAGE, studySet.language_from)
         makeDictationIntent!!.putExtra(BaseVariables.TO_LANG_MESSAGE, studySet.language_to)
-        mProgressBar!!.visibility = View.GONE
+        mProgressBar.visibility = View.GONE
         window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
         val sf = getPreferences(Context.MODE_PRIVATE)
         val help = sf.getBoolean(BaseVariables.HELP_SPECIFIC_STUDYSET, true)
@@ -349,8 +293,9 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         if (help) {
             playHelp()
             editor.putBoolean(BaseVariables.HELP_SPECIFIC_STUDYSET, false)
-            editor.commit()
+            editor.apply()
         }
+
     }
 
     private fun convertJsonArrayToArray(words: String): ArrayList<Word> {
@@ -371,10 +316,6 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
             e.printStackTrace()
         }
         return array
-    }
-
-    override fun onResume() {
-        super.onResume()
     }
 
     //Adapter for word recyclerview

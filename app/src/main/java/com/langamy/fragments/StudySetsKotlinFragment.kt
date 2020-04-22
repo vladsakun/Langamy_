@@ -16,10 +16,8 @@ import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.main.R
 import com.google.android.gms.ads.AdRequest
-import com.google.android.material.card.MaterialCardView
 import com.langamy.activities.*
 import com.langamy.adapters.StudySetsAdapter
 import com.langamy.base.classes.BaseVariables
@@ -140,6 +138,7 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
     private fun updateStudySetsList(studySetsList: List<StudySet>) {
         items = studySetsList as ArrayList<StudySet>
         mAdapter.filterListResult = studySetsList
+        mAdapter.itemsList = studySetsList
         mAdapter.notifyDataSetChanged()
     }
 
@@ -156,7 +155,6 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
 
         searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                mAdapter.filter.filter(query)
                 return false
             }
 

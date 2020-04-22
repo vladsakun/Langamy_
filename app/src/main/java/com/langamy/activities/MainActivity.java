@@ -1,10 +1,11 @@
 package com.langamy.activities;
 
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -27,8 +28,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.langamy.api.LangamyAPI;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.ConnectionModel;
-import com.langamy.base.classes.NetworkMonitor;
-import com.langamy.database.StudySetsBaseHelper;
 import com.langamy.fragments.CreateStudySetsFragment;
 import com.langamy.fragments.ProfileFragment;
 import com.langamy.fragments.ProfileKotlinFragment;
@@ -37,7 +36,10 @@ import com.langamy.viewmodel.MainViewModel;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.Objects;
 
 import me.toptas.fancyshowcase.FancyShowCaseQueue;
 import me.toptas.fancyshowcase.FancyShowCaseView;
@@ -52,16 +54,12 @@ public class MainActivity extends AppCompatActivity {
     CreateStudySetsFragment createStudySetsFragment;
 
     private ArrayList<Fragment> fragments;
-    private SQLiteDatabase mDatabase;
 
-    private BroadcastReceiver broadcastReceiver;
     public Retrofit retrofit = BaseVariables.retrofit;
     public LangamyAPI mLangamyAPI = retrofit.create(LangamyAPI.class);
-    private GoogleSignInAccount acct;
     private ViewPager2 mViewPager;
     private TabLayout tabLayout;
     private RelativeLayout mOfflineRelativeLayout;
-    private ImageButton infoBtn;
 
     private int[] tabIcons = {
             R.drawable.ic_my_studysets,
@@ -73,16 +71,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        setContentView(R.layout.start_activity);
+
         SharedPreferences sf = getPreferences(MODE_PRIVATE);
         SharedPreferences.Editor ed = sf.edit();
         try {
             sf.getBoolean(BaseVariables.HELP_CREATE_STUDYSETS_FRAGMENT, true);
         } catch (Exception e) {
             ed.putBoolean(BaseVariables.HELP_CREATE_STUDYSETS_FRAGMENT, true);
-            ed.commit();
+            ed.apply();
         }
 
-        acct = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+        GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
 
         if (acct == null) {
             Intent intent = new Intent(this, GoogleSignInActivity.class);
@@ -104,12 +104,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        setContentView(R.layout.start_activity);
-
         mViewPager = findViewById(R.id.pager);
         tabLayout = findViewById(R.id.tab_layout);
         mOfflineRelativeLayout = findViewById(R.id.offline_mode_RL);
-        infoBtn = findViewById(R.id.offline_mode_IB);
+        ImageButton infoBtn = findViewById(R.id.offline_mode_IB);
 
         //Fragment inizialization
         mProfileFragment = new ProfileFragment();
@@ -122,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         fragments.add(createStudySetsFragment);
         fragments.add(new ProfileKotlinFragment());
 
-        mViewPager.setAdapter(createCardAdapter());
+        mViewPager.setAdapter(createAdapter());
         mViewPager.setOffscreenPageLimit(2);
 
         mViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -133,14 +131,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mDatabase = new StudySetsBaseHelper(this)
-                .getWritableDatabase();
-
         new TabLayoutMediator(tabLayout, mViewPager,
                 (tab, position) -> {
                     tab.setIcon(tabIcons[position]);
                     if (position == 0) {
-                        tab.getIcon().setColorFilter(getResources().getColor(R.color.lightDark), PorterDuff.Mode.SRC_IN);
+                        Objects.requireNonNull(tab.getIcon()).setColorFilter(getResources().getColor(R.color.lightDark), PorterDuff.Mode.SRC_IN);
                     }
                 }).attach();
 
@@ -148,12 +143,21 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                tab.getIcon().setColorFilter(getResources().getColor(R.color.lightDark), PorterDuff.Mode.SRC_IN);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    Objects.requireNonNull(tab.getIcon()).setColorFilter(new BlendModeColorFilter(getColor(R.color.lightDark), BlendMode.SRC_ATOP));
+                } else {
+                    Objects.requireNonNull(tab.getIcon()).setColorFilter(getColor(R.color.lightDark), PorterDuff.Mode.SRC_ATOP);
+                }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                tab.getIcon().setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    Objects.requireNonNull(tab.getIcon()).setColorFilter(new BlendModeColorFilter(getColor(R.color.white), BlendMode.SRC_ATOP));
+                } else {
+                    Objects.requireNonNull(tab.getIcon()).setColorFilter(getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                }
+                Objects.requireNonNull(tab.getIcon()).setColorFilter(getResources().getColor(android.R.color.white), PorterDuff.Mode.SRC_IN);
             }
 
             @Override
@@ -172,7 +176,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-        broadcastReceiver = new NetworkMonitor();
         infoBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -188,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
         FancyShowCaseView offlineHelp = new FancyShowCaseView.Builder(this)
                 .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
                     @Override
-                    public void onViewInflated(View view) {
+                    public void onViewInflated(@NotNull View view) {
                         BaseVariables.setCustomFancyCaseView(view, getString(R.string.abilities_in_offline_mode), fq);
                     }
                 })
@@ -205,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
     private void disableOfflineMode() {
         mOfflineRelativeLayout.setVisibility(View.GONE);
     }
-
 
     public TabLayout getNavigationView() {
         return tabLayout;
@@ -225,13 +227,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private ViewPagerAdapter createCardAdapter() {
+    private ViewPagerAdapter createAdapter() {
         return new ViewPagerAdapter(this);
     }
 
     public class ViewPagerAdapter extends FragmentStateAdapter {
 
-        public ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+        ViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
             super(fragmentActivity);
         }
 
