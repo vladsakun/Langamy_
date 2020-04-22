@@ -13,6 +13,9 @@ interface DaoStudySet {
     @Query("SELECT * FROM study_set_table WHERE id=:id")
     fun getSpecificStudySet(id: Int): LiveData<StudySet>
 
+    @Query("SELECT * FROM study_set_table WHERE id=:id")
+    fun getNoLiveDataSpecificStudySet(id: Int): StudySet?
+
     @Query("SELECT * FROM study_set_table WHERE sync_status=0")
     fun getUnsyncedStudySet(): List<StudySet>
 

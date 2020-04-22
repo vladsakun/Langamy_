@@ -24,6 +24,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.langamy.api.LangamyAPI;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.ConnectionModel;
 import com.langamy.base.classes.NetworkMonitor;
@@ -32,7 +33,6 @@ import com.langamy.fragments.CreateStudySetsFragment;
 import com.langamy.fragments.ProfileFragment;
 import com.langamy.fragments.ProfileKotlinFragment;
 import com.langamy.fragments.StudySetsKotlinFragment;
-import com.langamy.retrofit.LangamyAPI;
 import com.langamy.viewmodel.MainViewModel;
 
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent;

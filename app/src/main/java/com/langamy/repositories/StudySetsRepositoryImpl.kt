@@ -5,8 +5,8 @@ import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.User
 import com.langamy.database.DaoStudySet
 import com.langamy.database.UserDao
+import com.langamy.datasource.LangamyNetworkDataSource
 import com.langamy.provider.UserProvider
-import com.langamy.retrofit.LangamyNetworkDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -19,12 +19,18 @@ class StudySetsRepositoryImpl(
         private val userProvider: UserProvider
 ) : StudySetsRepository {
 
+    override var clonedId: Int = 0
 
     init {
         langamyNetworkDataSource.apply {
 
             downloadedStudySets.observeForever { newStudySetsList ->
                 persistFetchedStudySetsList(newStudySetsList)
+            }
+
+            clonedStudySet.observeForever { newClonedStudySet ->
+                persistFetchedClonedStudySet(newClonedStudySet)
+                clonedId = newClonedStudySet.id
             }
         }
     }
@@ -36,9 +42,29 @@ class StudySetsRepositoryImpl(
         }
     }
 
+    private fun persistFetchedClonedStudySet(newClonedStudySet: StudySet) {
+
+        GlobalScope.launch(Dispatchers.IO) {
+            daoStudySet.insertStudySet(newClonedStudySet)
+        }
+
+    }
+
+    suspend fun getClonedStudySet(clonedId: Int): LiveData<StudySet> {
+        return withContext(Dispatchers.IO) {
+            return@withContext daoStudySet.getSpecificStudySet(clonedId)
+        }
+    }
+
     override suspend fun getStudySet(id: Int): LiveData<StudySet> {
         return withContext(Dispatchers.IO) {
             return@withContext daoStudySet.getSpecificStudySet(id)
+        }
+    }
+
+    override suspend fun getNoLiveDataStudySet(id: Int): StudySet {
+        return withContext(Dispatchers.IO){
+            return@withContext daoStudySet.getNoLiveDataSpecificStudySet(id)!!
         }
     }
 
@@ -79,6 +105,12 @@ class StudySetsRepositoryImpl(
         }
     }
 
+    override suspend fun cloneStudySet(studySet: StudySet) {
+        GlobalScope.launch(Dispatchers.IO) {
+            langamyNetworkDataSource.cloneStudySet(studySet, userProvider.getUserEmail())
+        }
+    }
+
     private suspend fun initStudySetsData() {
 
         if (isFetchStudySetsNeeded()) {
@@ -88,7 +120,6 @@ class StudySetsRepositoryImpl(
 
     private suspend fun fetchStudySetsList() {
         patchUnsyncedStudySets()
-//        langamyNetworkDataSource.fetchStudySets(userProvider.getUserEmail())
     }
 
     private suspend fun patchUnsyncedStudySets() {

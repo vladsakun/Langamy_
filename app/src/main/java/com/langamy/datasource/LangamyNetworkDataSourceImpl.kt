@@ -1,10 +1,11 @@
-package com.langamy.retrofit
+package com.langamy.datasource
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.langamy.base.classes.StudySet
 import com.langamy.exceptions.NoConnectivityException
+import com.langamy.retrofit.LangamyApiService
 
 class LangamyNetworkDataSourceImpl(
         private val langamyApiService: LangamyApiService
@@ -17,6 +18,11 @@ class LangamyNetworkDataSourceImpl(
     private val _deleteStatus = MutableLiveData<HashMap<String, Any>>()
     override val deleteStatus: LiveData<HashMap<String, Any>>
         get() = _deleteStatus
+
+    private val _clonedStudySet = MutableLiveData<StudySet>()
+    override val clonedStudySet: LiveData<StudySet>
+        get() = _clonedStudySet
+
 
     override suspend fun fetchStudySets(userEmail: String) {
         try {
@@ -38,9 +44,19 @@ class LangamyNetworkDataSourceImpl(
     }
 
     override suspend fun patchStudySet(studySet: StudySet) {
-        try{
+        try {
             langamyApiService.patchStudySet(studySet.id, studySet).await()
-        }catch (e: NoConnectivityException){
+        } catch (e: NoConnectivityException) {
+            Log.e("Connectivity", "No internet connection")
+        }
+    }
+
+    override suspend fun cloneStudySet(studySet: StudySet, userEmail: String) {
+        try {
+            val clonedId = langamyApiService.cloneStudySet(studySet.id, userEmail).await()
+            studySet.id = clonedId.toInt()
+            _clonedStudySet.postValue(studySet)
+        } catch (e: NoConnectivityException) {
             Log.e("Connectivity", "No internet connection")
         }
     }

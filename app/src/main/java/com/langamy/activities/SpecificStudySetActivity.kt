@@ -3,9 +3,9 @@ package com.langamy.activities
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.*
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +13,6 @@ import com.bignerdranch.android.main.R
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.button.MaterialButton
 import com.langamy.activities.EditStudySetActivity
 import com.langamy.api.LangamyAPI
@@ -21,8 +20,6 @@ import com.langamy.base.classes.BaseVariables
 import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.Word
 import com.langamy.base.kotlin.ScopedActivity
-import com.langamy.database.StudySetsBaseHelper
-import com.langamy.database.StudySetsScheme.StudySetsTable.Cols
 import com.langamy.fragments.MarkedWordsFragment
 import com.langamy.viewmodel.SpecificStudySetViewModel
 import com.langamy.viewmodel.SpecificStudySetsViewModelFactory
@@ -35,10 +32,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.closestKodein
-import org.kodein.di.generic.instance
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import org.kodein.di.generic.factory
 import java.io.Serializable
 import java.util.*
 
@@ -46,7 +40,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
 
     override val kodein by closestKodein()
 
-    private val viewModelFactory by instance<SpecificStudySetsViewModelFactory>()
+    private val viewModelFactory: ((Int) -> SpecificStudySetsViewModelFactory) by factory()
     private lateinit var viewModel: SpecificStudySetViewModel
 
     private var studySetId = 0
@@ -79,8 +73,6 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_specific_studyset)
 
-        viewModel = ViewModelProvider(this, viewModelFactory).get(SpecificStudySetViewModel::class.java)
-
         //Set window not touchable
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
@@ -110,6 +102,8 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
         studySetId = intent.getIntExtra(BaseVariables.STUDY_SET_ID_MESSAGE, 0)
+
+        viewModel = ViewModelProvider(this, viewModelFactory(studySetId)).get(SpecificStudySetViewModel::class.java)
 
         //MarkedWords Fragment initializing
         fragment = MarkedWordsFragment(mWordList)
@@ -170,26 +164,35 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
             fragment!!.words = mWordList
         })
 
+        try {
+            val data = intent.data
+            studySetId = data.toString().replace("http://vlad12.pythonanywhere.com/studyset/", "")
+                    .replace("/", "").toInt()
+            bindUI(true)
+        } catch (e: Exception) {
+            bindUI(false)
+        }
+
     }
 
-    private fun cloneStudySet(studySet_id: Int) {
-        val account = GoogleSignIn.getLastSignedInAccount(this)
-        val call = mLangamyAPI.cloneStudySet(studySet_id, account!!.email)
-        call.enqueue(object : Callback<String> {
-            override fun onResponse(call: Call<String>, response: Response<String>) {
-                if (!response.isSuccessful) {
-                    Toast.makeText(this@SpecificStudySetActivity, response.code().toString(), Toast.LENGTH_SHORT).show()
-                    return
-                }
-                studySetId = response.body()!!.toInt()
-                getSpecificStudySet(response.body()!!.toInt())
-            }
-
-            override fun onFailure(call: Call<String>, t: Throwable) {
-                Toast.makeText(this@SpecificStudySetActivity, t.toString(), Toast.LENGTH_SHORT).show()
-            }
-        })
-    }
+//    private fun cloneStudySet(studySet_id: Int) {
+//        val account = GoogleSignIn.getLastSignedInAccount(this)
+//        val call = mLangamyAPI.cloneStudySet(studySet_id, account!!.email)
+//        call.enqueue(object : Callback<String> {
+//            override fun onResponse(call: Call<String>, response: Response<String>) {
+//                if (!response.isSuccessful) {
+//                    Toast.makeText(this@SpecificStudySetActivity, response.code().toString(), Toast.LENGTH_SHORT).show()
+//                    return
+//                }
+//                studySetId = response.body()!!.toInt()
+//                getSpecificStudySet(response.body()!!.toInt())
+//            }
+//
+//            override fun onFailure(call: Call<String>, t: Throwable) {
+//                Toast.makeText(this@SpecificStudySetActivity, t.toString(), Toast.LENGTH_SHORT).show()
+//            }
+//        })
+//    }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
@@ -238,7 +241,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         BaseVariables.hideKeyboard(this)
         val fq = FancyShowCaseQueue()
         val makeDictation = FancyShowCaseView.Builder(this)
-                .focusOn(createDictationBtn!!)
+                .focusOn(createDictationBtn)
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .customView(R.layout.custom_layout_for_fancyshowcase, object : OnViewInflateListener {
                     override fun onViewInflated(view: View) {
@@ -259,7 +262,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
 //                .backgroundColor(getColor(R.color.blueForFancy))
 //                .build();
         val studyMarked = FancyShowCaseView.Builder(this)
-                .focusOn(studyMarked_MBTN!!)
+                .focusOn(studyMarked_MBTN)
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .customView(R.layout.custom_layout_for_fancyshowcase, object : OnViewInflateListener {
                     override fun onViewInflated(view: View) {
@@ -284,33 +287,36 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         fq.show()
     }
 
-    fun getSpecificStudySet(studySet_id: Int) {
-        if (BaseVariables.checkNetworkConnection(this)) {
-            val call = mLangamyAPI.getSpecificStudySet(studySet_id)
-            call.enqueue(object : Callback<StudySet?> {
-
-                override fun onResponse(call: Call<StudySet?>, response: Response<StudySet?>) {
-                    if (!response.isSuccessful) {
-                        Log.d("SPECIFIC_RESPONSE", response.code().toString())
-                        return
-                    }
-                    initializeStudySetActivity(response.body())
-                }
-
-                override fun onFailure(call: Call<StudySet?>, t: Throwable) {
-                    Toast.makeText(this@SpecificStudySetActivity, t.toString(), Toast.LENGTH_SHORT).show()
-                }
-            })
-        } else {
-            initializeStudySetActivity(readDataFromLocaleStorage(studySet_id))
-            createDictationBtn!!.setOnClickListener {
-                Toast.makeText(this@SpecificStudySetActivity, "To make a dictation" +
-                        " you need an internet connection", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
+//    fun getSpecificStudySet(studySet_id: Int) {
+//        if (BaseVariables.checkNetworkConnection(this)) {
+//
+//            val call = mLangamyAPI.getSpecificStudySet(studySet_id)
+//            call.enqueue(object : Callback<StudySet?> {
+//
+//                override fun onResponse(call: Call<StudySet?>, response: Response<StudySet?>) {
+//                    if (!response.isSuccessful) {
+//                        Log.d("SPECIFIC_RESPONSE", response.code().toString())
+//                        return
+//                    }
+//                    initializeStudySetActivity(response.body())
+//                }
+//
+//                override fun onFailure(call: Call<StudySet?>, t: Throwable) {
+//                    Toast.makeText(this@SpecificStudySetActivity, t.toString(), Toast.LENGTH_SHORT).show()
+//                }
+//            })
+//        } else {
+//            initializeStudySetActivity(readDataFromLocaleStorage(studySet_id))
+//            createDictationBtn!!.setOnClickListener {
+//                Toast.makeText(this@SpecificStudySetActivity, "To make a dictation" +
+//                        " you need an internet connection", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
 
     fun initializeStudySetActivity(studySet: StudySet?) {
+        mWordList!!.clear()
+
         mWordList!!.addAll(convertJsonArrayToArray(studySet!!.words))
         if (studySet.marked_words != null) {
             markedWords.addAll(convertJsonArrayToArray(studySet.marked_words))
@@ -366,16 +372,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
 
     override fun onResume() {
         super.onResume()
-        mWordList!!.clear()
-        try {
-            val data = intent.data
-            val studySet_id =
-                    data.toString().replace("http://vlad12.pythonanywhere.com/studyset/", "")
-                            .replace("/", "").toInt()
-            cloneStudySet(studySet_id)
-        } catch (e: Exception) {
-            bindUI(studySetId)
-        }
+
     }
 
     //Adapter for word recyclerview
@@ -430,9 +427,13 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         mAdapter!!.notifyDataSetChanged()
     }
 
-    fun bindUI(id:Int) = launch {
-        viewModel.id = id
-        val studySet = viewModel.studySet.await()
+    fun bindUI(cloned: Boolean) = launch {
+        var studySet: LiveData<out StudySet>? = null
+        studySet = if (cloned) {
+            viewModel.clonedStudySet.await()
+        } else {
+            viewModel.studySet.await()
+        }
         studySet.observe(this@SpecificStudySetActivity, androidx.lifecycle.Observer {
             if (it == null) return@Observer
 
@@ -440,17 +441,17 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         })
     }
 
-    fun readDataFromLocaleStorage(studySet_id: Int): StudySet {
-
-        val mDatabase = StudySetsBaseHelper(this).readableDatabase
-        val cursor = BaseVariables.queryStudySets(Cols.id + "=?", arrayOf(studySet_id.toString()), mDatabase)
-        val mLocaleStudySet: StudySet
-        mLocaleStudySet = try {
-            cursor.moveToFirst()
-            cursor.studySet
-        } finally {
-            cursor.close()
-        }
-        return mLocaleStudySet
-    }
+//    fun readDataFromLocaleStorage(studySet_id: Int): StudySet {
+//
+//        val mDatabase = StudySetsBaseHelper(this).readableDatabase
+//        val cursor = BaseVariables.queryStudySets(Cols.id + "=?", arrayOf(studySet_id.toString()), mDatabase)
+//        val mLocaleStudySet: StudySet
+//        mLocaleStudySet = try {
+//            cursor.moveToFirst()
+//            cursor.studySet
+//        } finally {
+//            cursor.close()
+//        }
+//        return mLocaleStudySet
+//    }
 }

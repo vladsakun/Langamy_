@@ -78,7 +78,7 @@ public class AudioStageFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         textToSpeechFast.shutdown();
-        textToSpeechFast.shutdown();
+        textToSpeechSlow.shutdown();
     }
 
     @Override

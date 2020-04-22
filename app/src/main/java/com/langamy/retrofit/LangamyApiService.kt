@@ -12,10 +12,10 @@ interface LangamyApiService {
 
     //StudySet
     @POST("api/create/studyset/")
-    fun createStudySet(@Body studySet: StudySet?): Deferred<StudySet?>?
+    fun createStudySet(@Body studySet: StudySet?): Deferred<StudySet>
 
     @GET("api/studyset/{study_set_id}/")
-    fun getSpecificStudySet(@Path("study_set_id") study_set_id: Int): Deferred<StudySet?>?
+    fun getSpecificStudySet(@Path("study_set_id") study_set_id: Int): Deferred<StudySet>
 
     @PATCH("api/studyset/{id}/")
     fun patchStudySet(@Path("id") id: Int, @Body studySet: StudySet?): Deferred<StudySet>
@@ -24,10 +24,10 @@ interface LangamyApiService {
     fun deleteStudySet(@Path("id") id: Int): Deferred<Void>
 
     @POST("api/finish/studyset/{studyset_id}/{mode}/")
-    fun finishStudyset(@Path("studyset_id") studyset_id: Int, @Path("mode") mode: String?): Deferred<Void?>?
+    fun finishStudyset(@Path("studyset_id") studyset_id: Int, @Path("mode") mode: String?): Deferred<Void>
 
     @POST("api/clone/studyset/{studyset_id}/{email}/")
-    fun cloneStudySet(@Path("studyset_id") studyset_id: Int, @Path("email") email: String?): Deferred<String?>?
+    fun cloneStudySet(@Path("studyset_id") studyset_id: Int, @Path("email") email: String?): Deferred<String>
 
     @GET("api/get/studysetsnames/{user_email}/")
     fun getStudySets(@Path("user_email") userEmail:String):Deferred<List<StudySet>>

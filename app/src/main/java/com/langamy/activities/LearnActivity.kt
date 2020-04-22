@@ -294,7 +294,7 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         if (currentFragment.javaClass.simpleName == "ContinueLearningFragment") {
             val continueLearningFragment = currentFragment as ContinueLearningFragment
             continueLearningFragment.setStudysetId(studysetId, learnMarked)
-            continueLearningFragment.setAmountOfWords(words!!.size)
+            continueLearningFragment.setAmountOfWords(words.size)
             continueLearningFragment.setMasteredWords(masteredWords)
         }
     }
@@ -355,15 +355,15 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         val studySet = mStudySet
 
         if (learnMarked) {
-            mStudySet!!.marked_words = wordsForUpdatingStudySet.toString()
+            studySet!!.marked_words = wordsForUpdatingStudySet.toString()
         } else {
-            mStudySet!!.words = wordsForUpdatingStudySet.toString()
+            studySet!!.words = wordsForUpdatingStudySet.toString()
         }
 
 
         if (BaseVariables.checkNetworkConnection(this)) {
 
-            val call = mLangamyAPI.patchStudySet(studysetId, mStudySet)
+            val call = mLangamyAPI.patchStudySet(studysetId, studySet)
 
             call.enqueue(object : Callback<StudySet?> {
                 override fun onResponse(call: Call<StudySet?>, response: Response<StudySet?>) {
@@ -380,19 +380,21 @@ class LearnActivity : ScopedActivity(), KodeinAware {
                     Log.d("FAILURE_LEARN_ACTIVITY", t.toString())
                 }
             })
-            updateLocalStudySet(mStudySet!!, true)
+            updateLocalStudySet(studySet, true)
         } else {
 //            val values = BaseVariables.getContentValuesForStudyset(studySet, false)
 //            val uuidString = studySet!!.id.toString()
 //            mDatabase.update(StudySetsTable.NAME, values,
 //                    Cols.id + "=?", arrayOf(uuidString))
-            updateLocalStudySet(mStudySet!!, false)
+            updateLocalStudySet(studySet, false)
         }
     }
 
     fun updateLocalStudySet(studySet: StudySet, syncStatus:Boolean) = launch{
         studySet.isSync_status = syncStatus
         viewModel.updateLocalStudySet(studySet)
+        Log.d("UPDATE", studySet.words.toString())
+
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {

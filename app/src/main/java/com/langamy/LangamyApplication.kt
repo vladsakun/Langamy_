@@ -2,19 +2,20 @@ package com.langamy
 
 import android.app.Application
 import com.langamy.database.StudySetsDatabase
+import com.langamy.datasource.LangamyNetworkDataSource
+import com.langamy.datasource.LangamyNetworkDataSourceImpl
 import com.langamy.provider.UserProvider
 import com.langamy.provider.UserProviderImpl
 import com.langamy.repositories.StudySetsRepository
 import com.langamy.repositories.StudySetsRepositoryImpl
-import com.langamy.retrofit.*
+import com.langamy.retrofit.ConnectivityInterceptor
+import com.langamy.retrofit.ConnectivityInterceptorImpl
+import com.langamy.retrofit.LangamyApiService
 import com.langamy.viewmodel.*
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.instance
-import org.kodein.di.generic.provider
-import org.kodein.di.generic.singleton
+import org.kodein.di.generic.*
 
 class LangamyApplication : Application(), KodeinAware {
     override val kodein = Kodein.lazy {
@@ -44,8 +45,10 @@ class LangamyApplication : Application(), KodeinAware {
         bind() from provider { StudySetsViewModelFactory(instance(), instance(), instance()) }
         bind() from provider { ProfileViewModelFactory(instance(), instance()) }
         bind() from provider { EditStudySetViewModelFactory(instance()) }
-        bind() from provider { SpecificStudySetsViewModelFactory(instance()) }
         bind() from provider { LearnActivityViewModelFactory(instance()) }
+        bind() from provider { ContinueLearningViewModelFactory(instance()) }
+
+        bind() from factory { studySetId: Int -> SpecificStudySetsViewModelFactory(instance(), studySetId) }
 
     }
 }
