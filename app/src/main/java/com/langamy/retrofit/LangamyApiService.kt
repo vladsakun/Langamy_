@@ -27,7 +27,7 @@ interface LangamyApiService {
     fun finishStudyset(@Path("studyset_id") studyset_id: Int, @Path("mode") mode: String?): Deferred<Void>
 
     @POST("api/clone/studyset/{studyset_id}/{email}/")
-    fun cloneStudySet(@Path("studyset_id") studyset_id: Int, @Path("email") email: String?): Deferred<String>
+    fun cloneStudySet(@Path("studyset_id") studyset_id: Int, @Path("email") email: String?): Deferred<StudySet>
 
     @GET("api/get/studysetsnames/{user_email}/")
     fun getStudySets(@Path("user_email") userEmail:String):Deferred<List<StudySet>>

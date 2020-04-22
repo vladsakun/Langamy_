@@ -5,7 +5,7 @@ import com.langamy.base.classes.StudySet
 
 interface StudySetsRepository {
 
-    var clonedId:Int
+    val clonedStudySet:LiveData<StudySet>?
 
     suspend fun getStudySetsList() : LiveData<out List<StudySet>>
     suspend fun getStudySet(id: Int) : LiveData<out StudySet>
@@ -15,5 +15,5 @@ interface StudySetsRepository {
     suspend fun deleteLocalStudySet(id:Int)
     suspend fun updateStudySet(studySet: StudySet)
     suspend fun insertStudySet(studySet: StudySet)
-    suspend fun cloneStudySet(studySet: StudySet)
+    suspend fun cloneStudySet(studySetId: Int)
 }

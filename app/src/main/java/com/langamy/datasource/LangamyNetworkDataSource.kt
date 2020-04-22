@@ -15,5 +15,5 @@ interface LangamyNetworkDataSource {
 
     suspend fun patchStudySet(studySet: StudySet)
 
-    suspend fun cloneStudySet(studySet: StudySet, userEmail: String)
+    suspend fun cloneStudySet(studySetId: Int, userEmail: String)
 }

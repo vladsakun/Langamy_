@@ -13,9 +13,12 @@ class SpecificStudySetViewModel(
         studySetsRepository.getStudySet(studySetId)
     }
 
+    suspend fun cloneStudySet(){
+        studySetsRepository.cloneStudySet(studySetId)
+    }
+
     val clonedStudySet by lazyDeferred {
-        studySetId = studySetsRepository.clonedId
-        studySetsRepository.getStudySet(studySetId)
+        studySetsRepository.clonedStudySet
     }
 
 }

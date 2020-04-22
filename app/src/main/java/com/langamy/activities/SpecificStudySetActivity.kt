@@ -103,6 +103,16 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         mAdView.loadAd(adRequest)
         studySetId = intent.getIntExtra(BaseVariables.STUDY_SET_ID_MESSAGE, 0)
 
+        var cloned: Boolean
+        try {
+            val data = intent.data
+            studySetId = data.toString().replace("http://vlad12.pythonanywhere.com/studyset/", "")
+                    .replace("/", "").toInt()
+            cloned = true
+        } catch (e: Exception) {
+            cloned = false
+        }
+
         viewModel = ViewModelProvider(this, viewModelFactory(studySetId)).get(SpecificStudySetViewModel::class.java)
 
         //MarkedWords Fragment initializing
@@ -164,14 +174,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
             fragment!!.words = mWordList
         })
 
-        try {
-            val data = intent.data
-            studySetId = data.toString().replace("http://vlad12.pythonanywhere.com/studyset/", "")
-                    .replace("/", "").toInt()
-            bindUI(true)
-        } catch (e: Exception) {
-            bindUI(false)
-        }
+        bindUI(cloned)
 
     }
 
@@ -372,7 +375,6 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
 
     override fun onResume() {
         super.onResume()
-
     }
 
     //Adapter for word recyclerview
@@ -430,11 +432,12 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
     fun bindUI(cloned: Boolean) = launch {
         var studySet: LiveData<out StudySet>? = null
         studySet = if (cloned) {
+            viewModel.cloneStudySet()
             viewModel.clonedStudySet.await()
         } else {
             viewModel.studySet.await()
         }
-        studySet.observe(this@SpecificStudySetActivity, androidx.lifecycle.Observer {
+        studySet?.observe(this@SpecificStudySetActivity, androidx.lifecycle.Observer {
             if (it == null) return@Observer
 
             initializeStudySetActivity(it)

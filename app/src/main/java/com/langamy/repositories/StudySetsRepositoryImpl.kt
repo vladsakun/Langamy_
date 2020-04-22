@@ -1,6 +1,7 @@
 package com.langamy.repositories
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.User
 import com.langamy.database.DaoStudySet
@@ -19,8 +20,6 @@ class StudySetsRepositoryImpl(
         private val userProvider: UserProvider
 ) : StudySetsRepository {
 
-    override var clonedId: Int = 0
-
     init {
         langamyNetworkDataSource.apply {
 
@@ -29,11 +28,15 @@ class StudySetsRepositoryImpl(
             }
 
             clonedStudySet.observeForever { newClonedStudySet ->
-                persistFetchedClonedStudySet(newClonedStudySet)
-                clonedId = newClonedStudySet.id
+                persistFetchedStudySet(newClonedStudySet)
             }
         }
     }
+
+    private val _clonedStudySet = MutableLiveData<StudySet>()
+
+    override val clonedStudySet: LiveData<StudySet>
+        get() = _clonedStudySet
 
     override suspend fun getStudySetsList(): LiveData<out List<StudySet>> {
         return withContext(Dispatchers.IO) {
@@ -42,12 +45,11 @@ class StudySetsRepositoryImpl(
         }
     }
 
-    private fun persistFetchedClonedStudySet(newClonedStudySet: StudySet) {
-
+    private fun persistFetchedStudySet(newClonedStudySet: StudySet) {
         GlobalScope.launch(Dispatchers.IO) {
-            daoStudySet.insertStudySet(newClonedStudySet)
+            daoStudySet.upsertStudySet(newClonedStudySet)
+            _clonedStudySet.postValue(newClonedStudySet)
         }
-
     }
 
     suspend fun getClonedStudySet(clonedId: Int): LiveData<StudySet> {
@@ -101,13 +103,13 @@ class StudySetsRepositoryImpl(
 
     override suspend fun insertStudySet(studySet: StudySet) {
         GlobalScope.launch(Dispatchers.IO) {
-            daoStudySet.insertStudySet(studySet)
+            daoStudySet.upsertStudySet(studySet)
         }
     }
 
-    override suspend fun cloneStudySet(studySet: StudySet) {
+    override suspend fun cloneStudySet(studySetId: Int) {
         GlobalScope.launch(Dispatchers.IO) {
-            langamyNetworkDataSource.cloneStudySet(studySet, userProvider.getUserEmail())
+            langamyNetworkDataSource.cloneStudySet(studySetId, userProvider.getUserEmail())
         }
     }
 

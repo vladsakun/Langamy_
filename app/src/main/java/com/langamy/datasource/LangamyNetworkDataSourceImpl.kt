@@ -51,11 +51,10 @@ class LangamyNetworkDataSourceImpl(
         }
     }
 
-    override suspend fun cloneStudySet(studySet: StudySet, userEmail: String) {
+    override suspend fun cloneStudySet(studySetId: Int, userEmail: String) {
         try {
-            val clonedId = langamyApiService.cloneStudySet(studySet.id, userEmail).await()
-            studySet.id = clonedId.toInt()
-            _clonedStudySet.postValue(studySet)
+            val clonedStudySet = langamyApiService.cloneStudySet(studySetId, userEmail).await()
+            _clonedStudySet.postValue(clonedStudySet)
         } catch (e: NoConnectivityException) {
             Log.e("Connectivity", "No internet connection")
         }
