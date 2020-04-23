@@ -14,7 +14,6 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,9 +49,8 @@ public class MyDictationsActivity extends AppCompatActivity {
     private RecyclerView mRecyclerView;
     private DictationsAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private RelativeLayout mContent;
     private ProgressBar mProgressBar;
-    private TextView noDictations, myDictations;
+    private TextView noDictations;
 
     private List<Dictation> mDictationList;
 
@@ -66,10 +64,8 @@ public class MyDictationsActivity extends AppCompatActivity {
         mDictationList = new ArrayList<>();
 
         mRecyclerView = findViewById(R.id.dictations_RV);
-        mContent = findViewById(R.id.content);
         mProgressBar = findViewById(R.id.progressBar);
         noDictations= findViewById(R.id.no_dictations_TV);
-        myDictations = findViewById(R.id.your_dictations);
 
         initializeRecyclerView(mDictationList);
 
@@ -79,7 +75,6 @@ public class MyDictationsActivity extends AppCompatActivity {
 
     private void noDictations(){
         noDictations.setVisibility(View.VISIBLE);
-        myDictations.setVisibility(View.GONE);
     }
 
     private void initializeRecyclerView(List<Dictation> dictations) {

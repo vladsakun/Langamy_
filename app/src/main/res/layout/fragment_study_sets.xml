@@ -102,10 +102,17 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/banner_ad"
         android:layout_below="@id/study_sets_action_buttons"
-        android:layout_marginBottom="10dp"
         android:scrollbars="vertical">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <Button
+        android:visibility="gone"
+        android:id="@+id/create_first_study_set_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/let_s_create_n_your_first_study_set" />
 
     <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/banner_ad"

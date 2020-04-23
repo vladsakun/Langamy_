@@ -118,9 +118,21 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
         studySetsList.observe(activity!!, Observer {
             if (it == null) return@Observer
 
+            if (it.isEmpty()) {
+                noStudySets()
+            }
+
             updateStudySetsList(it)
             progressBar.visibility = View.GONE
         })
+    }
+
+    private fun noStudySets() {
+        create_first_study_set_BTN.setOnClickListener{
+            val mainActivity:MainActivity = activity as MainActivity
+            mainActivity.viewPager.currentItem = 1
+        }
+        create_first_study_set_BTN.visibility = View.VISIBLE
     }
 
     private fun deleteStudySetById(id: Int) = launch {
@@ -155,7 +167,7 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
 
         searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                return false
+                return true
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
@@ -251,7 +263,7 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
         handler.postDelayed({ fq.show() }, 200)
     }
 
-    private fun showDeleteAlertDialog(studySet: StudySet, itemId:Int) {
+    private fun showDeleteAlertDialog(studySet: StudySet, itemId: Int) {
         val layoutInflater = layoutInflater
         val alertLayout = layoutInflater.inflate(R.layout.custom_alert_dialog, null)
         val delete_BTN = alertLayout.findViewById<Button>(R.id.delete_item_BTN)
@@ -261,11 +273,11 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
         alertDialog.setCancelable(true)
         alertDialog.setView(alertLayout)
         val dialog = alertDialog.create()
-        
+
         studySetName_TV.text = studySet.name
-        
+
         cancel_BTN.setOnClickListener { dialog.dismiss() }
-        
+
         delete_BTN.setOnClickListener {
             deleteStudySetById(studySet.id)
             items.remove(studySet)

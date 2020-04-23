@@ -548,7 +548,7 @@ public class MakeDictationActivity extends AppCompatActivity{
         @Override
         public SpecificDictationAdapter.SpecificDictationHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             // create a new view
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.make_dictation_word_item, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.word_item_without_star, parent, false);
             return new SpecificDictationHolder(v);
         }
 

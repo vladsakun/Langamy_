@@ -384,18 +384,4 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
             initializeStudySetActivity(it)
         })
     }
-
-//    fun readDataFromLocaleStorage(studySet_id: Int): StudySet {
-//
-//        val mDatabase = StudySetsBaseHelper(this).readableDatabase
-//        val cursor = BaseVariables.queryStudySets(Cols.id + "=?", arrayOf(studySet_id.toString()), mDatabase)
-//        val mLocaleStudySet: StudySet
-//        mLocaleStudySet = try {
-//            cursor.moveToFirst()
-//            cursor.studySet
-//        } finally {
-//            cursor.close()
-//        }
-//        return mLocaleStudySet
-//    }
 }

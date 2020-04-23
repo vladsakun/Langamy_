@@ -101,5 +101,6 @@
     <string name="recent_dictations">Recent dictations</string>
     <string name="you_have_not_passed_any_dictation">You have not passed any dictation.\nPress on roll dice and complete random one</string>
     <string name="code_must_be_numeric">Code must be numeric</string>
+    <string name="let_s_create_n_your_first_study_set">Let\'s create\n your first study set</string>
 
 </resources>
