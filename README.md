@@ -1,6 +1,9 @@
 <p align="center">
   Langamy is an app for learning foreigh words 
 </p>
+<p align="center">
+  Langamy is an app for learning foreigh words 
+</p>
 <br/>
 <p align="center">
   <img src="https://i.imgur.com/q6mAWKC.png" width="200">
