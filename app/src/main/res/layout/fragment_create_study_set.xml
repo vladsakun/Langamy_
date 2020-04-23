@@ -38,16 +38,6 @@
                     android:focusableInTouchMode="true"
                     android:hint="@string/title" />
 
-                <Switch
-                    android:id="@+id/auto_translate_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:text="@string/enable_auto_translate"
-                    android:theme="@style/SCBSwitch"
-                    android:thumbTint="@color/blue" />
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">

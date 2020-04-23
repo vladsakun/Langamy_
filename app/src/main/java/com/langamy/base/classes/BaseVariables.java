@@ -1,10 +1,7 @@
 package com.langamy.base.classes;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -18,9 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bignerdranch.android.main.R;
-import com.langamy.database.StudySetCursorWrapper;
-import com.langamy.database.StudySetsScheme.StudySetsTable;
-import com.langamy.database.StudySetsScheme.StudySetsTable.Cols;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -209,31 +203,6 @@ public final class BaseVariables {
             }
         }
         return hasInternet;
-    }
-
-    public static ContentValues getContentValuesForStudyset(StudySet studySet, boolean syncStatus) {
-
-        ContentValues contentValues = new ContentValues();
-
-        contentValues.put(Cols.id, studySet.getId());
-        contentValues.put(Cols.name, studySet.getName());
-        contentValues.put(Cols.language_to, studySet.getLanguage_to());
-        contentValues.put(Cols.language_from, studySet.getLanguage_from());
-        contentValues.put(Cols.words, studySet.getWords());
-        contentValues.put(Cols.creator, studySet.getCreator());
-        contentValues.put(Cols.percent_of_studying, 0);
-        contentValues.put(Cols.studied, false);
-        contentValues.put(Cols.amount_of_words, studySet.getAmount_of_words());
-        contentValues.put(Cols.marked_words, studySet.getMarked_words());
-        contentValues.put(Cols.sync_status, String.valueOf(syncStatus));
-
-        return contentValues;
-    }
-
-    public static StudySetCursorWrapper queryStudySets(String whereClause, String[] whereArgs, SQLiteDatabase db) {
-
-        Cursor cursor = db.query(StudySetsTable.NAME, null, whereClause, whereArgs, null, null, null);
-        return new StudySetCursorWrapper(cursor);
     }
 
     public static ArrayList<Word> convertJSONArrayToArrayOfWords(String jsonString) {

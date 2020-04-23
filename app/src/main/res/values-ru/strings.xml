@@ -102,7 +102,5 @@
     <string name="recent_dictations">Последние диктанты</string>
     <string name="you_have_not_passed_any_dictation">Пока здесь нету диктантов.\nНажмите на кубик и пройдите случайный</string>
     <string name="code_must_be_numeric">Код должен состоять только из цифр</string>
-    <string name="let_s_create_n_your_first_study_set">Давайте создадим\n первый учебный сэт</string>
-
 
 </resources>

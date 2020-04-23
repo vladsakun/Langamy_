@@ -17,9 +17,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.langamy.adapters.DoneDictationsAdapter;
 import com.langamy.api.LangamyAPI;
-import com.langamy.base.classes.BaseFunctionsKt;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.Dictation;
+import com.langamy.base.kotlin.BaseFunctionsKt;
 
 import java.util.ArrayList;
 import java.util.Objects;

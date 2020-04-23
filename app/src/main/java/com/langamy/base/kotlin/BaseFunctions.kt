@@ -1,4 +1,4 @@
-package com.langamy.base.classes
+package com.langamy.base.kotlin
 
 import androidx.appcompat.app.ActionBar
 

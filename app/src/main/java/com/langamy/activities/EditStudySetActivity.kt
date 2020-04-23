@@ -6,12 +6,10 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.sqlite.SQLiteDatabase
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.speech.tts.TextToSpeech
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -34,7 +32,6 @@ import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.TranslationResponse
 import com.langamy.base.classes.Word
 import com.langamy.base.kotlin.ScopedActivity
-import com.langamy.database.StudySetsBaseHelper
 import com.langamy.viewmodel.EditStudySetViewModel
 import com.langamy.viewmodel.EditStudySetViewModelFactory
 import com.theartofdev.edmodo.cropper.CropImage
@@ -71,18 +68,15 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
 
     private lateinit var mResultEt: EditText
     private lateinit var mTitleEt: EditText
-    private val tts: TextToSpeech? = null
     private lateinit var mScanDocumentBtn: Button
     private lateinit var mCommitWordsBtn: Button
     private lateinit var mAddWordBtn: FloatingActionButton
     private lateinit var mWordsLinearLayout: LinearLayout
     private lateinit var mResultCardView: LinearLayout
-    private lateinit var autoTranslateSwitch: Switch
     private lateinit var wordScrollView: ScrollView
 
     private var wordsInflater: LayoutInflater? = null
     private var wordsForSuggestions: HashMap<String, ArrayList<String>>? = null
-    private var mDatabase: SQLiteDatabase? = null
     lateinit var cameraPermission: Array<String>
     lateinit var storagePermission: Array<String>
 
@@ -114,9 +108,7 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
         mCommitWordsBtn = findViewById(R.id.commit_words_btn)
         mResultCardView = findViewById(R.id.result_LL)
         mWordsLinearLayout = findViewById(R.id.main_linearlayout)
-        autoTranslateSwitch = findViewById(R.id.auto_translate_switch)
         wordScrollView = findViewById(R.id.word_scrollview)
-        mDatabase = StudySetsBaseHelper(this).writableDatabase
         wordsInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         progressBar.visibility = View.GONE
 
@@ -205,7 +197,6 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
                 Toast.makeText(this@EditStudySetActivity, "Result is empty", Toast.LENGTH_SHORT).show()
             }
         })
-        autoTranslateSwitch.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b -> autoTranslate = b })
         wordsForSuggestions = save()
     }
 

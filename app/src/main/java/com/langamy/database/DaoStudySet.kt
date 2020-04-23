@@ -28,7 +28,7 @@ interface DaoStudySet {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsertStudySet(studySet: StudySet)
 
-    @Query("SELECT * FROM study_set_table")
+    @Query("SELECT * FROM study_set_table ORDER BY id DESC ")
     fun getAll(): LiveData<List<StudySet>>
 
     @Query("DELETE FROM study_set_table")

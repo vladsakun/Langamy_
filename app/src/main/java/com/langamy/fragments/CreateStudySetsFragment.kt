@@ -6,7 +6,6 @@ import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.sqlite.SQLiteDatabase
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
@@ -42,7 +41,6 @@ import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.TranslationResponse
 import com.langamy.base.classes.Word
 import com.langamy.base.kotlin.ScopedFragment
-import com.langamy.database.StudySetsBaseHelper
 import com.langamy.viewmodel.EditStudySetViewModel
 import com.langamy.viewmodel.EditStudySetViewModelFactory
 import com.theartofdev.edmodo.cropper.CropImage
@@ -95,12 +93,10 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
     private lateinit var mAddWordBtn: FloatingActionButton
     private lateinit var mWordsLinearLayout: LinearLayout
     private lateinit var mResultCardView: LinearLayout
-    private lateinit var autoTranslateSwitch: Switch
     private lateinit var wordScrollView: ScrollView
 
     private var wordsInflater: LayoutInflater? = null
     private var wordsForSuggestions: HashMap<String, ArrayList<String>>? = null
-    private var mDatabase: SQLiteDatabase? = null
     lateinit var cameraPermission: Array<String>
     lateinit var storagePermission: Array<String>
 
@@ -112,7 +108,6 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
         super.onCreate(savedInstanceState)
         // Confirm this fragment has menu items.
         setHasOptionsMenu(true)
-        mDatabase = StudySetsBaseHelper(context).writableDatabase
         wordsForSuggestions = save()
     }
 
@@ -136,7 +131,6 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
         mAddWordBtn = view.findViewById(R.id.add_word_btn)
         mCommitWordsBtn = view.findViewById(R.id.commit_words_btn)
         mWordsLinearLayout = view.findViewById(R.id.main_linearlayout)
-        autoTranslateSwitch = view.findViewById(R.id.auto_translate_switch)
         wordScrollView = view.findViewById(R.id.word_scrollview)
         mResultCardView = view.findViewById(R.id.result_LL)
         MobileAds.initialize(context, BaseVariables.REWARDED_VIDEO_TEST)
@@ -210,7 +204,6 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
                 Toast.makeText(context, "Result is empty", Toast.LENGTH_SHORT).show()
             }
         })
-        autoTranslateSwitch.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { compoundButton, b -> autoTranslate = b })
         return view
     }
 

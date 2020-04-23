@@ -118,21 +118,9 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
         studySetsList.observe(activity!!, Observer {
             if (it == null) return@Observer
 
-            if (it.isEmpty()) {
-                noStudySets()
-            }
-
             updateStudySetsList(it)
             progressBar.visibility = View.GONE
         })
-    }
-
-    private fun noStudySets() {
-        create_first_study_set_BTN.setOnClickListener{
-            val mainActivity:MainActivity = activity as MainActivity
-            mainActivity.viewPager.currentItem = 1
-        }
-        create_first_study_set_BTN.visibility = View.VISIBLE
     }
 
     private fun deleteStudySetById(id: Int) = launch {
@@ -148,10 +136,10 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun updateStudySetsList(studySetsList: List<StudySet>) {
-        items = studySetsList as ArrayList<StudySet>
-        mAdapter.filterListResult = studySetsList
-        mAdapter.itemsList = studySetsList
-        mAdapter.notifyDataSetChanged()
+            items = studySetsList as ArrayList<StudySet>
+            mAdapter.filterListResult = studySetsList
+            mAdapter.itemsList = studySetsList
+            mAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
