@@ -29,7 +29,8 @@
             android:layout_height="wrap_content"
             android:text="@string/you_have_not_passed_any_dictation"
             android:textColor="@color/blue"
-            android:textSize="20sp" />
+            android:textSize="15sp"
+            android:padding="10dp"/>
 
 
         <ImageButton

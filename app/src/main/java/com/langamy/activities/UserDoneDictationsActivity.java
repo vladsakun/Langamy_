@@ -1,9 +1,11 @@
 package com.langamy.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,7 +37,8 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.Adapter adapter;
     private ProgressBar progressBar;
-    private TextView recentDictation, noRecentDictations;
+    private LinearLayout noRecentDictations;
+    private ImageButton randomDictations;
 
     private ArrayList<Dictation> mDictations = new ArrayList<>();
 
@@ -51,8 +54,15 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.done_dictations_recyclerview);
         progressBar = findViewById(R.id.progressBar);
-        recentDictation = findViewById(R.id.recent_dictations_TV);
-        noRecentDictations = findViewById(R.id.no_recent_dictations_TV);
+        noRecentDictations = findViewById(R.id.no_recent_dictations_LL);
+        randomDictations = findViewById(R.id.randomDictation);
+
+        randomDictations.setOnClickListener(v-> {
+            Intent intent = new Intent(UserDoneDictationsActivity.this, SpecificDictationActivity.class);
+            intent.putExtra(BaseVariables.RANDOM_DICTATION_MESSAGE, true);
+            startActivity(intent);
+            finish();
+        });
 
         adapter = new DoneDictationsAdapter(mDictations, this);
 
@@ -61,7 +71,6 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
     }
 
     private void noRecentDictations() {
-        recentDictation.setVisibility(View.GONE);
         noRecentDictations.setVisibility(View.VISIBLE);
     }
 
