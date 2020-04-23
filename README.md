@@ -2,12 +2,12 @@
   Langamy is an app for learning foreigh words 
 </p>
 <p align="center">
+  <img src="https://i.imgur.com/q6mAWKC.png" width="200">
+</p>
+<p align="center">
   <img src="https://media.giphy.com/media/H4tqvHTtoCAh7PACIy/giphy.gif" height="600">
 </p>
 <br/>
-<p align="center">
-  <img src="https://i.imgur.com/q6mAWKC.png" width="200">
-</p>
 
 |List of your studysets|  Create new list of words |  View specific studyset  |
 | --- | --- | --- |
