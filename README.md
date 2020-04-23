@@ -2,7 +2,7 @@
   Langamy is an app for learning foreigh words 
 </p>
 <p align="center">
-  Langamy is an app for learning foreigh words 
+  <img src="https://giphy.com/gifs/H4tqvHTtoCAh7PACIy/html5" height="600">
 </p>
 <br/>
 <p align="center">
