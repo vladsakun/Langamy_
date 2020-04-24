@@ -88,13 +88,10 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_create_study_set)
-        try {
-            val studySet = intent.getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE) as StudySet
-            mStudySet = studySet
-            studySetId = studySet.id
-        } catch (e: NullPointerException) {
-            mStudySet = null
-        }
+        val studySet = intent.getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE) as StudySet
+        mStudySet = studySet
+        studySetId = studySet.id
+
         viewModel = ViewModelProvider(this, viewModelFactory).get(EditStudySetViewModel::class.java)
 
         //camera permission
@@ -112,9 +109,6 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
         wordsInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         progressBar.visibility = View.GONE
 
-        //Inflater for adding words
-        val wordsInflater = LayoutInflater.from(this)
-
         // адаптер
         val baseVariables = BaseVariables()
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, baseVariables.languages)
@@ -130,6 +124,7 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
 
         //Edit StudySet
         sendEditRequest = true
+
         mTitleEt.setText(mStudySet!!.name)
         val indexOfLanguageFrom = baseVariables.languageS_SHORT.indexOf(mStudySet!!.language_from)
         val indexOfLanguageTo = baseVariables.languageS_SHORT.indexOf(mStudySet!!.language_to)
@@ -142,7 +137,12 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
             for (i in 0 until jsonArray.length()) {
                 val jsonObject = jsonArray.getJSONObject(i)
                 val word = Word(jsonObject.getString("term"),
-                        jsonObject.getString("translation"))
+                        jsonObject.getString("translation"),
+                        jsonObject.getBoolean("firstStage"),
+                        jsonObject.getBoolean("secondStage"),
+                        jsonObject.getBoolean("thirdStage"),
+                        jsonObject.getBoolean("forthStage")
+                )
                 mWordList.add(word)
             }
         } catch (e: JSONException) {
@@ -156,7 +156,7 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
             translation.setText(mWordList[i].translation)
             mWordsLinearLayout.addView(wordView)
         }
-        mTitleEt.requestFocus()
+
         languageFromSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View,
                                         position: Int, id: Long) {
@@ -173,12 +173,14 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
 
             override fun onNothingSelected(arg0: AdapterView<*>?) {}
         }
+
         mAddWordBtn.setOnClickListener(View.OnClickListener {
             val listWordView = createListWordItem()
             val term = listWordView.findViewById<EditText>(R.id.term_TV)
             mWordsLinearLayout.addView(listWordView, mWordsLinearLayout.getChildCount())
             BaseVariables.showKeyboard(term)
         })
+
         mScanDocumentBtn.setOnClickListener(View.OnClickListener {
             if (!BaseVariables.checkNetworkConnection(this@EditStudySetActivity)) {
                 Toast.makeText(this@EditStudySetActivity, getString(R.string.you_need_an_internet_connection), Toast.LENGTH_SHORT).show()
