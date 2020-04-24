@@ -284,14 +284,14 @@ class LearnActivity : ScopedActivity(), KodeinAware {
     }
 
     fun goToNextPage() {
-        try {
-            updateStudyset()
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-        learnVP2!!.currentItem = learnVP2!!.currentItem + 1
-        val currentFragment = stages[learnVP2!!.currentItem]
+        learnVP2.currentItem = learnVP2.currentItem + 1
+        val currentFragment = stages[learnVP2.currentItem]
         if (currentFragment.javaClass.simpleName == "ContinueLearningFragment") {
+            try {
+                updateStudyset()
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
             val continueLearningFragment = currentFragment as ContinueLearningFragment
             continueLearningFragment.setStudysetId(studysetId, learnMarked)
             continueLearningFragment.setAmountOfWords(words.size)
@@ -383,7 +383,7 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         }
     }
 
-    fun updateLocalStudySet(studySet: StudySet, syncStatus:Boolean) = launch{
+    fun updateLocalStudySet(studySet: StudySet, syncStatus: Boolean) = launch {
         studySet.isSync_status = syncStatus
         viewModel.updateLocalStudySet(studySet)
         Log.d("UPDATE", studySet.words.toString())
