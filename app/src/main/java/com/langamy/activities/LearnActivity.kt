@@ -333,7 +333,7 @@ class LearnActivity : ScopedActivity(), KodeinAware {
             }
         }
         generatedStages.add(ContinueLearningFragment())
-        learnVP2!!.currentItem = learnVP2!!.currentItem + 1
+        learnVP2.currentItem = learnVP2.currentItem + 1
         return generatedStages
     }
 
@@ -371,9 +371,6 @@ class LearnActivity : ScopedActivity(), KodeinAware {
                         Toast.makeText(this@LearnActivity, "Changes have not been saved", Toast.LENGTH_SHORT).show()
                         return
                     }
-//                    val values = BaseVariables.getContentValuesForStudyset(studySet, true)
-//                    val uuidString = studySet!!.id.toString()
-
                 }
 
                 override fun onFailure(call: Call<StudySet?>, t: Throwable) {
@@ -382,10 +379,6 @@ class LearnActivity : ScopedActivity(), KodeinAware {
             })
             updateLocalStudySet(studySet, true)
         } else {
-//            val values = BaseVariables.getContentValuesForStudyset(studySet, false)
-//            val uuidString = studySet!!.id.toString()
-//            mDatabase.update(StudySetsTable.NAME, values,
-//                    Cols.id + "=?", arrayOf(uuidString))
             updateLocalStudySet(studySet, false)
         }
     }

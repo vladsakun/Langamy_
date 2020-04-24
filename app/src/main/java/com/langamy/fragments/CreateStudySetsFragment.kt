@@ -186,24 +186,24 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
             BaseVariables.showKeyboard(term)
         })
         mScanDocumentBtn.setOnClickListener(View.OnClickListener {
-            if (!BaseVariables.checkNetworkConnection(context)) {
+            if (!BaseVariables.checkNetworkConnection(context) || !mAd.isLoaded) {
                 Toast.makeText(context, getString(R.string.you_need_an_internet_connection), Toast.LENGTH_SHORT).show()
                 return@OnClickListener
             }
-            if (mAd.isLoaded()) {
+            if (mAd.isLoaded) {
                 mAd.show()
             }
         })
-        mCommitWordsBtn.setOnClickListener(View.OnClickListener {
-            if (mResultEt.getText().toString().length != 0) {
-                activity!!.window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+        mCommitWordsBtn.setOnClickListener {
+            if (mResultEt.getText().toString().isNotEmpty()) {
+                requireActivity().window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 progressBar.setVisibility(View.VISIBLE)
                 manyTranslate(mResultEt.getText().toString())
             } else {
                 Toast.makeText(context, "Result is empty", Toast.LENGTH_SHORT).show()
             }
-        })
+        }
         return view
     }
 
