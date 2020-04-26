@@ -26,7 +26,6 @@
                 android:id="@+id/create_study_set_LL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/offline_mode_RL"
                 android:orientation="vertical"
                 android:padding="10dp">
 
@@ -143,7 +142,15 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/create_study_set_LL"
                 android:orientation="vertical"
-                android:paddingBottom="40dp" />
+                android:paddingBottom="40dp"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:paddingBottom="40dp"
+                android:id="@+id/words_recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/create_study_set_LL" />
         </RelativeLayout>
     </ScrollView>
 
@@ -160,8 +167,9 @@
         app:srcCompat="@drawable/ic_plus_white_24dp"
         app:tint="#fff" />
 
-    <include layout="@layout/custom_progress_bar"
-        android:visibility="gone"/>
+    <include
+        layout="@layout/custom_progress_bar"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

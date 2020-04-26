@@ -11,6 +11,7 @@ public class Word implements Serializable {
     private boolean thirdStage;
     private boolean forthStage;
     private boolean marked;
+    private boolean showKeyboard;
 
     public Word(String term, String translation) {
         this.term = term;
@@ -28,6 +29,7 @@ public class Word implements Serializable {
         this.secondStage = secondStage;
         this.thirdStage = thirdStage;
         this.forthStage = forthStage;
+        this.showKeyboard = false;
     }
 
     public boolean isMarked() {
@@ -84,5 +86,13 @@ public class Word implements Serializable {
 
     public void setTranslation(String translation) {
         this.translation = translation;
+    }
+
+    public boolean isShowKeyboard() {
+        return showKeyboard;
+    }
+
+    public void setShowKeyboard(boolean showKeyboard) {
+        this.showKeyboard = showKeyboard;
     }
 }

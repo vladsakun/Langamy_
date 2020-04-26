@@ -10,22 +10,26 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.*
-import android.view.View.OnFocusChangeListener
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bignerdranch.android.main.R
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.reward.RewardItem
+import com.google.android.gms.ads.reward.RewardedVideoAd
+import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
+import com.langamy.adapters.WordsAdapter
 import com.langamy.api.LangamyAPI
 import com.langamy.base.classes.BaseVariables
 import com.langamy.base.classes.StudySet
@@ -48,21 +52,22 @@ import org.kodein.di.generic.instance
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.Retrofit
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.*
 
-class EditStudySetActivity : ScopedActivity(), KodeinAware {
+class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
+        KodeinAware {
 
     override val kodein by closestKodein()
 
     private var mStudySet: StudySet? = null
-    var retrofit = BaseVariables.retrofit
-    var mLangamyAPI = retrofit.create(LangamyAPI::class.java)
+    var retrofit: Retrofit = BaseVariables.retrofit
+    var mLangamyAPI: LangamyAPI = retrofit.create(LangamyAPI::class.java)
     private var languageToTranslate = "ru"
     private var languageFromTranslate = "en"
-    private var autoTranslate = false
     private var sendEditRequest = false
     private var studySetId = 0
 
@@ -74,6 +79,10 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
     private lateinit var mWordsLinearLayout: LinearLayout
     private lateinit var mResultCardView: LinearLayout
     private lateinit var wordScrollView: ScrollView
+    lateinit var wordsModelArrayList: ArrayList<Word>
+    lateinit var mAdapter: WordsAdapter
+    private var recyclerView: RecyclerView? = null
+
 
     private var wordsInflater: LayoutInflater? = null
     private var wordsForSuggestions: HashMap<String, ArrayList<String>>? = null
@@ -81,6 +90,7 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
     lateinit var storagePermission: Array<String>
 
     var image_uri: Uri? = null
+    lateinit var mAd: RewardedVideoAd
 
     private val viewModelFactory by instance<EditStudySetViewModelFactory>()
     private lateinit var viewModel: EditStudySetViewModel
@@ -88,6 +98,9 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_create_study_set)
+
+        wordsModelArrayList = ArrayList()
+
         val studySet = intent.getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE) as StudySet
         mStudySet = studySet
         studySetId = studySet.id
@@ -97,9 +110,12 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
         //camera permission
         cameraPermission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
         storagePermission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+
         mResultEt = resultEt
         mTitleEt = title_edittext
+        recyclerView = findViewById(R.id.words_recyclerview)
         mScanDocumentBtn = findViewById(R.id.scan_document_btn)
         mAddWordBtn = findViewById(R.id.add_word_btn)
         mCommitWordsBtn = findViewById(R.id.commit_words_btn)
@@ -108,6 +124,10 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
         wordScrollView = findViewById(R.id.word_scrollview)
         wordsInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         progressBar.visibility = View.GONE
+
+        MobileAds.initialize(this, BaseVariables.REWARDED_VIDEO_TEST)
+        mAd = MobileAds.getRewardedVideoAdInstance(this)
+        mAd.rewardedVideoAdListener = this
 
         // адаптер
         val baseVariables = BaseVariables()
@@ -128,9 +148,10 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
         mTitleEt.setText(mStudySet!!.name)
         val indexOfLanguageFrom = baseVariables.languageS_SHORT.indexOf(mStudySet!!.language_from)
         val indexOfLanguageTo = baseVariables.languageS_SHORT.indexOf(mStudySet!!.language_to)
+
         languageFromSpinner.setSelection(indexOfLanguageFrom)
         languageToSpinner.setSelection(indexOfLanguageTo)
-        val mWordList = ArrayList<Word>()
+
         val words = mStudySet!!.words
         try {
             val jsonArray = JSONArray(words)
@@ -143,24 +164,17 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
                         jsonObject.getBoolean("thirdStage"),
                         jsonObject.getBoolean("forthStage")
                 )
-                mWordList.add(word)
+                wordsModelArrayList.add(word)
             }
         } catch (e: JSONException) {
             e.printStackTrace()
-        }
-        for (i in mWordList.indices) {
-            val wordView = createListWordItem()
-            val term = wordView.findViewById<EditText>(R.id.term_TV)
-            val translation = wordView.findViewById<EditText>(R.id.translation_TV)
-            term.setText(mWordList[i].term)
-            translation.setText(mWordList[i].translation)
-            mWordsLinearLayout.addView(wordView)
         }
 
         languageFromSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View,
                                         position: Int, id: Long) {
                 languageFromTranslate = baseVariables.languageS_SHORT[position]
+                mAdapter.languageFromTranslate = baseVariables.languageS_SHORT[position]
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>?) {}
@@ -169,28 +183,44 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
             override fun onItemSelected(parent: AdapterView<*>?, view: View,
                                         position: Int, id: Long) {
                 languageToTranslate = baseVariables.languageS_SHORT[position]
+                mAdapter.languageToTranslate = baseVariables.languageS_SHORT[position]
             }
 
             override fun onNothingSelected(arg0: AdapterView<*>?) {}
         }
 
-        mAddWordBtn.setOnClickListener(View.OnClickListener {
-            val listWordView = createListWordItem()
-            val term = listWordView.findViewById<EditText>(R.id.term_TV)
-            mWordsLinearLayout.addView(listWordView, mWordsLinearLayout.getChildCount())
-            BaseVariables.showKeyboard(term)
-        })
+        mAdapter = WordsAdapter(object : WordsAdapter.Callback {
+            override fun onDeleteClicked(translationSupport: TextView, itemId: Int) {
+                wordsModelArrayList.removeAt(itemId)
+                mAdapter.notifyItemRemoved(itemId)
+                mAdapter.notifyItemRangeChanged(itemId, wordsModelArrayList.size)
+                BaseVariables.hideKeyboard(this@EditStudySetActivity)
+            }
+
+        }, this, wordsModelArrayList, wordScrollView, result_LL, save(), true)
+
+        recyclerView!!.isNestedScrollingEnabled = false
+        recyclerView!!.adapter = mAdapter
+        recyclerView!!.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        mAddWordBtn.setOnClickListener {
+            mAdapter.edit = false
+            wordsModelArrayList.add(Word("", "", false, false, false, false))
+            mAdapter.notifyItemInserted(mAdapter.itemCount)
+        }
 
         mScanDocumentBtn.setOnClickListener(View.OnClickListener {
             if (!BaseVariables.checkNetworkConnection(this@EditStudySetActivity)) {
                 Toast.makeText(this@EditStudySetActivity, getString(R.string.you_need_an_internet_connection), Toast.LENGTH_SHORT).show()
                 return@OnClickListener
             }
-            showImageImportDialog()
-            mResultCardView.setVisibility(View.VISIBLE)
+            if (mAd.isLoaded) {
+                mAd.show()
+            }
         })
+
         mCommitWordsBtn.setOnClickListener(View.OnClickListener {
-            if (mResultEt.getText().toString().length != 0) {
+            if (mResultEt.getText().toString().isNotEmpty()) {
                 window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 progressBar.setVisibility(View.VISIBLE)
@@ -207,7 +237,6 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
     }
 
     private fun manyTranslate(words: String) {
-        val wordArrayList = ArrayList<Word>()
         val stringsToBeTranslated = words.replace("\\r?\\n".toRegex(), ";")
                 .replace("\\[".toRegex(), "").replace("]".toRegex(), "")
         val terms = stringsToBeTranslated.split(";").toTypedArray()
@@ -217,6 +246,8 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
+        mAdapter.edit = true
+
         val call = mLangamyAPI.translate(postData, languageFromTranslate, languageToTranslate, "many")
         call.enqueue(object : Callback<TranslationResponse> {
             override fun onResponse(call: Call<TranslationResponse>, response: Response<TranslationResponse>) {
@@ -225,20 +256,17 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
                     return
                 }
                 val translations = response.body()!!.translation.toString().split(";").toTypedArray()
-                Log.d("RESPONSE", response.body()!!.translation.toString())
-                Log.d("Translations Length", translations.size.toString())
-                Log.d("Term Length", terms.size.toString())
+
+
                 for (i in terms.indices) {
-                    wordArrayList.add(Word(terms[i], translations[i]))
+                    try{
+                        wordsModelArrayList.add(Word(terms[i], translations[i]))
+                    }catch (e: ArrayIndexOutOfBoundsException){
+                        wordsModelArrayList.add(Word("", ""))
+                    }
                 }
-                for (i in wordArrayList.indices) {
-                    val wordListItem = createListWordItem()
-                    val term = wordListItem.findViewById<EditText>(R.id.term_TV)
-                    val translation = wordListItem.findViewById<EditText>(R.id.translation_TV)
-                    term.setText(wordArrayList[i].term)
-                    translation.setText(wordArrayList[i].translation)
-                    mWordsLinearLayout!!.addView(wordListItem, mWordsLinearLayout!!.childCount)
-                }
+
+                mAdapter.notifyDataSetChanged()
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 progressBar!!.visibility = View.GONE
             }
@@ -247,62 +275,8 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
                 Toast.makeText(this@EditStudySetActivity, t.toString(), Toast.LENGTH_SHORT).show()
             }
         })
-    }
+        mAdapter.edit = false
 
-    fun createListWordItem(): View {
-        val wordView = wordsInflater!!.inflate(R.layout.list_words_item, null)
-        val term = wordView.findViewById<AutoCompleteTextView>(R.id.term_TV)
-        val translationSupport = wordView.findViewById<TextView>(R.id.translation_support)
-        val translation = wordView.findViewById<EditText>(R.id.translation_TV)
-        val removeBtn = wordView.findViewById<ImageButton>(R.id.remove_list_word_item_btn)
-        removeBtn.setOnClickListener {
-            val parent = removeBtn.parent.parent.parent as LinearLayout
-            parent.removeView(removeBtn.parent.parent as View)
-        }
-        term.onFocusChangeListener = OnFocusChangeListener { view1, hasFocus ->
-            if (hasFocus) {
-                wordScrollView!!.post {
-                    val parent = translation.parent.parent as CardView
-                    val mainLinearLayout = parent.parent as LinearLayout
-                    val mainRelativeLayout = mainLinearLayout.parent as RelativeLayout
-                    val linearLayout = mainRelativeLayout.findViewById<LinearLayout>(R.id.result_LL)
-                    wordScrollView!!.scrollTo(0, parent.bottom + linearLayout.height)
-                }
-            }
-        }
-        term.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (s.toString().trim { it <= ' ' }.length == 1) {
-                    val firstChar = Character.toLowerCase(s[0])
-                    if (firstChar >= 'a' && firstChar <= 'z' || firstChar >= 'A' && firstChar <= 'Z') {
-                        val words = wordsForSuggestions!!["$firstChar.txt"]!!
-                        val wordsStringArr = words.toTypedArray()
-
-                        // Создаем адаптер для автозаполнения элемента AutoCompleteTextView
-                        val adapter = ArrayAdapter(this@EditStudySetActivity, R.layout.support_simple_spinner_dropdown_item,
-                                wordsStringArr)
-                        term.setAdapter(adapter)
-                    }
-                }
-            }
-
-            override fun afterTextChanged(s: Editable) {}
-        })
-        translation.onFocusChangeListener = OnFocusChangeListener { view1, hasFocus ->
-            if (hasFocus) {
-                Translate(term.text.toString().trim { it <= ' ' }, translationSupport)
-                wordScrollView!!.post {
-                    val parent = translation.parent.parent as CardView
-                    val mainLinearLayout = parent.parent as LinearLayout
-                    val mainRelativeLayout = mainLinearLayout.parent as RelativeLayout
-                    val linearLayout = mainRelativeLayout.findViewById<LinearLayout>(R.id.result_LL)
-                    wordScrollView!!.scrollTo(0, parent.bottom + linearLayout.height)
-                }
-            }
-        }
-        translationSupport.setOnClickListener { translation.setText(translationSupport.text.toString()) }
-        return wordView
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -326,18 +300,17 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
             }
             val wordList = JSONArray()
             try {
-                for (i in 0 until mWordsLinearLayout!!.childCount) {
-                    val layout = mWordsLinearLayout!!.getChildAt(i)
+                for (i in WordsAdapter.wordsArrayList) {
                     val currentWord = JSONObject()
-                    val translation = layout.findViewById<EditText>(R.id.translation_TV)
-                    val term = layout.findViewById<EditText>(R.id.term_TV)
-                    if (!(translation.text.toString() == "" && term.text.toString() == "")) {
-                        currentWord.put("term", term.text.toString().trim { it <= ' ' })
-                        currentWord.put("translation", translation.text.toString().trim { it <= ' ' })
-                        currentWord.put("firstStage", false)
-                        currentWord.put("secondStage", false)
-                        currentWord.put("thirdStage", false)
-                        currentWord.put("forthStage", false)
+                    val translation = i.translation
+                    val term = i.term
+                    if (!(translation == "" && term == "")) {
+                        currentWord.put("term", term.trim { it <= ' ' })
+                        currentWord.put("translation", translation.trim { it <= ' ' })
+                        currentWord.put("firstStage", i.isFirstStage)
+                        currentWord.put("secondStage", i.isSecondStage)
+                        currentWord.put("thirdStage", i.isThirdStage)
+                        currentWord.put("forthStage", i.isForthStage)
                         wordList.put(currentWord)
                     }
                 }
@@ -356,7 +329,7 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
     private fun updateStudySet(id: Int, wordList: JSONArray) {
         val acct = GoogleSignIn.getLastSignedInAccount(this)
 
-        val studySet = StudySet(acct!!.email, mTitleEt!!.text.toString(), wordList.toString(),
+        val studySet = StudySet(acct!!.email, mTitleEt.text.toString(), wordList.toString(),
                 languageToTranslate, languageFromTranslate, wordList.length())
         studySet.id = id
         val call = mLangamyAPI.patchStudySet(id, studySet)
@@ -537,7 +510,7 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
                                 words.append(word).append("\n")
                             }
                             //set text to edit text
-                            mResultEt!!.append(words.toString())
+                            mResultEt.append(words.toString())
                         }
                         .addOnFailureListener { e -> Toast.makeText(this@EditStudySetActivity, e.toString(), Toast.LENGTH_SHORT).show() }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
@@ -546,30 +519,6 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
                 Toast.makeText(this, "" + error, Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun Translate(stringToTranslate: String, translationSupport: TextView) {
-        val postData = JSONObject()
-        try {
-            postData.put("words", stringToTranslate)
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-        val call = mLangamyAPI.translate(postData, languageFromTranslate, languageToTranslate, "one")
-        call.enqueue(object : Callback<TranslationResponse> {
-            override fun onResponse(call: Call<TranslationResponse>, response: Response<TranslationResponse>) {
-                if (!response.isSuccessful) {
-                    Toast.makeText(this@EditStudySetActivity, response.code().toString(), Toast.LENGTH_SHORT).show()
-                    return
-                }
-                translationSupport.visibility = View.VISIBLE
-                translationSupport.text = response.body()!!.translation
-            }
-
-            override fun onFailure(call: Call<TranslationResponse>, t: Throwable) {
-                Toast.makeText(this@EditStudySetActivity, t.toString(), Toast.LENGTH_SHORT).show()
-            }
-        })
     }
 
     private fun save(): HashMap<String, ArrayList<String>> {
@@ -614,5 +563,44 @@ class EditStudySetActivity : ScopedActivity(), KodeinAware {
         private const val STORAGE_REQUEST_CODE = 400
         private const val IMAGE_PICK_GALLERY_CODE = 1000
         private const val IMAGE_PICK_CAMERA_CODE = 1001
+    }
+    override fun onRewardedVideoAdLoaded() {
+        Log.d("VIDEO", "An ad has loaded")
+        mScanDocumentBtn.isEnabled = true
+    }
+
+    override fun onRewardedVideoAdOpened() {
+        Log.d("VIDEO", "An ad has opened")
+    }
+
+    override fun onRewardedVideoStarted() {
+        Log.d("VIDEO", "An ad has started")
+    }
+
+    override fun onRewardedVideoAdClosed() {
+        Log.d("VIDEO", "An ad has closed")
+        loadRewardedVideoAd()
+    }
+
+    override fun onRewarded(rewardItem: RewardItem) {
+        showImageImportDialog()
+        mResultCardView.visibility = View.VISIBLE
+        loadRewardedVideoAd()
+    }
+
+    override fun onRewardedVideoAdLeftApplication() {
+        Log.d("VIDEO", "An ad has caused focus to leave")
+    }
+
+    override fun onRewardedVideoAdFailedToLoad(i: Int) {
+        Log.d("VIDEO", "An ad has failed to load")
+    }
+
+    override fun onRewardedVideoCompleted() {
+        Log.d("VIDEO", "An ad has completed")
+    }
+
+    private fun loadRewardedVideoAd() {
+        mAd.loadAd(BaseVariables.REWARDED_VIDEO_TEST, AdRequest.Builder().build())
     }
 }
