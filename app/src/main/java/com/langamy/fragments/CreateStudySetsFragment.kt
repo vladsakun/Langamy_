@@ -122,7 +122,6 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
                 wordsModelArrayList.removeAt(itemId)
                 mAdapter.notifyItemRemoved(itemId)
                 mAdapter.notifyItemRangeChanged(itemId, wordsModelArrayList.size)
-                BaseVariables.hideKeyboard(activity)
             }
 
         }, requireContext(), wordsModelArrayList, wordScrollView, result_LL, save(), true)

@@ -3,7 +3,6 @@ package com.langamy.activities
 import android.Manifest
 import android.app.Activity
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -11,7 +10,10 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
@@ -83,8 +85,6 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
     lateinit var mAdapter: WordsAdapter
     private var recyclerView: RecyclerView? = null
 
-
-    private var wordsInflater: LayoutInflater? = null
     private var wordsForSuggestions: HashMap<String, ArrayList<String>>? = null
     lateinit var cameraPermission: Array<String>
     lateinit var storagePermission: Array<String>
@@ -112,7 +112,6 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
         storagePermission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
         val progressBar = findViewById<ProgressBar>(R.id.progressBar)
-
         mResultEt = resultEt
         mTitleEt = title_edittext
         recyclerView = findViewById(R.id.words_recyclerview)
@@ -122,14 +121,15 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
         mResultCardView = findViewById(R.id.result_LL)
         mWordsLinearLayout = findViewById(R.id.main_linearlayout)
         wordScrollView = findViewById(R.id.word_scrollview)
-        wordsInflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         progressBar.visibility = View.GONE
 
         MobileAds.initialize(this, BaseVariables.REWARDED_VIDEO_TEST)
         mAd = MobileAds.getRewardedVideoAdInstance(this)
         mAd.rewardedVideoAdListener = this
 
-        // адаптер
+        loadRewardedVideoAd()
+
+        // Adapter for spinners
         val baseVariables = BaseVariables()
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, baseVariables.languages)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -138,7 +138,7 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
         languageFromSpinner.adapter = adapter
         languageToSpinner.adapter = adapter
 
-        // заголовок
+        // Titles for spinners
         languageFromSpinner.prompt = "Language from"
         languageToSpinner.prompt = "Language to"
 
@@ -151,24 +151,6 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
 
         languageFromSpinner.setSelection(indexOfLanguageFrom)
         languageToSpinner.setSelection(indexOfLanguageTo)
-
-        val words = mStudySet!!.words
-        try {
-            val jsonArray = JSONArray(words)
-            for (i in 0 until jsonArray.length()) {
-                val jsonObject = jsonArray.getJSONObject(i)
-                val word = Word(jsonObject.getString("term"),
-                        jsonObject.getString("translation"),
-                        jsonObject.getBoolean("firstStage"),
-                        jsonObject.getBoolean("secondStage"),
-                        jsonObject.getBoolean("thirdStage"),
-                        jsonObject.getBoolean("forthStage")
-                )
-                wordsModelArrayList.add(word)
-            }
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
 
         languageFromSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View,
@@ -194,17 +176,35 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
                 wordsModelArrayList.removeAt(itemId)
                 mAdapter.notifyItemRemoved(itemId)
                 mAdapter.notifyItemRangeChanged(itemId, wordsModelArrayList.size)
-                BaseVariables.hideKeyboard(this@EditStudySetActivity)
             }
 
         }, this, wordsModelArrayList, wordScrollView, result_LL, save(), true)
+
+        val words = mStudySet!!.words
+        try {
+            val jsonArray = JSONArray(words)
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                val word = Word(jsonObject.getString("term"),
+                        jsonObject.getString("translation"),
+                        jsonObject.getBoolean("firstStage"),
+                        jsonObject.getBoolean("secondStage"),
+                        jsonObject.getBoolean("thirdStage"),
+                        jsonObject.getBoolean("forthStage")
+                )
+                wordsModelArrayList.add(word)
+            }
+            mAdapter.edit = false
+
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
 
         recyclerView!!.isNestedScrollingEnabled = false
         recyclerView!!.adapter = mAdapter
         recyclerView!!.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
 
         mAddWordBtn.setOnClickListener {
-            mAdapter.edit = false
             wordsModelArrayList.add(Word("", "", false, false, false, false))
             mAdapter.notifyItemInserted(mAdapter.itemCount)
         }
@@ -293,7 +293,7 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
                 Toast.makeText(this@EditStudySetActivity, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show()
                 return false
             }
-            if (mTitleEt!!.text.length == 0) {
+            if (mTitleEt.text.isEmpty()) {
                 Toast.makeText(this, "Title is empty", Toast.LENGTH_SHORT).show()
                 BaseVariables.showKeyboard(mTitleEt)
                 return false
