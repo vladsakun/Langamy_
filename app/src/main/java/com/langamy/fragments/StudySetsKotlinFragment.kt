@@ -17,6 +17,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bignerdranch.android.main.R
+import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.google.android.gms.ads.AdRequest
 import com.langamy.activities.*
 import com.langamy.adapters.StudySetsAdapter
@@ -61,17 +62,17 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
         items = arrayListOf()
 
         randomDictation.setOnClickListener {
-            val intent = Intent(context!!, SpecificDictationActivity::class.java)
+            val intent = Intent(requireContext(), SpecificDictationActivity::class.java)
             intent.putExtra(BaseVariables.RANDOM_DICTATION_MESSAGE, true)
             startActivity(intent)
         }
 
         recent_dictations.setOnClickListener {
-            startActivity(Intent(context!!, UserDoneDictationsActivity::class.java))
+            startActivity(Intent(requireContext(), UserDoneDictationsActivity::class.java))
         }
 
         dictations.setOnClickListener {
-            startActivity(Intent(context!!, MyDictationsActivity::class.java))
+            startActivity(Intent(requireContext(), MyDictationsActivity::class.java))
         }
 
         search_dictation_btn.setOnClickListener {
@@ -107,7 +108,7 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
 
     private fun bindUI() = launch {
 
-        viewModel.connectivity.observe(activity!!, Observer {
+        viewModel.connectivity.observe(requireActivity(), Observer {
             if (it.isConnected) {
                 initAd()
             }
@@ -115,7 +116,7 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
 
         val studySetsList = viewModel.studySets.await()
 
-        studySetsList.observe(activity!!, Observer {
+        studySetsList.observe(requireActivity(), Observer {
             if (it == null) return@Observer
 
             updateStudySetsList(it)
@@ -148,9 +149,9 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
         inflater.inflate(R.menu.menu_help_item, menu)
         inflater.inflate(R.menu.menu_study_sets_fragment, menu)
 
-        val searchManager = context!!.getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchManager = requireContext().getSystemService(Context.SEARCH_SERVICE) as SearchManager
         searchView = menu.findItem(R.id.action_search).actionView as SearchView
-        searchView!!.setSearchableInfo(searchManager.getSearchableInfo(activity!!.componentName))
+        searchView!!.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().componentName))
         searchView!!.maxWidth = Int.MAX_VALUE
 
         searchView!!.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -178,7 +179,7 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
     private fun playHelp() {
         BaseVariables.hideKeyboard(activity)
         val fq = FancyShowCaseQueue()
-        val helpBtn = FancyShowCaseView.Builder(activity!!)
+        val helpBtn = FancyShowCaseView.Builder(requireActivity())
                 .customView(R.layout.fancyshowcase_with_image, object : OnViewInflateListener {
                     override fun onViewInflated(view: View) {
                         BaseVariables.setImage(view, getString(R.string.fancy_help_btn),
@@ -187,7 +188,7 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
                 })
                 .backgroundColor(Color.parseColor("#E621618C"))
                 .build()
-        val myDictations = FancyShowCaseView.Builder(activity!!)
+        val myDictations = FancyShowCaseView.Builder(requireActivity())
                 .focusOn(dictations)
                 .customView(R.layout.custom_layout_for_fancyshowcase, object : OnViewInflateListener {
                     override fun onViewInflated(view: View) {
@@ -198,7 +199,7 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
                 })
                 .backgroundColor(Color.parseColor("#E621618C"))
                 .build()
-        val randomDictations = FancyShowCaseView.Builder(activity!!)
+        val randomDictations = FancyShowCaseView.Builder(requireActivity())
                 .focusOn(randomDictation)
                 .customView(R.layout.custom_layout_for_fancyshowcase, object : OnViewInflateListener {
                     override fun onViewInflated(view: View) {
@@ -209,7 +210,7 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
                 })
                 .backgroundColor(Color.parseColor("#E621618C"))
                 .build()
-        val doneDictations = FancyShowCaseView.Builder(activity!!)
+        val doneDictations = FancyShowCaseView.Builder(requireActivity())
                 .focusOn(recent_dictations)
                 .customView(R.layout.custom_layout_for_fancyshowcase, object : OnViewInflateListener {
                     override fun onViewInflated(view: View) {
@@ -225,7 +226,7 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
         val tabAt = navigation.getTabAt(1)
         val tabView: View = tabAt!!.view
         val viewPager = activity.viewPager
-        val createStudySet = FancyShowCaseView.Builder(getActivity()!!)
+        val createStudySet = FancyShowCaseView.Builder(requireActivity())
                 .customView(R.layout.custom_layout_for_fancyshowcase, object : OnViewInflateListener {
                     override fun onViewInflated(view: View) {
                         BaseVariables.setCustomFancyCaseView(view, getString(R.string.fancy_create_studyset), fq)
