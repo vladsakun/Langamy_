@@ -26,16 +26,26 @@ This application was created during the course __"Samsung IT School Ukraine"__.
 This project is implemented in __Android Studio 3.6.3__. This app works correctly at __API 25__ : Android 7.1 (Nougat) and higher. Tested on Smasung S8 Plus, Samsung Galaxy A5 (2017), Pixel 2 API 29 (Virtual Device), Pixel 2XL API 29 (Virtual Device) and Pixel 2 API 25 (Virtual Device).
 
 # Features :
-- Remote storage of all words on the server in Django (Python web framework);
+
+*  __Remote storage of all words on the server in Django (Python web framework)__
+
 <img src="https://media.giphy.com/media/h3zRg0R0vj38GQx1Uk/giphy.gif" height="600">
-- Caching data with Room for offline learning and sync with server;
+
+*  __Caching data with Room for offline learning and sync with server__;
+
 <img src="https://media.giphy.com/media/kfGGsezI2fCLEabiqG/giphy.gif" height="600">
-- Creating dictations with 3 ways of cheching knowledge of words;
+
+*  __Creating dictations with 3 ways of cheching knowledge of words__;
+
 <img src="https://media.giphy.com/media/db3kkxYLIIlmIaegnd/giphy.gif" height="600">
-- Combination study sets into one dictation;
+
+*  __Combination study sets into one dictation__;
+
 <img src="https://media.giphy.com/media/VHwqAIaM37IFKgmYE1/giphy.gif" height="600">
-- Pass interactive dictations with mistakes report;
-- Fast converting static papers into interective dictations and study sets;
+
+*  __Pass interactive dictations with mistakes report__;
+
+*  __Fast converting static papers into interective dictations and study sets__;
 
 <p align="center">
   <img src="https://media.giphy.com/media/H4tqvHTtoCAh7PACIy/giphy.gif" height="600">
