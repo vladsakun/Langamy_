@@ -28,7 +28,6 @@ This project is implemented in __Android Studio 3.6.3__. This app works correctl
 # Features :
 - Remote storage of all words on the server in Django (Python web framework);
 <img src="https://media.giphy.com/media/h3zRg0R0vj38GQx1Uk/giphy.gif" height="600">
-- Fast converting static papers into interective dictations and study sets;
 - Caching data with Room for offline learning and sync with server;
 <img src="https://media.giphy.com/media/kfGGsezI2fCLEabiqG/giphy.gif" height="600">
 - Creating dictations with 3 ways of cheching knowledge of words;
@@ -36,7 +35,7 @@ This project is implemented in __Android Studio 3.6.3__. This app works correctl
 - Combination study sets into one dictation;
 <img src="https://media.giphy.com/media/VHwqAIaM37IFKgmYE1/giphy.gif" height="600">
 - Pass interactive dictations with mistakes report;
-<img src="https://media.giphy.com/media/VCz6c54OgVf5dfmdX6/giphy.gif" height="600">
+- Fast converting static papers into interective dictations and study sets;
 
 <p align="center">
   <img src="https://media.giphy.com/media/H4tqvHTtoCAh7PACIy/giphy.gif" height="600">
