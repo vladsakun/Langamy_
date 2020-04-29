@@ -1,3 +1,4 @@
+# Langamy
 <p align="center">
   Langamy is an app for learning foreigh words 
 </p>
