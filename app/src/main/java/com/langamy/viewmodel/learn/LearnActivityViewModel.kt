@@ -1,4 +1,4 @@
-package com.langamy.viewmodel
+package com.langamy.viewmodel.learn
 
 import androidx.lifecycle.ViewModel
 import com.langamy.base.classes.StudySet

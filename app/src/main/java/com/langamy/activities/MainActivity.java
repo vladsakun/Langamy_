@@ -29,7 +29,6 @@ import com.langamy.api.LangamyAPI;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.ConnectionModel;
 import com.langamy.fragments.CreateStudySetsFragment;
-import com.langamy.fragments.ProfileFragment;
 import com.langamy.fragments.ProfileKotlinFragment;
 import com.langamy.fragments.StudySetsKotlinFragment;
 import com.langamy.viewmodel.MainViewModel;
@@ -47,11 +46,6 @@ import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
-
-    //    Fragments
-    ProfileFragment mProfileFragment;
-    StudySetsKotlinFragment mStudySetsFragment;
-    CreateStudySetsFragment createStudySetsFragment;
 
     private ArrayList<Fragment> fragments;
 
@@ -110,14 +104,11 @@ public class MainActivity extends AppCompatActivity {
         ImageButton infoBtn = findViewById(R.id.offline_mode_IB);
 
         //Fragment inizialization
-        mProfileFragment = new ProfileFragment();
-        mStudySetsFragment = new StudySetsKotlinFragment();
-        createStudySetsFragment = new CreateStudySetsFragment();
 
         fragments = new ArrayList<>();
 
-        fragments.add(mStudySetsFragment);
-        fragments.add(createStudySetsFragment);
+        fragments.add(new StudySetsKotlinFragment());
+        fragments.add(new CreateStudySetsFragment());
         fragments.add(new ProfileKotlinFragment());
 
         mViewPager.setAdapter(createAdapter());

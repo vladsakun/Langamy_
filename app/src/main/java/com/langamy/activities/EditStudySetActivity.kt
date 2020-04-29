@@ -27,7 +27,6 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
@@ -38,8 +37,8 @@ import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.TranslationResponse
 import com.langamy.base.classes.Word
 import com.langamy.base.kotlin.ScopedActivity
-import com.langamy.viewmodel.EditStudySetViewModel
-import com.langamy.viewmodel.EditStudySetViewModelFactory
+import com.langamy.viewmodel.edit.EditStudySetViewModel
+import com.langamy.viewmodel.edit.EditStudySetViewModelFactory
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.custom_progress_bar.*
@@ -70,8 +69,6 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
     var mLangamyAPI: LangamyAPI = retrofit.create(LangamyAPI::class.java)
     private var languageToTranslate = "ru"
     private var languageFromTranslate = "en"
-    private var sendEditRequest = false
-    private var studySetId = 0
 
     private lateinit var mResultEt: EditText
     private lateinit var mTitleEt: EditText
@@ -89,7 +86,7 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
     lateinit var cameraPermission: Array<String>
     lateinit var storagePermission: Array<String>
 
-    var image_uri: Uri? = null
+    private var imageUri: Uri? = null
     lateinit var mAd: RewardedVideoAd
 
     private val viewModelFactory by instance<EditStudySetViewModelFactory>()
@@ -101,9 +98,7 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
 
         wordsModelArrayList = ArrayList()
 
-        val studySet = intent.getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE) as StudySet
-        mStudySet = studySet
-        studySetId = studySet.id
+        mStudySet = intent.getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE) as StudySet
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(EditStudySetViewModel::class.java)
 
@@ -141,9 +136,6 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
         // Titles for spinners
         languageFromSpinner.prompt = "Language from"
         languageToSpinner.prompt = "Language to"
-
-        //Edit StudySet
-        sendEditRequest = true
 
         mTitleEt.setText(mStudySet!!.name)
         val indexOfLanguageFrom = baseVariables.languageS_SHORT.indexOf(mStudySet!!.language_from)
@@ -317,7 +309,9 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
                 if (wordList.length() < 4) {
                     Toast.makeText(this, "Study set must include 4 or more words", Toast.LENGTH_SHORT).show()
                 } else {
-                    updateStudySet(studySetId, wordList)
+                    mStudySet!!.words = wordList.toString()
+                    mStudySet!!.amount_of_words = wordList.length()
+                    updateStudySet(mStudySet!!.id, mStudySet!!)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -326,12 +320,12 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
         return super.onOptionsItemSelected(item)
     }
 
-    private fun updateStudySet(id: Int, wordList: JSONArray) {
-        val acct = GoogleSignIn.getLastSignedInAccount(this)
+    private fun updateStudySet(id: Int, studySet: StudySet) {
 
-        val studySet = StudySet(acct!!.email, mTitleEt.text.toString(), wordList.toString(),
-                languageToTranslate, languageFromTranslate, wordList.length())
-        studySet.id = id
+        studySet.language_from = languageFromTranslate
+        studySet.language_to = languageToTranslate
+        studySet.name = mTitleEt.text.toString()
+
         val call = mLangamyAPI.patchStudySet(id, studySet)
 
         call.enqueue(object : Callback<StudySet> {
@@ -405,9 +399,9 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, "NewPic") //title of the picture
         values.put(MediaStore.Images.Media.DESCRIPTION, "Image To text") // description
-        image_uri = Objects.requireNonNull(this).contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        imageUri = Objects.requireNonNull(this).contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE)
     }
 
@@ -468,7 +462,7 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
             }
             if (requestCode == IMAGE_PICK_CAMERA_CODE) {
                 //got image from camera now crop it
-                CropImage.activity(image_uri)
+                CropImage.activity(imageUri)
                         .setGuidelines(CropImageView.Guidelines.ON)
                         .start(Objects.requireNonNull(this)) //enable image guidlines
             }

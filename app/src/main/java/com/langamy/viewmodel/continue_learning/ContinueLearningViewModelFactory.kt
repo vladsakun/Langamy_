@@ -1,15 +1,14 @@
-package com.langamy.viewmodel
+package com.langamy.viewmodel.continue_learning
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.langamy.repositories.StudySetsRepository
 
-class LearnActivityViewModelFactory(
+class ContinueLearningViewModelFactory(
         private val studySetsRepository: StudySetsRepository
-) :ViewModelProvider.NewInstanceFactory(){
-
+) : ViewModelProvider.NewInstanceFactory() {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return LearnActivityViewModel(studySetsRepository) as T
+        return ContinueLearningViewModel(studySetsRepository) as T
     }
 }

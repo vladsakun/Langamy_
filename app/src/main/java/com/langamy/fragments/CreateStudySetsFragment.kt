@@ -39,8 +39,8 @@ import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.TranslationResponse
 import com.langamy.base.classes.Word
 import com.langamy.base.kotlin.ScopedFragment
-import com.langamy.viewmodel.EditStudySetViewModel
-import com.langamy.viewmodel.EditStudySetViewModelFactory
+import com.langamy.viewmodel.edit.EditStudySetViewModel
+import com.langamy.viewmodel.edit.EditStudySetViewModelFactory
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.custom_progress_bar.*
@@ -118,7 +118,8 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
         wordsModelArrayList = ArrayList()
 
         mAdapter = WordsAdapter(object : WordsAdapter.Callback {
-            override fun onDeleteClicked(translationSupport: TextView, itemId: Int) {
+            override fun onDeleteClicked(translationSupport: TextView, itemId: Int, view: View) {
+                view.clearFocus()
                 wordsModelArrayList.removeAt(itemId)
                 mAdapter.notifyItemRemoved(itemId)
                 mAdapter.notifyItemRangeChanged(itemId, wordsModelArrayList.size)

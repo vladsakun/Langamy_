@@ -14,15 +14,14 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.button.MaterialButton
-import com.langamy.activities.EditStudySetActivity
 import com.langamy.api.LangamyAPI
 import com.langamy.base.classes.BaseVariables
 import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.Word
 import com.langamy.base.kotlin.ScopedActivity
 import com.langamy.fragments.MarkedWordsFragment
-import com.langamy.viewmodel.SpecificStudySetViewModel
-import com.langamy.viewmodel.SpecificStudySetsViewModelFactory
+import com.langamy.viewmodel.detail.SpecificStudySetViewModel
+import com.langamy.viewmodel.detail.SpecificStudySetsViewModelFactory
 import kotlinx.coroutines.launch
 import me.toptas.fancyshowcase.FancyShowCaseQueue
 import me.toptas.fancyshowcase.FancyShowCaseView

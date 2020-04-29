@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    tools:context="com.langamy.fragments.SpeechStageFragment">
+
+    <ImageButton
+        android:id="@+id/voiceBtn"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@null"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_mic" />
+
+    <TextView
+        android:id="@+id/translation_TV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/voiceBtn"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
+        android:text="Translation"
+        android:textColor="@color/darkColor"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/termHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/translation_TV"
+        android:layout_centerHorizontal="true"
+        android:letterSpacing="0.3"
+        android:text="Say this word in"
+        android:textColor="@color/darkColor" />
+
+</RelativeLayout>

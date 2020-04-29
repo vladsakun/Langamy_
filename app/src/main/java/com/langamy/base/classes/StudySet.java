@@ -68,6 +68,22 @@ public class StudySet implements Serializable {
         return creator;
     }
 
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setLanguage_to(String language_to) {
+        this.language_to = language_to;
+    }
+
+    public void setLanguage_from(String language_from) {
+        this.language_from = language_from;
+    }
+
     public StudySet(String creator, String name, String words, String language_to, String language_from, int amount_of_words) {
         this.creator = creator;
         this.name = name;

@@ -1,8 +1,5 @@
 package com.langamy.activities
 
-import android.animation.ObjectAnimator
-import android.animation.ValueAnimator
-import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -17,14 +14,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.langamy.adapters.StagesAdapter
 import com.langamy.api.LangamyAPI
-import com.langamy.base.classes.BaseVariables
-import com.langamy.base.classes.NonSwipeableViewPager
-import com.langamy.base.classes.StudySet
-import com.langamy.base.classes.Word
+import com.langamy.base.classes.*
 import com.langamy.base.kotlin.ScopedActivity
 import com.langamy.fragments.*
-import com.langamy.viewmodel.LearnActivityViewModel
-import com.langamy.viewmodel.LearnActivityViewModelFactory
+import com.langamy.viewmodel.learn.LearnActivityViewModel
+import com.langamy.viewmodel.learn.LearnActivityViewModelFactory
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONException
@@ -59,7 +53,6 @@ class LearnActivity : ScopedActivity(), KodeinAware {
     private var toLang: String? = null
     var retrofit = BaseVariables.retrofit
     var mLangamyAPI = retrofit.create(LangamyAPI::class.java)
-    private var mDatabase: SQLiteDatabase? = null
     private var account: GoogleSignInAccount? = null
     private var correctAlertDialog: AlertDialog? = null
     private var wrongAlertDialog: AlertDialog? = null
@@ -132,39 +125,39 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         account = GoogleSignIn.getLastSignedInAccount(this)
     }
 
-    fun textScaleAnimation(textView: TextView?) {
-        val startSize = 14f // Size in pixels
-        val endSize = 20f
-        val animationDuration: Long = 450 // Animation duration in ms
-        val animator = ValueAnimator.ofFloat(startSize, endSize)
-        animator.duration = animationDuration
-        animator.addUpdateListener { valueAnimator ->
-            val animatedValue = valueAnimator.animatedValue as Float
-            textView!!.textSize = animatedValue
-        }
-        animator.repeatCount = 1
-        animator.repeatMode = ObjectAnimator.REVERSE
-        animator.start()
-    }
+//    fun textScaleAnimation(textView: TextView?) {
+//        val startSize = 14f // Size in pixels
+//        val endSize = 20f
+//        val animationDuration: Long = 450 // Animation duration in ms
+//        val animator = ValueAnimator.ofFloat(startSize, endSize)
+//        animator.duration = animationDuration
+//        animator.addUpdateListener { valueAnimator ->
+//            val animatedValue = valueAnimator.animatedValue as Float
+//            textView!!.textSize = animatedValue
+//        }
+//        animator.repeatCount = 1
+//        animator.repeatMode = ObjectAnimator.REVERSE
+//        animator.start()
+//    }
 
     fun reloadViewPager(view: View?) {
         stages.clear()
-        wordsForLearning!!.clear()
+        wordsForLearning.clear()
         val wordArrayList = ArrayList(words)
-        wordsForLearning!!.addAll(getRandomObjects(wordArrayList))
+        wordsForLearning.addAll(getRandomObjects(wordArrayList))
         stages = ArrayList()
         stages = generateStages(wordsForLearning)
         if (stages.size == 1) {
             return
         }
-        adapter!!.setStages(stages)
-        learnVP2!!.adapter = adapter
-        learnVP2!!.invalidate()
+        adapter.setStages(stages)
+        learnVP2.adapter = adapter
+        learnVP2.invalidate()
         if (stages[0].javaClass.simpleName == "AudioStageFragment") {
             val currentStage = stages[0] as AudioStageFragment
             currentStage.speakTerm()
         }
-        learnVP2!!.currentItem = 0
+        learnVP2.currentItem = 0
     }
 
     private fun showCorrectAlertDialog() {
@@ -209,15 +202,14 @@ class LearnActivity : ScopedActivity(), KodeinAware {
 
     fun checkAnswerFirstStage(v: View) {
         val text = (v as TextView).text.toString()
-        val quizStage = stages[learnVP2!!.currentItem] as QuizStage
+        val quizStage = stages[learnVP2.currentItem] as QuizStage
         val userAnswer = quizStage.checkAnswer(text)
-        val correctWordIndex = words!!.indexOf(quizStage.word)
+        val correctWordIndex = words.indexOf(quizStage.word)
         if (userAnswer.status) {
-            val correctWord = words!![correctWordIndex]
+            val correctWord = words[correctWordIndex]
             correctWord.isFirstStage = true
-            textScaleAnimation(firstStageWords_TV)
-            firstStageWords_TV!!.text = (firstStageWords_TV!!.text.toString().toInt() + 1).toString()
-            restWords_TV!!.text = (restWords_TV!!.text.toString().toInt() - 1).toString()
+            firstStageWords_TV.text = (firstStageWords_TV.text.toString().toInt() + 1).toString()
+            restWords_TV.text = (restWords_TV.text.toString().toInt() - 1).toString()
             showCorrectAlertDialog()
         } else {
             showWrongAlertDialog(userAnswer.correctAnswer, correctWordIndex, "first")
@@ -228,7 +220,7 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         val parent = view.parent as RelativeLayout
         val userAnswer_ET = parent.findViewById<View>(R.id.definition_audiostage_ET) as EditText
         val text = userAnswer_ET.text.toString().toLowerCase().trim { it <= ' ' }
-        val audioStageFragment = stages[learnVP2!!.currentItem] as AudioStageFragment
+        val audioStageFragment = stages[learnVP2.currentItem] as AudioStageFragment
         val userAnswer = audioStageFragment.checkAnswer(text)
         if (view.id == R.id.cannot_speak_BTN) {
             userAnswer.status = true
@@ -243,19 +235,29 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         }
     }
 
+    fun checkAnswerSpeechStage(answer: Answer, word: Word) {
+        val correctWordIndex = words.indexOf(word)
+        if (answer.status) {
+            val correctWord = words[correctWordIndex]
+            correctWord.isSecondStage = true
+            showCorrectAlertDialog()
+        } else {
+            showWrongAlertDialog(answer.correctAnswer, correctWordIndex, "second")
+        }
+    }
+
     fun checkAnswerTermTranslation(v: View) {
         val parent = v.parent as RelativeLayout
         val child = parent.findViewById<View>(R.id.answer_ET) as EditText
         val text = child.text.toString().trim { it <= ' ' }.toLowerCase()
-        val termDefinitionStage = stages[learnVP2!!.currentItem] as TermDefinitionStage
+        val termDefinitionStage = stages[learnVP2.currentItem] as TermDefinitionStage
         val userAnswer = termDefinitionStage.checkAnswer(text)
-        val correctWordIndex = words!!.indexOf(termDefinitionStage.word)
+        val correctWordIndex = words.indexOf(termDefinitionStage.word)
         if (userAnswer.status) {
-            val correctWord = words!![correctWordIndex]
+            val correctWord = words[correctWordIndex]
             correctWord.isThirdStage = true
-            textScaleAnimation(thirdStageWords_TV)
-            thirdStageWords_TV!!.text = (thirdStageWords_TV!!.text.toString().toInt() + 1).toString()
-            firstStageWords_TV!!.text = (firstStageWords_TV!!.text.toString().toInt() - 1).toString()
+            thirdStageWords_TV.text = (thirdStageWords_TV.text.toString().toInt() + 1).toString()
+            firstStageWords_TV.text = (firstStageWords_TV.text.toString().toInt() - 1).toString()
             showCorrectAlertDialog()
         } else {
             showWrongAlertDialog(userAnswer.correctAnswer, correctWordIndex, "third")
@@ -273,7 +275,6 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         if (userAnswer.status) {
             val correctWord = words!![correctWordIndex]
             correctWord.isForthStage = true
-            textScaleAnimation(masteredWords_TV)
             masteredWords++
             masteredWords_TV!!.text = (masteredWords_TV!!.text.toString().toInt() + 1).toString()
             thirdStageWords_TV!!.text = (thirdStageWords_TV!!.text.toString().toInt() - 1).toString()
@@ -325,7 +326,13 @@ class LearnActivity : ScopedActivity(), KodeinAware {
                         randomAnswers[0], randomAnswers[1], randomAnswers[2], fromLang, 0)
                 generatedStages.add(quizStage)
             } else if (!wordsForGenerating[i].isSecondStage) {
-                generatedStages.add(AudioStageFragment(wordsForGenerating[i], fromLang))
+                val random = Random()
+                val randomBool = random.nextBoolean()
+                if (randomBool) {
+                    generatedStages.add(SpeechStageFragment(wordsForGenerating[i], fromLang!!))
+                } else {
+                    generatedStages.add(AudioStageFragment(wordsForGenerating[i], fromLang))
+                }
             } else if (!wordsForGenerating[i].isThirdStage) {
                 generatedStages.add(TermDefinitionStage(wordsForGenerating[i], fromLang))
             } else if (!wordsForGenerating[i].isForthStage) {
@@ -386,14 +393,12 @@ class LearnActivity : ScopedActivity(), KodeinAware {
     fun updateLocalStudySet(studySet: StudySet, syncStatus: Boolean) = launch {
         studySet.isSync_status = syncStatus
         viewModel.updateLocalStudySet(studySet)
-        Log.d("UPDATE", studySet.words.toString())
-
     }
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent): Boolean {
         if (keyCode == KeyEvent.KEYCODE_ENTER) {
-            val className = stages[learnVP2!!.currentItem].javaClass.simpleName
-            val parent = stages[learnVP2!!.currentItem].view as RelativeLayout?
+            val className = stages[learnVP2.currentItem].javaClass.simpleName
+            val parent = stages[learnVP2.currentItem].view as RelativeLayout?
             val child = parent!!.getChildAt(0)
             when (className) {
                 "AudioStageFragment" -> checkAnswerAudioStage(child)

@@ -1,16 +1,19 @@
-package com.langamy.viewmodel
+package com.langamy.viewmodel.list
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.langamy.provider.UserProvider
 import com.langamy.repositories.StudySetsRepository
 
-class SpecificStudySetsViewModelFactory(
+class StudySetsViewModelFactory(
         private val studySetsRepository: StudySetsRepository,
-        private val studySetId:Int
+        private val userProvider: UserProvider,
+        private val application: Application
 ) :ViewModelProvider.NewInstanceFactory(){
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return SpecificStudySetViewModel(studySetsRepository, studySetId) as T
+        return StudySetsViewModel(studySetsRepository, userProvider, application) as T
     }
 }

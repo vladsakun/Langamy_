@@ -23,8 +23,8 @@ import com.langamy.adapters.StudySetsAdapter
 import com.langamy.base.classes.BaseVariables
 import com.langamy.base.classes.StudySet
 import com.langamy.base.kotlin.ScopedFragment
-import com.langamy.viewmodel.StudySetsViewModel
-import com.langamy.viewmodel.StudySetsViewModelFactory
+import com.langamy.viewmodel.list.StudySetsViewModel
+import com.langamy.viewmodel.list.StudySetsViewModelFactory
 import kotlinx.android.synthetic.main.custom_progress_bar.*
 import kotlinx.android.synthetic.main.fragment_study_sets.*
 import kotlinx.coroutines.launch

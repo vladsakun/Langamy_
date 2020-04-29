@@ -2,8 +2,10 @@ package com.langamy.retrofit
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.langamy.base.classes.StudySet
+import com.langamy.base.classes.TranslationResponse
 import kotlinx.coroutines.Deferred
 import okhttp3.OkHttpClient
+import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
@@ -31,6 +33,11 @@ interface LangamyApiService {
 
     @GET("api/get/studysetsnames/{user_email}/")
     fun getStudySets(@Path("user_email") userEmail:String):Deferred<List<StudySet>>
+
+    //Translate
+    @POST("api/translate/{from_lang}/{to_lang}/{mode}/")
+    fun translate(@Body stringToTranslate: JSONObject?, @Path("from_lang") fromLang: String?,
+                  @Path("to_lang") toLang: String?, @Path("mode") mode: String?): Deferred<TranslationResponse>
 
 
     companion object {

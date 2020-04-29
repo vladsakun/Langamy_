@@ -56,7 +56,7 @@ class WordsAdapter(
 
             deleteBtn.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION)
-                    callback.onDeleteClicked(translationSupport, adapterPosition)
+                    callback.onDeleteClicked(translationSupport, adapterPosition, termEditText)
             }
             termEditText.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
@@ -147,7 +147,7 @@ class WordsAdapter(
     }
 
     interface Callback {
-        fun onDeleteClicked(translationSupport: TextView, itemId: Int)
+        fun onDeleteClicked(translationSupport: TextView, itemId: Int, view: View)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordsHolder {

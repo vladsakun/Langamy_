@@ -11,7 +11,12 @@ import com.langamy.repositories.StudySetsRepositoryImpl
 import com.langamy.retrofit.ConnectivityInterceptor
 import com.langamy.retrofit.ConnectivityInterceptorImpl
 import com.langamy.retrofit.LangamyApiService
-import com.langamy.viewmodel.*
+import com.langamy.viewmodel.continue_learning.ContinueLearningViewModelFactory
+import com.langamy.viewmodel.detail.SpecificStudySetsViewModelFactory
+import com.langamy.viewmodel.edit.EditStudySetViewModelFactory
+import com.langamy.viewmodel.learn.LearnActivityViewModelFactory
+import com.langamy.viewmodel.list.StudySetsViewModelFactory
+import com.langamy.viewmodel.profile.ProfileViewModelFactory
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.androidXModule

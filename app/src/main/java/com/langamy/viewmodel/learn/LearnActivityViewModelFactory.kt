@@ -1,14 +1,15 @@
-package com.langamy.viewmodel
+package com.langamy.viewmodel.learn
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.langamy.repositories.StudySetsRepository
 
-class EditStudySetViewModelFactory(
+class LearnActivityViewModelFactory(
         private val studySetsRepository: StudySetsRepository
-) : ViewModelProvider.NewInstanceFactory() {
+) :ViewModelProvider.NewInstanceFactory(){
+
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-        return EditStudySetViewModel(studySetsRepository) as T
+        return LearnActivityViewModel(studySetsRepository) as T
     }
 }

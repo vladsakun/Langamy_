@@ -71,19 +71,15 @@ public class DefinitionTermStage extends Fragment {
     }
 
     public Answer checkAnswer(String userAnswer) {
-
         Answer answer = new Answer(userAnswer, word.getTranslation(), word.getTerm(), true);
 
         if (!userAnswer.toLowerCase().trim().equals(word.getTerm().toLowerCase().trim())) {
 
             answer.setStatus(false);
-
         }
 
         term_ET.setText("");
-
         return answer;
-
     }
 
     public Word getWord() {

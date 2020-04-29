@@ -52,12 +52,6 @@ class StudySetsRepositoryImpl(
         }
     }
 
-    suspend fun getClonedStudySet(clonedId: Int): LiveData<StudySet> {
-        return withContext(Dispatchers.IO) {
-            return@withContext daoStudySet.getSpecificStudySet(clonedId)
-        }
-    }
-
     override suspend fun getStudySet(id: Int): LiveData<StudySet> {
         return withContext(Dispatchers.IO) {
             return@withContext daoStudySet.getSpecificStudySet(id)

@@ -15,8 +15,8 @@ import com.google.android.material.button.MaterialButton
 import com.langamy.api.LangamyAPI
 import com.langamy.base.classes.BaseVariables
 import com.langamy.base.kotlin.ScopedFragment
-import com.langamy.viewmodel.ContinueLearningViewModel
-import com.langamy.viewmodel.ContinueLearningViewModelFactory
+import com.langamy.viewmodel.continue_learning.ContinueLearningViewModel
+import com.langamy.viewmodel.continue_learning.ContinueLearningViewModelFactory
 import kotlinx.coroutines.launch
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.closestKodein
