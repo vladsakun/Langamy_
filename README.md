@@ -47,10 +47,6 @@ This project is implemented in __Android Studio 3.6.3__. This app works correctl
 
 *  __Fast converting static papers into interective dictations and study sets__;
 
-<p align="center">
-  <img src="https://media.giphy.com/media/H4tqvHTtoCAh7PACIy/giphy.gif" height="600">
-</p>
-
 |List of your studysets|Create new list of words|View specific studyset|
 | --- | --- | --- |
 |<img src="https://i.imgur.com/xmbGjKb.jpg" height="600">|<img src="https://i.imgur.com/6ruTbBj.jpg" height="600">|<img src="https://i.imgur.com/cKH3OWk.jpg" height="600">|
