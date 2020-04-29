@@ -10,12 +10,16 @@ A student can:
 - Translate new words and store them in Langamy;
 - Learn words in __5 different ways__;
 - Save words on the __server__. So the student can continue learning on __every Android smartphone and tab__;
-- Study remotely if the student can't come at school;
-- Make challenges for friends in foreign languages;
-- Explore new words with random dictations from any user of Langamy;
+- __Study remotely__ if the student can't come at school;
+- __Make challenges__ for friends in foreign languages;
+- __Explore new words__ with random dictations from any user of Langamy;
 
 A teacher can:
-- 
+- Check knowledge of words, __except boring test checks__. Langamy checks words automatically and send all results to teacher;
+- __Economy paper__ on tests;
+- Share words to students with __teacher's translate__;
+- __Economy time__ on dictating words list;
+
 This application was created during the course __"Samsung IT School Ukraine"__.
 
 # Version and devices
