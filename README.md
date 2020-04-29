@@ -2,6 +2,7 @@
 <p align="center">
   <img src="https://i.imgur.com/MernM5T.png" width="300">
 </p>
+
 # Info about app
 This application was created during the course __"Samsung IT School Ukraine"__. It's a basket for products that helps to __save money on daily products__ (milk, eggs and bread). A user can choose products from __3 supermarket chains__ (Novus, MegaMarket and Fozzy) and then __add them to his basket__. In the store user can easily __navigate his purchases and plans__.
 
