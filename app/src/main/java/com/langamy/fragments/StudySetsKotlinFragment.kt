@@ -176,6 +176,16 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onResume() {
+        super.onResume()
+        val preferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
+        if (preferences.getBoolean(BaseVariables.HELP_STUDY_STUDYSETS_FRAGMENT, true)) {
+            playHelp()
+            preferences.edit().putBoolean(BaseVariables.HELP_STUDY_STUDYSETS_FRAGMENT, false).apply()
+        }
+
+    }
+
     private fun playHelp() {
         BaseVariables.hideKeyboard(activity)
         val fq = FancyShowCaseQueue()

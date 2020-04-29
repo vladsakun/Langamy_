@@ -76,7 +76,10 @@ public class MakeDictationActivity extends AppCompatActivity{
     private TextView questionCountTV, questionTime_TV;
     private ImageButton cancelTimer, activeTimer;
     private RelativeLayout typesOfQuestions;
-    private LinearLayout quiz_LL, term_LL, translation_LL, addTimer, questionCount_LL;
+    private LinearLayout quiz_LL;
+    private LinearLayout term_LL;
+    private LinearLayout translation_LL;
+    private LinearLayout dictationSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +91,12 @@ public class MakeDictationActivity extends AppCompatActivity{
         translation_LL = findViewById(R.id.translation_LL);
         wordsRecyclerView = findViewById(R.id.words_recyclerview);
         titleTextView = findViewById(R.id.dictation_name);
-        questionCount_LL = findViewById(R.id.question_count_RL);
+        dictationSettings = findViewById(R.id.dictation_setting_LL);
         questionCountTV = findViewById(R.id.question_amount_tv);
         questionTime_TV = findViewById(R.id.question_time_tv);
         startDictationBtn = findViewById(R.id.make_dictation_btn);
         typesOfQuestions = findViewById(R.id.dictation_buttons_RL);
-        addTimer = findViewById(R.id.add_time_LL);
+        LinearLayout addTimer = findViewById(R.id.add_time_LL);
         activeTimer = findViewById(R.id.active_timer_IB);
         cancelTimer = findViewById(R.id.cancel_timer_IB);
 
@@ -143,7 +146,7 @@ public class MakeDictationActivity extends AppCompatActivity{
             }
         });
 
-        questionCount_LL.setOnClickListener(new View.OnClickListener() {
+        dictationSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 show("questionCount");
@@ -241,7 +244,7 @@ public class MakeDictationActivity extends AppCompatActivity{
         FancyShowCaseQueue fq = new FancyShowCaseQueue();
 
         FancyShowCaseView amountOfQuestions = new FancyShowCaseView.Builder(this)
-                .focusOn(questionCount_LL)
+                .focusOn(findViewById(R.id.question_count_LL))
                 .focusShape(FocusShape.ROUNDED_RECTANGLE)
                 .customView(R.layout.custom_layout_for_fancyshowcase, new OnViewInflateListener() {
                     @Override
@@ -323,20 +326,9 @@ public class MakeDictationActivity extends AppCompatActivity{
                 })
                 .build();
 
-//        FancyShowCaseView markWord = new FancyShowCaseView.Builder(this)
-//                .focusOn(wordsRecyclerView.getChildAt(0).findViewById(R.id.starBtn))
-//                .backgroundColor(getColor(R.color.blueForFancy))
-//                .customView(R.layout.fancyshowcase_with_image, new OnViewInflateListener() {
-//                    @Override
-//                    public void onViewInflated(View view) {
-//                        BaseVariables.setCustomFancyCaseView(view, getString(R.string.fancy_mark_dication_word), fq);
-//                    }
-//                })
-//                .build();
-
         fq.add(amountOfQuestions)
-                .add(typeOfQuestions)
                 .add(timer)
+                .add(typeOfQuestions)
                 .add(quiz)
                 .add(term)
                 .add(translation)
@@ -390,7 +382,7 @@ public class MakeDictationActivity extends AppCompatActivity{
                 if(help){
                     playHelp();
                     editor.putBoolean(BaseVariables.HELP_MAKE_DICTATION, false);
-                    editor.commit();
+                    editor.apply();
                 }
 
             }

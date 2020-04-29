@@ -66,6 +66,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
     var retrofit = BaseVariables.retrofit
     var mLangamyAPI = retrofit.create(LangamyAPI::class.java)
     private var makeDictationIntent: Intent? = null
+    private lateinit var studySet:StudySet
 
     public override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -78,7 +79,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        val studySet = intent.getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE) as StudySet
+        studySet = intent.getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE) as StudySet
 
         mWordList = convertJsonArrayToArray(studySet.words)
 
@@ -170,6 +171,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
             studySetId = data.toString().replace("http://vlad12.pythonanywhere.com/studyset/", "")
                     .replace("/", "").toInt()
             viewModel = ViewModelProvider(this, viewModelFactory(studySetId)).get(SpecificStudySetViewModel::class.java)
+
             bindUI(true)
         } catch (e: Exception) {
             initializeStudySetActivity(studySet)
@@ -178,6 +180,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
+
         inflater.inflate(R.menu.menu_specific_study_set, menu)
         inflater.inflate(R.menu.menu_help_item, menu)
         return true
@@ -203,7 +206,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
             }
             val sendIntent = Intent()
             sendIntent.action = Intent.ACTION_SEND
-            val sharedDictationText = BaseVariables.getShareStudySetText(studySetId.toString())
+            val sharedDictationText = BaseVariables.getShareStudySetText(studySet.id.toString())
             sendIntent.putExtra(Intent.EXTRA_TEXT, sharedDictationText)
             sendIntent.type = "text/plain"
             startActivity(sendIntent)
@@ -243,19 +246,18 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
                 })
                 .backgroundColor(getColor(R.color.blueForFancy))
                 .build()
-        val edit = FancyShowCaseView.Builder(this)
-                .focusOn(findViewById(R.id.edit_study_set))
-                .customView(R.layout.fancyshowcase_with_image, object : OnViewInflateListener {
-                    override fun onViewInflated(view: View) {
-                        BaseVariables.setImage(view, getString(R.string.fancy_edit),
-                                fq, getDrawable(R.drawable.ic_edit_white_24dp))
-                    }
-                })
-                .backgroundColor(getColor(R.color.blueForFancy))
-                .build()
+//        val edit = FancyShowCaseView.Builder(this)
+//                .focusOn(findViewById(R.id.edit_study_set))
+//                .customView(R.layout.fancyshowcase_with_image, object : OnViewInflateListener {
+//                    override fun onViewInflated(view: View) {
+//                        BaseVariables.setImage(view, getString(R.string.fancy_edit),
+//                                fq, getDrawable(R.drawable.ic_edit_white_24dp))
+//                    }
+//                })
+//                .backgroundColor(getColor(R.color.blueForFancy))
+//                .build()
         fq.add(makeDictation)
                 .add(studyMarked)
-                .add(edit)
         fq.show()
     }
 

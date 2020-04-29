@@ -116,7 +116,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/question_count_RL"
+                    android:id="@+id/dictation_setting_LL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/dictation_code_RL"
@@ -180,7 +180,7 @@
                     android:id="@+id/type_of_question_RL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/question_count_RL"
+                    android:layout_below="@+id/dictation_setting_LL"
                     android:layout_marginBottom="10dp"
                     android:clickable="true"
                     android:focusable="true"

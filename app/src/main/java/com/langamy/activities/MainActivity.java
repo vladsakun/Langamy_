@@ -1,7 +1,6 @@
 package com.langamy.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
 import android.graphics.PorterDuff;
@@ -66,15 +65,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.start_activity);
-
-        SharedPreferences sf = getPreferences(MODE_PRIVATE);
-        SharedPreferences.Editor ed = sf.edit();
-        try {
-            sf.getBoolean(BaseVariables.HELP_CREATE_STUDYSETS_FRAGMENT, true);
-        } catch (Exception e) {
-            ed.putBoolean(BaseVariables.HELP_CREATE_STUDYSETS_FRAGMENT, true);
-            ed.apply();
-        }
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
 

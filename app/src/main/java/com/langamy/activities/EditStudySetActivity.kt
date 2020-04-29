@@ -164,7 +164,8 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
         }
 
         mAdapter = WordsAdapter(object : WordsAdapter.Callback {
-            override fun onDeleteClicked(translationSupport: TextView, itemId: Int) {
+            override fun onDeleteClicked(translationSupport: TextView, itemId: Int, view:View) {
+                view.clearFocus()
                 wordsModelArrayList.removeAt(itemId)
                 mAdapter.notifyItemRemoved(itemId)
                 mAdapter.notifyItemRangeChanged(itemId, wordsModelArrayList.size)
