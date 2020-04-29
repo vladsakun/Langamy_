@@ -4,13 +4,14 @@
 </p>
 
 # Info about app
-This application was created during the course __"Samsung IT School Ukraine"__. It's the platform for learning foreign words on __35 languages__ that helps __teachers and students in a studying process__ . 
+It's the app for learning foreign words on __35 languages__ that helps __teachers and students in a studying process__ . 
 A student can:
 - Translate new words and store them in Langamy;
 - Learn words in __5 different ways__;
 - Save words on the __server__. So the student can continue learning on __every Android smartphone and tab__;
 - Study remotely if the student can't come at school;
 In turn 
+This application was created during the course __"Samsung IT School Ukraine"__.
 
 # Version and devices
 This project is implemented in __Android Studio 3.5.2__. This app works correctly at __API 23__ : Android 6.0 (Marshmallow) and higher. Tested on Xiaomi Mi A1, Samsung Galaxy A50, Samsung Galaxy A6 and Pixel 2XL API 29 (Virtual Device), Pixel API 28 (Virtual Device) and Nexus 5 API 28 (Virtual Device).
