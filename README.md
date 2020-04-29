@@ -5,12 +5,17 @@
 
 # Info about app
 It's the app for learning foreign words on __35 languages__ that helps __teachers and students in a studying process__ . 
+
 A student can:
 - Translate new words and store them in Langamy;
 - Learn words in __5 different ways__;
 - Save words on the __server__. So the student can continue learning on __every Android smartphone and tab__;
 - Study remotely if the student can't come at school;
-In turn 
+- Make challenges for friends in foreign languages;
+- Explore new words with random dictations from any user of Langamy;
+
+A teacher can:
+- 
 This application was created during the course __"Samsung IT School Ukraine"__.
 
 # Version and devices
