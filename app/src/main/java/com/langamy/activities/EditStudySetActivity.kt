@@ -342,7 +342,7 @@ class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
                 }
                 updateLocalStudySet(studySet)
                 val intent = Intent(this@EditStudySetActivity, SpecificStudySetActivity::class.java)
-                intent.putExtra(BaseVariables.STUDY_SET_ID_MESSAGE, id)
+                intent.putExtra(BaseVariables.STUDY_SET_MESSAGE, studySet)
                 startActivity(intent)
                 finish()
             }

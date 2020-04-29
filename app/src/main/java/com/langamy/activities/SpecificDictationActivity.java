@@ -42,6 +42,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.langamy.base.kotlin.BaseFunctionsKt.includeConnectivityErrorLayout;
+
 public class SpecificDictationActivity extends AppCompatActivity {
 
     public Retrofit retrofit = BaseVariables.retrofit;
@@ -62,6 +64,7 @@ public class SpecificDictationActivity extends AppCompatActivity {
     private ArrayList<Mark> marks;
     private RelativeLayout specificDictation_RL, error_RL;
     private RelativeLayout specificDictation_VIEW;
+    private RelativeLayout content;
     private boolean error = false;
 
     @Override
@@ -95,6 +98,7 @@ public class SpecificDictationActivity extends AppCompatActivity {
         specificDictation_VIEW = findViewById(R.id.specific_dictation_VIEW);
         error_RL = findViewById(R.id.error_RL);
         dictationCode = findViewById(R.id.dictation_code);
+        content =  findViewById(R.id.content);
 
         specificDictation_VIEW.setVisibility(View.GONE);
 
@@ -268,15 +272,22 @@ public class SpecificDictationActivity extends AppCompatActivity {
                 public void onResponse(Call<List<Dictation>> call, Response<List<Dictation>> response) {
                     if (response.code() == 500) {
                         noDictation();
+                        return;
+                    } else if (!response.isSuccessful()) {
+                        includeConnectivityErrorLayout(String.valueOf(response.code()), content, getLayoutInflater(), SpecificDictationActivity.this);
+                        progressBar.setVisibility(View.GONE);
 
                         return;
                     }
+                    assert response.body() != null;
                     prepareDictation(response.body().get(0));
 
                 }
 
                 @Override
                 public void onFailure(Call<List<Dictation>> call, Throwable t) {
+                    includeConnectivityErrorLayout("failure", content, getLayoutInflater(), SpecificDictationActivity.this);
+                    progressBar.setVisibility(View.GONE);
 
                 }
             });
@@ -288,13 +299,20 @@ public class SpecificDictationActivity extends AppCompatActivity {
                     if (response.code() == 500) {
                         noDictation();
                         return;
+                    } else if (!response.isSuccessful()) {
+                        includeConnectivityErrorLayout(String.valueOf(response.code()), content, getLayoutInflater(), SpecificDictationActivity.this);
+                        progressBar.setVisibility(View.GONE);
+                        return;
                     }
+                    assert response.body() != null;
                     prepareDictation(response.body());
                 }
 
                 @Override
                 public void onFailure(Call<Dictation> call, Throwable t) {
-//                Toast.makeText(SpecificDictationActivity.this, String.valueOf(t), Toast.LENGTH_SHORT).show();
+                    includeConnectivityErrorLayout("failure", content, getLayoutInflater(), SpecificDictationActivity.this);
+                    progressBar.setVisibility(View.GONE);
+
                 }
             });
         }

@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.Toast;
+import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,6 +29,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static com.langamy.base.kotlin.BaseFunctionsKt.includeConnectivityErrorLayout;
+
 public class UserDoneDictationsActivity extends AppCompatActivity {
 
     public Retrofit retrofit = BaseVariables.retrofit;
@@ -39,6 +41,7 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private LinearLayout noRecentDictations;
     private ImageButton randomDictations;
+    private RelativeLayout content;
 
     private ArrayList<Dictation> mDictations = new ArrayList<>();
 
@@ -56,8 +59,9 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         noRecentDictations = findViewById(R.id.no_recent_dictations_LL);
         randomDictations = findViewById(R.id.randomDictation);
+        content = findViewById(R.id.content);
 
-        randomDictations.setOnClickListener(v-> {
+        randomDictations.setOnClickListener(v -> {
             Intent intent = new Intent(UserDoneDictationsActivity.this, SpecificDictationActivity.class);
             intent.putExtra(BaseVariables.RANDOM_DICTATION_MESSAGE, true);
             startActivity(intent);
@@ -88,7 +92,8 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ArrayList<Dictation>> call, Response<ArrayList<Dictation>> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(UserDoneDictationsActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                    includeConnectivityErrorLayout(String.valueOf(response.code()), content, getLayoutInflater(), UserDoneDictationsActivity.this);
+                    progressBar.setVisibility(View.GONE);
                     return;
                 }
                 mDictations.clear();
@@ -102,7 +107,7 @@ public class UserDoneDictationsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ArrayList<Dictation>> call, Throwable t) {
-                Toast.makeText(UserDoneDictationsActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+                includeConnectivityErrorLayout("failure", content, getLayoutInflater(), UserDoneDictationsActivity.this);
             }
         });
 

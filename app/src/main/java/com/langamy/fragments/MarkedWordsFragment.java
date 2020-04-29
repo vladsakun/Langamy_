@@ -2,26 +2,23 @@ package com.langamy.fragments;
 
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bignerdranch.android.main.R;
 import com.langamy.activities.SpecificStudySetActivity;
 import com.langamy.base.classes.Word;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MarkedWordsFragment extends Fragment {
 
@@ -60,8 +57,10 @@ public class MarkedWordsFragment extends Fragment {
 
         this.markedWords.clear();
         this.markedWords.addAll(markedWords);
-//        mAdapter = new MarkedWordsAdapter(markedWords);
-//        recyclerView.setAdapter(mAdapter);
+
+        if(mAdapter == null){
+            mAdapter = new MarkedWordsAdapter(this.markedWords);
+        }
         mAdapter.notifyDataSetChanged();
 
         Log.d("SIZE", String.valueOf(markedWords.size()));
@@ -74,8 +73,6 @@ public class MarkedWordsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_marked_words, container, false);
         recyclerView = view.findViewById(R.id.marked_words_recyclerview);
-
-        mAdapter = new MarkedWordsAdapter(markedWords);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(mAdapter);

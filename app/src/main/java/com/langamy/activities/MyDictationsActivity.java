@@ -14,6 +14,7 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,8 @@ import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.Dictation;
 import com.langamy.base.kotlin.BaseFunctionsKt;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,6 +43,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static com.langamy.base.kotlin.BaseFunctionsKt.includeConnectivityErrorLayout;
 
 public class MyDictationsActivity extends AppCompatActivity {
 
@@ -51,6 +56,7 @@ public class MyDictationsActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager mLayoutManager;
     private ProgressBar mProgressBar;
     private TextView noDictations;
+    private RelativeLayout content;
 
     private List<Dictation> mDictationList;
 
@@ -66,6 +72,7 @@ public class MyDictationsActivity extends AppCompatActivity {
         mRecyclerView = findViewById(R.id.dictations_RV);
         mProgressBar = findViewById(R.id.progressBar);
         noDictations= findViewById(R.id.no_dictations_TV);
+        content = findViewById(R.id.content);
 
         initializeRecyclerView(mDictationList);
 
@@ -112,29 +119,38 @@ public class MyDictationsActivity extends AppCompatActivity {
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
 
-        Call<List<Dictation>> call = mLangamyAPI.getDictationsOfCurrentUser(acct.getEmail());
-        call.enqueue(new Callback<List<Dictation>>() {
-            @Override
-            public void onResponse(Call<List<Dictation>> call, Response<List<Dictation>> response) {
-                if (!response.isSuccessful()) {
-                    Toast.makeText(MyDictationsActivity.this, response.code(), Toast.LENGTH_SHORT).show();
-                    return;
+        Call<List<Dictation>> call = null;
+        if (acct != null) {
+            call = mLangamyAPI.getDictationsOfCurrentUser(acct.getEmail());
+        }
+        if (call != null) {
+            call.enqueue(new Callback<List<Dictation>>() {
+                @Override
+                public void onResponse(@NotNull Call<List<Dictation>> call, @NotNull Response<List<Dictation>> response) {
+                    if (!response.isSuccessful()) {
+                        includeConnectivityErrorLayout(String.valueOf(response.code()), content, getLayoutInflater(), MyDictationsActivity.this);
+                        mProgressBar.setVisibility(View.GONE);
+                        return;
+                    }
+                    mDictationList.clear();
+                    if (response.body() != null) {
+                        mDictationList.addAll(response.body());
+                    }
+                    mAdapter.notifyDataSetChanged();
+                    mProgressBar.setVisibility(View.GONE);
+                    assert response.body() != null;
+                    if(response.body().size() == 0){
+                        noDictations();
+                    }
                 }
-                mDictationList.clear();
-                mDictationList.addAll(response.body());
-                mAdapter.notifyDataSetChanged();
-                mProgressBar.setVisibility(View.GONE);
-                if(response.body().size() == 0){
-                    noDictations();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<List<Dictation>> call, Throwable t) {
-                mProgressBar.setVisibility(View.GONE);
-                Toast.makeText(MyDictationsActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(@NotNull Call<List<Dictation>> call, @NotNull Throwable t) {
+                    includeConnectivityErrorLayout("failure", content, getLayoutInflater(), MyDictationsActivity.this);
+                    mProgressBar.setVisibility(View.GONE);
+                }
+            });
+        }
     }
 
     private void deleteDictation(int id) {
@@ -157,27 +173,6 @@ public class MyDictationsActivity extends AppCompatActivity {
         });
 
     }
-
-
-//    private class GetDictationsTask extends AsyncTask<Void, Void, Void> {
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-//            getDictationsOfCurrentUser();
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            super.onPostExecute(aVoid);
-//        }
-//
-//    }
 
     public class DictationsHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

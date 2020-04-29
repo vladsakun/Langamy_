@@ -6,8 +6,6 @@
         <item name="colorPrimary">@color/blue</item>
         <item name="colorPrimaryDark">@color/darkBlue</item>
         <item name="colorAccent">@color/orange</item>
-
-        <!--        <item name="android:windowAnimationStyle">@style/CustomActivityAnimation</item>-->
     </style>
 
     <!-- Activity with no Title -->

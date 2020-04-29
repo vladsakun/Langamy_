@@ -79,7 +79,15 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
 
-        mWordList = ArrayList()
+        val studySet = intent.getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE) as StudySet
+
+        mWordList = convertJsonArrayToArray(studySet.words)
+
+        //MarkedWords Fragment initializing
+        fragment = MarkedWordsFragment(mWordList)
+        fragmentTransaction.add(R.id.container_for_recycler, fragment!!)
+        fragmentTransaction.commit()
+
         editStudySetActivityIntent = Intent(this@SpecificStudySetActivity, EditStudySetActivity::class.java)
         learnIntent = Intent(this@SpecificStudySetActivity, LearnActivity::class.java)
         cardIntent = Intent(this@SpecificStudySetActivity, CardModeActivity::class.java)
@@ -97,29 +105,13 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         containerForRecylcler = findViewById(R.id.container_for_recycler)
         parentForContainer = findViewById(R.id.parent_for_container)
         mAdView = findViewById(R.id.adView)
+
         MobileAds.initialize(this) { }
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
-        studySetId = intent.getIntExtra(BaseVariables.STUDY_SET_ID_MESSAGE, 0)
 
-        var cloned: Boolean
-        try {
-            val data = intent.data
-            studySetId = data.toString().replace("http://vlad12.pythonanywhere.com/studyset/", "")
-                    .replace("/", "").toInt()
-            cloned = true
-        } catch (e: Exception) {
-            cloned = false
-        }
+        inizializeRecyclerView(mWordList as List<Word>)
 
-        viewModel = ViewModelProvider(this, viewModelFactory(studySetId)).get(SpecificStudySetViewModel::class.java)
-
-        //MarkedWords Fragment initializing
-        fragment = MarkedWordsFragment(mWordList)
-        fragmentTransaction.add(R.id.container_for_recycler, fragment!!)
-        fragmentTransaction.commit()
-
-        inizializeRecyclerView(mWordList!!)
         learnBtn.setOnClickListener(View.OnClickListener {
             if (studyMarked) {
                 val markedWordsForIntent = ArrayList<Word>()
@@ -133,24 +125,25 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
                     return@OnClickListener
                 }
                 learnIntent!!.putExtra(BaseVariables.MARKED_MESSAGE, true)
-                learnIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, markedWords)
+                learnIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, markedWordsForIntent)
             } else {
                 learnIntent!!.putExtra(BaseVariables.MARKED_MESSAGE, false)
                 learnIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, mWordList)
             }
             startActivity(learnIntent)
         })
-        cardMode_BTN.setOnClickListener(View.OnClickListener {
+
+        cardMode_BTN.setOnClickListener {
             cardIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, mWordList)
             startActivity(cardIntent)
-        })
-        createDictationBtn.setOnClickListener(View.OnClickListener {
+        }
+        createDictationBtn.setOnClickListener {
             makeDictationIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, mWordList)
             makeDictationIntent!!.putExtra(BaseVariables.TITLE_MESSAGE, studySetName)
             startActivity(makeDictationIntent)
             finish()
-        })
-        studyAll_MBTN.setOnClickListener(View.OnClickListener {
+        }
+        studyAll_MBTN.setOnClickListener {
             studyMarked = false
             studyAll_MBTN.setBackgroundColor(getColor(R.color.blue))
             studyAll_MBTN.setTextColor(getColor(R.color.white))
@@ -160,8 +153,8 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
             studyMarked_MBTN.isClickable = true
             parentForContainer.visibility = View.GONE
             wordsRecyclerView.visibility = View.VISIBLE
-        })
-        studyMarked_MBTN.setOnClickListener(View.OnClickListener {
+        }
+        studyMarked_MBTN.setOnClickListener {
             studyMarked = true
             studyMarked_MBTN.setBackgroundColor(getColor(R.color.blue))
             studyMarked_MBTN.setTextColor(getColor(R.color.white))
@@ -172,10 +165,16 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
             parentForContainer.setVisibility(View.VISIBLE)
             wordsRecyclerView.setVisibility(View.GONE)
             fragment!!.words = mWordList
-        })
-
-        bindUI(cloned)
-
+        }
+        try {
+            val data = intent.data
+            studySetId = data.toString().replace("http://vlad12.pythonanywhere.com/studyset/", "")
+                    .replace("/", "").toInt()
+            viewModel = ViewModelProvider(this, viewModelFactory(studySetId)).get(SpecificStudySetViewModel::class.java)
+            bindUI(true)
+        } catch (e: Exception) {
+            initializeStudySetActivity(studySet)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -263,7 +262,6 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
 
     fun initializeStudySetActivity(studySet: StudySet?) {
         mWordList!!.clear()
-
         mWordList!!.addAll(convertJsonArrayToArray(studySet!!.words))
         if (studySet.marked_words != null) {
             markedWords.addAll(convertJsonArrayToArray(studySet.marked_words))

@@ -17,7 +17,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bignerdranch.android.main.R
-import com.blogspot.atifsoftwares.animatoolib.Animatoo
 import com.google.android.gms.ads.AdRequest
 import com.langamy.activities.*
 import com.langamy.adapters.StudySetsAdapter
@@ -94,6 +93,7 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
             override fun onItemClicked(item: StudySet) {
                 val intent = Intent(context, SpecificStudySetActivity::class.java)
                 intent.putExtra(BaseVariables.STUDY_SET_ID_MESSAGE, item.id)
+                intent.putExtra(BaseVariables.STUDY_SET_MESSAGE, item)
                 startActivity(intent)
             }
         })
@@ -137,10 +137,10 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
     }
 
     private fun updateStudySetsList(studySetsList: List<StudySet>) {
-            items = studySetsList as ArrayList<StudySet>
-            mAdapter.filterListResult = studySetsList
-            mAdapter.itemsList = studySetsList
-            mAdapter.notifyDataSetChanged()
+        items = studySetsList as ArrayList<StudySet>
+        mAdapter.filterListResult = studySetsList
+        mAdapter.itemsList = studySetsList
+        mAdapter.notifyDataSetChanged()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -221,11 +221,11 @@ class StudySetsKotlinFragment : ScopedFragment(), KodeinAware {
                 })
                 .backgroundColor(Color.parseColor("#E621618C"))
                 .build()
-        val activity = activity as MainActivity?
-        val navigation = activity!!.navigationView
+        val mainActivity = activity as MainActivity
+        val navigation = mainActivity.navigationView
         val tabAt = navigation.getTabAt(1)
         val tabView: View = tabAt!!.view
-        val viewPager = activity.viewPager
+        val viewPager = mainActivity.viewPager
         val createStudySet = FancyShowCaseView.Builder(requireActivity())
                 .customView(R.layout.custom_layout_for_fancyshowcase, object : OnViewInflateListener {
                     override fun onViewInflated(view: View) {
