@@ -13,6 +13,7 @@ A student can:
 - __Study remotely__ if the student can't come at school;
 - __Make challenges__ for friends in foreign languages;
 - __Explore new words__ with random dictations from any user of Langamy;
+- Pass dictation on the website if he does not have an Android device; http://vlad12.pythonanywhere.com/http://vlad12.pythonanywhere.com/
 
 A teacher can:
 - Check knowledge of words, __except boring test checks__. Langamy checks words automatically and send all results to teacher;
