@@ -17,6 +17,7 @@ A student can:
 
 A teacher can:
 - Check knowledge of words, __except boring test checks__. Langamy checks words automatically and send all results to teacher;
+- Store all marks in the app;
 - __Economy paper__ for tests;
 - Share words to students with __teacher's translate__;
 - __Economy time__ on dictating words list;
