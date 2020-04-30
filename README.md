@@ -53,11 +53,6 @@ This project is implemented in __Android Studio 3.6.3__. This app works correctl
 | --- | --- | --- |
 |<img src="https://i.imgur.com/xmbGjKb.jpg" height="600">|<img src="https://i.imgur.com/6ruTbBj.jpg" height="600">|<img src="https://i.imgur.com/cKH3OWk.jpg" height="600">|
 
-|Learn| Cards |Make dictation|
+|Learn| Cards |Edit study set|
 | --- | --- | --- |
-|<img src="https://i.imgur.com/p2sZHwv.jpg" height="600">|<img src="https://i.imgur.com/OSRrLKz.jpg" height="600">|<img src="https://i.imgur.com/udDNiWb.jpg" height="600">|
-
-|Your dictations| Recent dictations | Edit studyset |
-| --- | --- | --- |
-|<img src="https://i.imgur.com/xrQ6RBf.jpg" height="600">|<img src="https://i.imgur.com/Gb2tBC9.jpg" height="600">|<img src="https://i.imgur.com/JYhDJYk.jpg" height="600">|
-<br/>
+|<img src="https://i.imgur.com/p2sZHwv.jpg" height="600">|<img src="https://i.imgur.com/OSRrLKz.jpg" height="600">|<img src="https://i.imgur.com/JYhDJYk.jpg" height="600">|
