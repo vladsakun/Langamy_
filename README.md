@@ -16,7 +16,7 @@ A student can:
 
 A teacher can:
 - Check knowledge of words, __except boring test checks__. Langamy checks words automatically and send all results to teacher;
-- __Economy paper__ on tests;
+- __Economy paper__ for tests;
 - Share words to students with __teacher's translate__;
 - __Economy time__ on dictating words list;
 
@@ -27,7 +27,7 @@ This project is implemented in __Android Studio 3.6.3__. This app works correctl
 
 # Features :
 
-*  __Remote storage of all words on the server in Django (Python web framework)__
+*  __Remote storage of all words on the server in Django (Python web framework)__ https://github.com/vladsakun/langamyRestApi;
 
 <img src="https://media.giphy.com/media/h3zRg0R0vj38GQx1Uk/giphy.gif" height="600">
 
