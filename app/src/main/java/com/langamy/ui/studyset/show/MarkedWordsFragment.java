@@ -1,4 +1,4 @@
-package com.langamy.fragments;
+package com.langamy.ui.studyset.show;
 
 
 import android.os.Bundle;
@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bignerdranch.android.main.R;
-import com.langamy.activities.SpecificStudySetActivity;
 import com.langamy.base.classes.Word;
 
 import java.util.ArrayList;

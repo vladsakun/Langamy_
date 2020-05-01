@@ -1,23 +1,23 @@
-package com.langamy.fragments
+package com.langamy.ui.studyset.edit
 
 import android.Manifest
 import android.app.Activity
 import android.content.ContentValues
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
 import android.provider.MediaStore
 import android.util.Log
-import android.view.*
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.view.WindowManager
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,18 +27,17 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
-import com.langamy.activities.SpecificStudySetActivity
 import com.langamy.adapters.WordsAdapter
 import com.langamy.api.LangamyAPI
 import com.langamy.base.classes.BaseVariables
 import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.TranslationResponse
 import com.langamy.base.classes.Word
-import com.langamy.base.kotlin.ScopedFragment
+import com.langamy.base.kotlin.ScopedActivity
+import com.langamy.ui.studyset.show.SpecificStudySetActivity
 import com.langamy.viewmodel.edit.EditStudySetViewModel
 import com.langamy.viewmodel.edit.EditStudySetViewModelFactory
 import com.theartofdev.edmodo.cropper.CropImage
@@ -46,15 +45,11 @@ import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.custom_progress_bar.*
 import kotlinx.android.synthetic.main.fragment_create_study_set.*
 import kotlinx.coroutines.launch
-import me.toptas.fancyshowcase.FancyShowCaseQueue
-import me.toptas.fancyshowcase.FancyShowCaseView
-import me.toptas.fancyshowcase.FocusShape
-import me.toptas.fancyshowcase.listener.OnViewInflateListener
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import org.kodein.di.KodeinAware
-import org.kodein.di.android.x.closestKodein
+import org.kodein.di.android.closestKodein
 import org.kodein.di.generic.instance
 import retrofit2.Call
 import retrofit2.Callback
@@ -64,18 +59,13 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import java.util.*
-import kotlin.collections.ArrayList
 
-/**
- * A simple [Fragment] subclass.
- */
-class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, KodeinAware {
+class EditStudySetActivity : ScopedActivity(), RewardedVideoAdListener,
+        KodeinAware {
 
     override val kodein by closestKodein()
 
-    private val viewModelFactory by instance<EditStudySetViewModelFactory>()
-    private lateinit var viewModel: EditStudySetViewModel
-
+    private var mStudySet: StudySet? = null
     var retrofit: Retrofit = BaseVariables.retrofit
     var mLangamyAPI: LangamyAPI = retrofit.create(LangamyAPI::class.java)
     private var languageToTranslate = "ru"
@@ -94,92 +84,66 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
     private var recyclerView: RecyclerView? = null
 
     private var wordsForSuggestions: HashMap<String, ArrayList<String>>? = null
+    lateinit var cameraPermission: Array<String>
+    lateinit var storagePermission: Array<String>
 
-    private lateinit var mAd: RewardedVideoAd
+    private var imageUri: Uri? = null
+    lateinit var mAd: RewardedVideoAd
 
-    private var image_uri: Uri? = null
+    private val viewModelFactory by instance<EditStudySetViewModelFactory>()
+    private lateinit var viewModel: EditStudySetViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        MobileAds.initialize(context, BaseVariables.REWARDED_VIDEO_TEST)
-        mAd = MobileAds.getRewardedVideoAdInstance(context)
-        mAd.rewardedVideoAdListener = this
-
-        // Confirm this fragment has menu items.
-        setHasOptionsMenu(true)
-        wordsForSuggestions = save()
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(EditStudySetViewModel::class.java)
+        setContentView(R.layout.fragment_create_study_set)
 
         wordsModelArrayList = ArrayList()
 
-        mAdapter = WordsAdapter(object : WordsAdapter.Callback {
-            override fun onDeleteClicked(translationSupport: TextView, itemId: Int, view: View) {
-                view.clearFocus()
-                wordsModelArrayList.removeAt(itemId)
-                mAdapter.notifyItemRemoved(itemId)
-                mAdapter.notifyItemRangeChanged(itemId, wordsModelArrayList.size)
-            }
+        mStudySet = intent.getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE) as StudySet
 
-        }, requireContext(), wordsModelArrayList, wordScrollView, result_LL, save(), true)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(EditStudySetViewModel::class.java)
 
-        recyclerView!!.isNestedScrollingEnabled = false
-        recyclerView!!.adapter = mAdapter
-        recyclerView!!.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        //camera permission
+        cameraPermission = arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        storagePermission = arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE)
 
-        for (i in 0..1) {
-            wordsModelArrayList.add(Word("", ""))
-        }
+        val progressBar = findViewById<ProgressBar>(R.id.progressBar)
+        mResultEt = resultEt
+        mTitleEt = title_edittext
+        recyclerView = findViewById(R.id.words_recyclerview)
+        mScanDocumentBtn = findViewById(R.id.scan_document_btn)
+        mAddWordBtn = findViewById(R.id.add_word_btn)
+        mCommitWordsBtn = findViewById(R.id.commit_words_btn)
+        mResultCardView = findViewById(R.id.result_LL)
+        mWordsLinearLayout = findViewById(R.id.main_linearlayout)
+        wordScrollView = findViewById(R.id.word_scrollview)
+        progressBar.visibility = View.GONE
 
-        mAddWordBtn.setOnClickListener {
-            mAdapter.edit = false
-            wordsModelArrayList.add(Word("", "", false, false, false, false))
-            mAdapter.notifyItemInserted(mAdapter.itemCount)
-        }
-    }
-
-    private fun insertLocalStudySet(studySet: StudySet) = launch {
-        viewModel.insertStudySet(studySet)
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_create_study_set, container, false)
-        mResultEt = view.findViewById(R.id.resultEt)
-        mTitleEt = view.findViewById(R.id.title_edittext)
-        mScanDocumentBtn = view.findViewById(R.id.scan_document_btn)
-        mAddWordBtn = view.findViewById(R.id.add_word_btn)
-        mCommitWordsBtn = view.findViewById(R.id.commit_words_btn)
-        mWordsLinearLayout = view.findViewById(R.id.main_linearlayout)
-        wordScrollView = view.findViewById(R.id.word_scrollview)
-        mResultCardView = view.findViewById(R.id.result_LL)
-        recyclerView = view.findViewById(R.id.words_recyclerview)
-
-        val languageFromSpinner = view.findViewById<Spinner>(R.id.language_form_spinner)
-        val languageToSpinner = view.findViewById<Spinner>(R.id.language_to_spinner)
+        MobileAds.initialize(this, BaseVariables.REWARDED_VIDEO_TEST)
+        mAd = MobileAds.getRewardedVideoAdInstance(this)
+        mAd.rewardedVideoAdListener = this
 
         loadRewardedVideoAd()
 
-        // адаптер
+        // Adapter for spinners
         val baseVariables = BaseVariables()
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, baseVariables.languages)
-
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, baseVariables.languages)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val languageFromSpinner = findViewById<Spinner>(R.id.language_form_spinner)
+        val languageToSpinner = findViewById<Spinner>(R.id.language_to_spinner)
         languageFromSpinner.adapter = adapter
         languageToSpinner.adapter = adapter
 
-        // заголовок
-        languageFromSpinner.prompt = ("Language from")
-        languageToSpinner.prompt = ("Language to")
+        // Titles for spinners
+        languageFromSpinner.prompt = "Language from"
+        languageToSpinner.prompt = "Language to"
 
-        // выделяем элемент
-        languageFromSpinner.setSelection(0)
-        languageToSpinner.setSelection(1)
+        mTitleEt.setText(mStudySet!!.name)
+        val indexOfLanguageFrom = baseVariables.languageS_SHORT.indexOf(mStudySet!!.language_from)
+        val indexOfLanguageTo = baseVariables.languageS_SHORT.indexOf(mStudySet!!.language_to)
+
+        languageFromSpinner.setSelection(indexOfLanguageFrom)
+        languageToSpinner.setSelection(indexOfLanguageTo)
 
         languageFromSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View,
@@ -200,9 +164,48 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
             override fun onNothingSelected(arg0: AdapterView<*>?) {}
         }
 
+        mAdapter = WordsAdapter(object : WordsAdapter.Callback {
+            override fun onDeleteClicked(translationSupport: TextView, itemId: Int, view:View) {
+                view.clearFocus()
+                wordsModelArrayList.removeAt(itemId)
+                mAdapter.notifyItemRemoved(itemId)
+                mAdapter.notifyItemRangeChanged(itemId, wordsModelArrayList.size)
+            }
+
+        }, this, wordsModelArrayList, wordScrollView, result_LL, save(), true)
+
+        val words = mStudySet!!.words
+        try {
+            val jsonArray = JSONArray(words)
+            for (i in 0 until jsonArray.length()) {
+                val jsonObject = jsonArray.getJSONObject(i)
+                val word = Word(jsonObject.getString("term"),
+                        jsonObject.getString("translation"),
+                        jsonObject.getBoolean("firstStage"),
+                        jsonObject.getBoolean("secondStage"),
+                        jsonObject.getBoolean("thirdStage"),
+                        jsonObject.getBoolean("forthStage")
+                )
+                wordsModelArrayList.add(word)
+            }
+            mAdapter.edit = false
+
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+
+        recyclerView!!.isNestedScrollingEnabled = false
+        recyclerView!!.adapter = mAdapter
+        recyclerView!!.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+
+        mAddWordBtn.setOnClickListener {
+            wordsModelArrayList.add(Word("", "", false, false, false, false))
+            mAdapter.notifyItemInserted(mAdapter.itemCount)
+        }
+
         mScanDocumentBtn.setOnClickListener(View.OnClickListener {
-            if (!BaseVariables.checkNetworkConnection(context) || !mAd.isLoaded) {
-                Toast.makeText(context, getString(R.string.you_need_an_internet_connection), Toast.LENGTH_SHORT).show()
+            if (!BaseVariables.checkNetworkConnection(this@EditStudySetActivity)) {
+                Toast.makeText(this@EditStudySetActivity, getString(R.string.you_need_an_internet_connection), Toast.LENGTH_SHORT).show()
                 return@OnClickListener
             }
             if (mAd.isLoaded) {
@@ -210,17 +213,21 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
             }
         })
 
-        mCommitWordsBtn.setOnClickListener {
-            if (mResultEt.text.toString().isNotEmpty()) {
-                requireActivity().window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+        mCommitWordsBtn.setOnClickListener(View.OnClickListener {
+            if (mResultEt.getText().toString().isNotEmpty()) {
+                window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-                progressBar.visibility = View.VISIBLE
-                manyTranslate(mResultEt.text.toString())
+                progressBar.setVisibility(View.VISIBLE)
+                manyTranslate(mResultEt.getText().toString())
             } else {
-                Toast.makeText(context, "Result is empty", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@EditStudySetActivity, "Result is empty", Toast.LENGTH_SHORT).show()
             }
-        }
-        return view
+        })
+        wordsForSuggestions = save()
+    }
+
+    private fun updateLocalStudySet(studySet: StudySet) = launch {
+        viewModel.updateStudySet(studySet)
     }
 
     private fun manyTranslate(words: String) {
@@ -239,50 +246,49 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
         call.enqueue(object : Callback<TranslationResponse> {
             override fun onResponse(call: Call<TranslationResponse>, response: Response<TranslationResponse>) {
                 if (!response.isSuccessful) {
-                    Toast.makeText(context, response.code().toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@EditStudySetActivity, response.code().toString(), Toast.LENGTH_SHORT).show()
                     return
                 }
                 val translations = response.body()!!.translation.toString().split(";").toTypedArray()
 
+
                 for (i in terms.indices) {
-                    try {
+                    try{
                         wordsModelArrayList.add(Word(terms[i], translations[i]))
-                    } catch (e: ArrayIndexOutOfBoundsException) {
+                    }catch (e: ArrayIndexOutOfBoundsException){
                         wordsModelArrayList.add(Word("", ""))
                     }
-
                 }
 
                 mAdapter.notifyDataSetChanged()
-                activity!!.window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
+                window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
                 progressBar!!.visibility = View.GONE
             }
 
             override fun onFailure(call: Call<TranslationResponse>, t: Throwable) {
-                Toast.makeText(context, t.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@EditStudySetActivity, t.toString(), Toast.LENGTH_SHORT).show()
             }
         })
         mAdapter.edit = false
 
     }
 
-    //actionbar menu
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
         inflater.inflate(R.menu.menu_create_study_set, menu)
-        inflater.inflate(R.menu.menu_help_item, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+        return true
     }
 
     //handle actionbar item clicks
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         if (id == R.id.submitWords) {
-            if (!BaseVariables.checkNetworkConnection(context)) {
-                Toast.makeText(context, getString(R.string.you_need_an_internet_connection), Toast.LENGTH_SHORT).show()
+            if (!BaseVariables.checkNetworkConnection(this)) {
+                Toast.makeText(this@EditStudySetActivity, getString(R.string.no_internet_connection), Toast.LENGTH_SHORT).show()
                 return false
             }
             if (mTitleEt.text.isEmpty()) {
-                Toast.makeText(context, getString(R.string.title_is_empty), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Title is empty", Toast.LENGTH_SHORT).show()
                 BaseVariables.showKeyboard(mTitleEt)
                 return false
             }
@@ -303,44 +309,81 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
                     }
                 }
                 if (wordList.length() < 4) {
-                    Toast.makeText(context, getString(R.string.min_words_in_studyset), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Study set must include 4 or more words", Toast.LENGTH_SHORT).show()
                 } else {
-                    createStudySet(mTitleEt.text.toString(), wordList)
+                    mStudySet!!.words = wordList.toString()
+                    mStudySet!!.amount_of_words = wordList.length()
+                    updateStudySet(mStudySet!!.id, mStudySet!!)
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
-        if (id == R.id.help) {
-            playHelp()
-        }
         return super.onOptionsItemSelected(item)
     }
 
-    private fun toEmptyStudySetData() {
-        mTitleEt.text = null
+    private fun updateStudySet(id: Int, studySet: StudySet) {
 
-        mResultEt.text = null
-        mResultCardView.visibility = View.GONE
+        studySet.language_from = languageFromTranslate
+        studySet.language_to = languageToTranslate
+        studySet.name = mTitleEt.text.toString()
 
-        wordsModelArrayList.clear()
-        mAdapter.notifyDataSetChanged()
+        val call = mLangamyAPI.patchStudySet(id, studySet)
+
+        call.enqueue(object : Callback<StudySet> {
+            override fun onResponse(call: Call<StudySet>, response: Response<StudySet>) {
+                if (!response.isSuccessful) {
+                    Toast.makeText(this@EditStudySetActivity, response.code().toString(), Toast.LENGTH_SHORT).show()
+                    return
+                }
+                updateLocalStudySet(studySet)
+                val intent = Intent(this@EditStudySetActivity, SpecificStudySetActivity::class.java)
+                intent.putExtra(BaseVariables.STUDY_SET_MESSAGE, studySet)
+                startActivity(intent)
+                finish()
+            }
+
+            override fun onFailure(call: Call<StudySet>, t: Throwable) {
+                Toast.makeText(this@EditStudySetActivity, t.toString(), Toast.LENGTH_SHORT).show()
+                return
+            }
+        })
     }
 
     private fun showImageImportDialog() {
         //items to display in dialog
         val items = arrayOf(" Camera", " Gallery")
-        val dialog = AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(Objects.requireNonNull(this))
         //set title
         dialog.setTitle("Select Image")
-        dialog.setItems(items) { _, which ->
+        dialog.setItems(items) { dialogInterface, which ->
             if (which == 0) {
                 //camera option clicked
-                requestCameraPermission()
+                if (!checkCameraPermission()) {
+                    //camera permission not allowed, request it
+                    requestCameraPersmission()
+                    if (checkCameraPermission()) {
+                        pickCamera()
+                    }
+                } else {
+                    //permission allowed, take picture
+                    pickCamera()
+                }
+                //for OS marshmallow and above we need to ask runtime permission
+                //for camera and storage
             }
             if (which == 1) {
                 //gallery option clicked
-                requestStoragePermission()
+                if (!checkStoragePermission()) {
+                    //Storage permission not allowed, request it
+                    requestStoragePersmission()
+                    if (checkStoragePermission()) {
+                        pickGallery()
+                    }
+                } else {
+                    //permission allowed, take picture
+                    pickGallery()
+                }
             }
         }
         dialog.create().show() //show dialog
@@ -358,81 +401,72 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
         val values = ContentValues()
         values.put(MediaStore.Images.Media.TITLE, "NewPic") //title of the picture
         values.put(MediaStore.Images.Media.DESCRIPTION, "Image To text") // description
-        image_uri = Objects.requireNonNull(requireActivity()).contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
+        imageUri = Objects.requireNonNull(this).contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
         startActivityForResult(cameraIntent, IMAGE_PICK_CAMERA_CODE)
     }
 
+    private fun requestStoragePersmission() {
+        ActivityCompat.requestPermissions(Objects.requireNonNull(this), storagePermission, STORAGE_REQUEST_CODE)
+    }
+
     private fun checkStoragePermission(): Boolean {
-        return ContextCompat.checkSelfPermission(requireActivity(),
+        return ContextCompat.checkSelfPermission(Objects.requireNonNull(this),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
     }
 
+    private fun requestCameraPersmission() {
+        ActivityCompat.requestPermissions(Objects.requireNonNull(this), cameraPermission, CAMERA_REQUEST_CODE)
+    }
+
     private fun checkCameraPermission(): Boolean {
-        return ContextCompat.checkSelfPermission(requireActivity(),
+        val result = ContextCompat.checkSelfPermission(Objects.requireNonNull(this),
                 Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED
-    }
-
-    private fun requestStoragePermission() {
-        if (checkStoragePermission()) {
-            pickGallery()
-        } else {
-            requestPermissions(arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), STORAGE_REQUEST_CODE)
-        }
-    }
-
-    private fun requestCameraPermission() {
-        if (checkCameraPermission() && checkStoragePermission()) {
-
-            // has the permission.
-            pickCamera()
-        } else {
-
-            // request the permission
-            requestPermissions(arrayOf(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE), CAMERA_REQUEST_CODE)
-        }
+        val result1 = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        return result && result1
     }
 
     //handle permission result
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) {
         when (requestCode) {
-            CAMERA_REQUEST_CODE -> if (grantResults.isNotEmpty()) {
+            CAMERA_REQUEST_CODE -> if (grantResults.size > 0) {
                 val cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
-                val writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED
+                val writeStorageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
                 if (cameraAccepted && writeStorageAccepted) {
                     pickCamera()
                 } else {
-                    Toast.makeText(activity, "Permission denied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "permission denied", Toast.LENGTH_SHORT).show()
                 }
             }
-            STORAGE_REQUEST_CODE -> if (grantResults.isNotEmpty()) {
+            STORAGE_REQUEST_CODE -> if (grantResults.size > 0) {
                 val writeStorageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
                 if (writeStorageAccepted) {
                     pickGallery()
                 } else {
-                    Toast.makeText(activity, "Permission denied", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "permission denied", Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
     //handle image result
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == IMAGE_PICK_GALLERY_CODE) {
                 //got image from gallery now crop it
                 CropImage.activity(data!!.data)
                         .setGuidelines(CropImageView.Guidelines.ON)
-                        .start(Objects.requireNonNull(requireActivity())) //enable image guidlines
+                        .start(Objects.requireNonNull(this)) //enable image guidlines
             }
             if (requestCode == IMAGE_PICK_CAMERA_CODE) {
                 //got image from camera now crop it
-                CropImage.activity(image_uri)
+                CropImage.activity(imageUri)
                         .setGuidelines(CropImageView.Guidelines.ON)
-                        .start(Objects.requireNonNull(requireActivity())) //enable image guidlines
+                        .start(Objects.requireNonNull(this)) //enable image guidlines
             }
         }
         //get cropped image
@@ -443,7 +477,7 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
                 //get drawable bitmap for text recognition
                 var bitmap: Bitmap? = null
                 try {
-                    bitmap = MediaStore.Images.Media.getBitmap(requireContext().contentResolver, resultUri)
+                    bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, resultUri)
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -472,121 +506,35 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
                                 words.append(word).append("\n")
                             }
                             //set text to edit text
-                            mResultEt.setText(words.toString())
+                            mResultEt.append(words.toString())
                         }
-                        .addOnFailureListener { e -> Toast.makeText(activity, e.toString(), Toast.LENGTH_SHORT).show() }
+                        .addOnFailureListener { e -> Toast.makeText(this@EditStudySetActivity, e.toString(), Toast.LENGTH_SHORT).show() }
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 //if there is ane error show if
                 val error = result.error
-                Toast.makeText(activity, "" + error, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "" + error, Toast.LENGTH_SHORT).show()
             }
         }
-    }
-
-    private fun createStudySet(name: String, wordList: JSONArray) {
-        if (wordList.length() < 2) {
-            return
-        }
-        val acct = GoogleSignIn.getLastSignedInAccount(context)
-        val studySet = StudySet(acct!!.email, name, wordList.toString(), languageToTranslate, languageFromTranslate, wordList.length())
-        val call = mLangamyAPI.createStudySet(studySet)
-
-        call.enqueue(object : Callback<StudySet> {
-            override fun onResponse(call: Call<StudySet>, response: Response<StudySet>) {
-                if (!response.isSuccessful) {
-                    Toast.makeText(context, response.code().toString(), Toast.LENGTH_SHORT).show()
-                    return
-                }
-                insertLocalStudySet(response.body()!!)
-                val intent = Intent(context, SpecificStudySetActivity::class.java)
-                intent.putExtra(BaseVariables.STUDY_SET_ID_MESSAGE, response.body()!!.id)
-                startActivity(intent)
-            }
-
-            override fun onFailure(call: Call<StudySet>, t: Throwable) {
-                Toast.makeText(context, t.toString(), Toast.LENGTH_SHORT).show()
-            }
-        })
-        toEmptyStudySetData()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        setHasOptionsMenu(isVisible)
-        val sf = requireActivity().getPreferences(Context.MODE_PRIVATE)
-        val help = sf.getBoolean(BaseVariables.HELP_CREATE_STUDYSETS_FRAGMENT, true)
-        if (help) {
-            playHelp()
-            val editor = requireActivity().getPreferences(Context.MODE_PRIVATE).edit()
-            editor.putBoolean(BaseVariables.HELP_CREATE_STUDYSETS_FRAGMENT, false)
-            editor.apply()
-        }
-    }
-
-    private fun playHelp() {
-        BaseVariables.hideKeyboard(activity)
-        val queue = FancyShowCaseQueue()
-        val titleFocus = FancyShowCaseView.Builder(requireActivity())
-                .focusOn(mTitleEt)
-                .customView(R.layout.custom_layout_for_fancyshowcase, object : OnViewInflateListener {
-                    override fun onViewInflated(view: View) {
-                        BaseVariables.setCustomFancyCaseView(view, getString(R.string.fancy_title), queue)
-                    }
-                })
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .backgroundColor(Color.parseColor("#E621618C"))
-                .build()
-        val fromLang = FancyShowCaseView.Builder(requireActivity())
-                .focusOn(language_form_spinner!!)
-                .customView(R.layout.custom_layout_for_fancyshowcase, object : OnViewInflateListener {
-                    override fun onViewInflated(view: View) {
-                        BaseVariables.setCustomFancyCaseView(view, getString(R.string.fancy_from_lang), queue)
-                    }
-                })
-                .backgroundColor(Color.parseColor("#E621618C"))
-                .build()
-        val toLang = FancyShowCaseView.Builder(requireActivity())
-                .focusOn(language_to_spinner!!)
-                .customView(R.layout.custom_layout_for_fancyshowcase, object : OnViewInflateListener {
-                    override fun onViewInflated(view: View) {
-                        BaseVariables.setCustomFancyCaseView(view, getString(R.string.fancy_to_lang), queue)
-                    }
-                })
-                .backgroundColor(Color.parseColor("#E621618C"))
-                .build()
-        val scan = FancyShowCaseView.Builder(requireActivity())
-                .focusOn(mScanDocumentBtn)
-                .customView(R.layout.custom_layout_for_fancyshowcase, object : OnViewInflateListener {
-                    override fun onViewInflated(view: View) {
-                        BaseVariables.setCustomFancyCaseView(view, getString(R.string.fancy_scan_btn), queue)
-                    }
-                })
-                .focusShape(FocusShape.ROUNDED_RECTANGLE)
-                .backgroundColor(Color.parseColor("#E621618C"))
-                .build()
-        queue.add(titleFocus)
-        queue.add(fromLang)
-        queue.add(toLang)
-        queue.add(scan)
-        val handler = Handler()
-        handler.postDelayed({ queue.show() }, 200)
     }
 
     private fun save(): HashMap<String, ArrayList<String>> {
+
         val allWords = HashMap<String, ArrayList<String>>()
+
         val fileNames = arrayOf(
                 "a.txt", "b.txt", "c.txt", "d.txt", "e.txt", "f.txt", "g.txt", "h.txt",
                 "i.txt", "j.txt", "k.txt", "l.txt", "m.txt", "n.txt",
                 "o.txt", "p.txt", "q.txt", "r.txt", "s.txt", "t.txt",
                 "u.txt", "v.txt", "w.txt", "x.txt", "y.txt", "z.txt")
+
         var reader: BufferedReader? = null
         for (fileName in fileNames) {
             try {
                 reader = BufferedReader(
-                        InputStreamReader(requireContext().assets.open("english_words/$fileName")))
+                        InputStreamReader(assets.open("english_words/$fileName")))
 
                 // do reading, usually loop until end of file reading
-                var mLine: String?
+                var mLine: String? = null
                 val words = ArrayList<String>()
                 while (reader.readLine().also { mLine = it } != null) {
                     words.add(mLine!!)
@@ -606,6 +554,12 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
         return allWords
     }
 
+    companion object {
+        private const val CAMERA_REQUEST_CODE = 200
+        private const val STORAGE_REQUEST_CODE = 400
+        private const val IMAGE_PICK_GALLERY_CODE = 1000
+        private const val IMAGE_PICK_CAMERA_CODE = 1001
+    }
     override fun onRewardedVideoAdLoaded() {
         Log.d("VIDEO", "An ad has loaded")
         mScanDocumentBtn.isEnabled = true
@@ -644,12 +598,5 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
 
     private fun loadRewardedVideoAd() {
         mAd.loadAd(BaseVariables.REWARDED_VIDEO_TEST, AdRequest.Builder().build())
-    }
-
-    companion object {
-        private const val CAMERA_REQUEST_CODE = 200
-        private const val STORAGE_REQUEST_CODE = 400
-        private const val IMAGE_PICK_GALLERY_CODE = 1000
-        private const val IMAGE_PICK_CAMERA_CODE = 1001
     }
 }

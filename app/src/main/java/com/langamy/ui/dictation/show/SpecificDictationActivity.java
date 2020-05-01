@@ -1,4 +1,4 @@
-package com.langamy.activities;
+package com.langamy.ui.dictation.show;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -27,6 +27,7 @@ import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.Dictation;
 import com.langamy.base.classes.Mark;
 import com.langamy.base.classes.Word;
+import com.langamy.ui.dictation.DictationPagerActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;

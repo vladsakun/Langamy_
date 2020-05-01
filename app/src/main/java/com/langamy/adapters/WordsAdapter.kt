@@ -109,7 +109,9 @@ class WordsAdapter(
             })
             translationEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
-                    translate(termEditText.text.toString().trim { it <= ' ' }, translationSupport)
+                    if(translationEditText.text.isNotEmpty()){
+                        translate(termEditText.text.toString().trim { it <= ' ' }, translationSupport)
+                    }
                     scrollView.post {
                         scrollView.scrollTo(0, itemView.bottom + resultLinearLayout.height)
                     }
@@ -133,7 +135,7 @@ class WordsAdapter(
         call.enqueue(object : retrofit2.Callback<TranslationResponse> {
             override fun onResponse(call: Call<TranslationResponse>, response: Response<TranslationResponse>) {
                 if (!response.isSuccessful) {
-                    Toast.makeText(context, response.code().toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.can_not_translate), Toast.LENGTH_SHORT).show()
                     return
                 }
                 translationSupport.visibility = View.VISIBLE
@@ -142,6 +144,8 @@ class WordsAdapter(
 
             override fun onFailure(call: Call<TranslationResponse>, t: Throwable) {
                 Log.d("Translate_Failure", t.toString())
+                Toast.makeText(context, context.getString(R.string.can_not_translate), Toast.LENGTH_SHORT).show()
+
             }
         })
     }

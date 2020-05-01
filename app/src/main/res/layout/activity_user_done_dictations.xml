@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:id="@+id/content"
     android:layout_height="match_parent"
-    tools:context="com.langamy.activities.UserDoneDictationsActivity">
+    tools:context="com.langamy.ui.dictation.show.UserDoneDictationsActivity">
 
     <include layout="@layout/custom_progress_bar" />
 

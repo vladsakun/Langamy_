@@ -1,7 +1,6 @@
-package com.langamy.fragments;
+package com.langamy.ui.learning.stages;
 
 
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.view.LayoutInflater;
@@ -20,32 +19,16 @@ import com.langamy.base.classes.Word;
 
 import java.util.Locale;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class TermDefinitionStage extends Fragment  {
+public class DefinitionTermStage extends Fragment {
 
-    private TextView term_TV;
-    private EditText definition_ET;
     private Word word;
+    private EditText term_ET;
     private TextToSpeech textToSpeech;
     private String fromLang;
 
-    public TermDefinitionStage(Word word, String fromLang) {
-        this.word = word;
+    public DefinitionTermStage(Word word, String fromLang) {
         this.fromLang = fromLang;
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-
-        LayoutInflater inflater = LayoutInflater.from(getActivity());
-        ViewGroup viewGroup = (ViewGroup) getView();
-        viewGroup.removeAllViewsInLayout();
-        View view = onCreateView(inflater, viewGroup, null);
-        viewGroup.addView(view);
-
+        this.word = word;
     }
 
     @Override
@@ -54,19 +37,19 @@ public class TermDefinitionStage extends Fragment  {
         textToSpeech.shutdown();
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_term_definition_stage, container, false);
+        View view = inflater.inflate(R.layout.fragment_definition_term_stage, container, false);
 
-        term_TV = view.findViewById(R.id.term_TV);
-        definition_ET = view.findViewById(R.id.answer_ET);
+        TextView mDefinition_TV = view.findViewById(R.id.definition_TV);
+        term_ET = view.findViewById(R.id.answer_ET);
         ImageButton speak = view.findViewById(R.id.volume_up_IB);
-        definition_ET.requestFocus();
 
-        term_TV.setText(word.getTerm());
+        term_ET.requestFocus();
+        mDefinition_TV.setText(word.getTranslation());
 
         textToSpeech = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
             @Override
@@ -79,7 +62,7 @@ public class TermDefinitionStage extends Fragment  {
         speak.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CharSequence c = word.getTerm();
+                CharSequence c = word.getTranslation();
                 textToSpeech.speak(c, TextToSpeech.QUEUE_FLUSH, null, null);
             }
         });
@@ -87,33 +70,29 @@ public class TermDefinitionStage extends Fragment  {
         return view;
     }
 
-    @Override
-    public void onResume() {
-
-        super.onResume();
-        definition_ET.requestFocus();
-
-        BaseVariables.showKeyboard(getActivity());
-
-    }
-
     public Answer checkAnswer(String userAnswer) {
-
         Answer answer = new Answer(userAnswer, word.getTranslation(), word.getTerm(), true);
 
-        if (!userAnswer.toLowerCase().trim().equals(word.getTranslation().toLowerCase().trim())) {
+        if (!userAnswer.toLowerCase().trim().equals(word.getTerm().toLowerCase().trim())) {
+
             answer.setStatus(false);
         }
 
-        definition_ET.setText("");
-
+        term_ET.setText("");
         return answer;
-
     }
 
     public Word getWord() {
         return word;
     }
 
+    @Override
+    public void onResume() {
+
+        super.onResume();
+        term_ET.requestFocus();
+
+        BaseVariables.showKeyboard(getActivity());
+    }
 
 }

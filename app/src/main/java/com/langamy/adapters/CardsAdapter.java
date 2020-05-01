@@ -1,24 +1,18 @@
 package com.langamy.adapters;
 
 import android.app.Activity;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.speech.tts.TextToSpeech;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bignerdranch.android.main.R;
-import com.langamy.activities.CardModeActivity;
 import com.langamy.base.classes.CardItem;
+import com.langamy.ui.studyset.show.CardModeActivity;
 
 import java.util.List;
-import java.util.Locale;
 
 public class CardsAdapter extends BaseAdapter {
 

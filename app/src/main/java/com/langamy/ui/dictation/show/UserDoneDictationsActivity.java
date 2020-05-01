@@ -1,4 +1,4 @@
-package com.langamy.activities;
+package com.langamy.ui.dictation.show;
 
 import android.content.Intent;
 import android.os.Bundle;

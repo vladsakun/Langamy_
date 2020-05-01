@@ -1,4 +1,4 @@
-package com.langamy.fragments
+package com.langamy.ui.learning.process
 
 import android.app.Activity
 import android.os.Bundle
@@ -44,10 +44,11 @@ class ContinueLearningFragment : ScopedFragment(), KodeinAware {
     private var returnToStudySet_MBTN: MaterialButton? = null
     private var continue_MBTN: MaterialButton? = null
     private var cool_IV: ImageView? = null
+
     override fun onResume() {
         super.onResume()
-        val imm = activity!!.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view!!.windowToken, 0)
+        val imm = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(requireView().windowToken, 0)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -55,7 +56,7 @@ class ContinueLearningFragment : ScopedFragment(), KodeinAware {
         val view = inflater.inflate(R.layout.fragment_continue_learning, container, false)
         continue_MBTN = view.findViewById(R.id.continue_learning_MBTN)
         returnToStudySet_MBTN = view.findViewById(R.id.return_to_studyset_MBTN)
-        returnToStudySet_MBTN!!.setOnClickListener(View.OnClickListener { activity!!.finish() })
+        returnToStudySet_MBTN!!.setOnClickListener { requireActivity().finish() }
         cool_IV = view.findViewById(R.id.cool_emoji_IV)
         return view
     }
@@ -88,10 +89,10 @@ class ContinueLearningFragment : ScopedFragment(), KodeinAware {
         this.learnMarked = learnMarked
     }
 
-    fun finishStudyset() {
+    private fun finishStudyset() {
+
         if (BaseVariables.checkNetworkConnection(context)) {
-            val call: Call<Void>
-            call = if (learnMarked) {
+            val call: Call<Void> = if (learnMarked) {
                 mLangamyAPI.finishStudyset(studysetId, "marked")
             } else {
                 mLangamyAPI.finishStudyset(studysetId, "words")

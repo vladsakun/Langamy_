@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:animateLayoutChanges="true"
-    tools:context="com.langamy.activities.CardModeActivity">
+    tools:context="com.langamy.ui.studyset.show.CardModeActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

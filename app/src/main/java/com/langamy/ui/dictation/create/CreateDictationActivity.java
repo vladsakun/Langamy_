@@ -1,4 +1,4 @@
-package com.langamy.activities;
+package com.langamy.ui.dictation.create;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -35,6 +35,7 @@ import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.Dictation;
 import com.langamy.base.classes.StudySet;
 import com.langamy.base.classes.Word;
+import com.langamy.ui.dictation.show.SpecificDictationActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,7 +53,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class MakeDictationActivity extends AppCompatActivity{
+public class CreateDictationActivity extends AppCompatActivity{
 
     public Retrofit retrofit = BaseVariables.retrofit;
     public LangamyAPI mLangamyAPI = retrofit.create(LangamyAPI.class);
@@ -351,7 +352,7 @@ public class MakeDictationActivity extends AppCompatActivity{
             @Override
             public void onResponse(Call<List<StudySet>> call, Response<List<StudySet>> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(MakeDictationActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateDictationActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -389,14 +390,14 @@ public class MakeDictationActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<List<StudySet>> call, Throwable t) {
-                Toast.makeText(MakeDictationActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateDictationActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void show(String numberPickerName) {
 
-        final Dialog d = new Dialog(MakeDictationActivity.this);
+        final Dialog d = new Dialog(CreateDictationActivity.this);
         d.setContentView(R.layout.numberpicker_dialog);
 
         final NumberPicker np = (NumberPicker) d.findViewById(R.id.numberPicker1);
@@ -497,11 +498,11 @@ public class MakeDictationActivity extends AppCompatActivity{
             @Override
             public void onResponse(Call<Dictation> call, Response<Dictation> response) {
                 if (!response.isSuccessful()) {
-                    Toast.makeText(MakeDictationActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateDictationActivity.this, String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Intent intent = new Intent(MakeDictationActivity.this, SpecificDictationActivity.class);
+                Intent intent = new Intent(CreateDictationActivity.this, SpecificDictationActivity.class);
                 intent.putExtra(BaseVariables.DICTATION_ID_MESSAGE, response.body().getId());
                 startActivity(intent);
                 finish();
@@ -510,7 +511,7 @@ public class MakeDictationActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<Dictation> call, Throwable t) {
-                Toast.makeText(MakeDictationActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(CreateDictationActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
             }
         });
     }

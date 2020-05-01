@@ -21,11 +21,11 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-1867610337047797~1889776259"/>
         <activity
-            android:name="com.langamy.activities.UserDoneDictationsActivity"
+            android:name="com.langamy.ui.dictation.show.UserDoneDictationsActivity"
             android:parentActivityName="com.langamy.activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.langamy.activities.CardModeActivity"
+            android:name="com.langamy.ui.studyset.show.CardModeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeOverlay.MyNoTitleActivity" />
         <activity
@@ -39,16 +39,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.langamy.activities.MyDictationsActivity"
+            android:name="com.langamy.ui.dictation.show.MyDictationsActivity"
             android:parentActivityName="com.langamy.activities.MainActivity"
             android:screenOrientation="portrait" />
-        <activity android:name="com.langamy.activities.DictationResultActivity" />
+        <activity android:name="com.langamy.ui.dictation.DictationResultActivity" />
         <activity
-            android:name="com.langamy.activities.DictationPagerActivity"
+            android:name="com.langamy.ui.dictation.DictationPagerActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.langamy.activities.SpecificDictationActivity"
+            android:name="com.langamy.ui.dictation.show.SpecificDictationActivity"
             android:parentActivityName="com.langamy.activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -65,7 +65,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.langamy.activities.MakeDictationActivity"
+            android:name="com.langamy.ui.dictation.create.CreateDictationActivity"
             android:parentActivityName="com.langamy.activities.MainActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -90,15 +90,15 @@
             android:value="ocr" />
 
         <activity
-            android:name="com.langamy.activities.LearnActivity"
+            android:name="com.langamy.ui.learning.LearnActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.langamy.activities.EditStudySetActivity"
+            android:name="com.langamy.ui.studyset.edit.EditStudySetActivity"
             android:parentActivityName="com.langamy.activities.MainActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
-            android:name="com.langamy.activities.SpecificStudySetActivity"
+            android:name="com.langamy.ui.studyset.show.SpecificStudySetActivity"
             android:parentActivityName="com.langamy.activities.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -114,7 +114,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.langamy.activities.GoogleSignInActivity"
+            android:name="com.langamy.ui.profile.GoogleSignInActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ThemeOverlay.MyNoTitleActivity" />
     </application>

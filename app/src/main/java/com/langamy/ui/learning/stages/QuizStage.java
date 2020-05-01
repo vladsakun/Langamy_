@@ -1,4 +1,4 @@
-package com.langamy.fragments;
+package com.langamy.ui.learning.stages;
 
 
 import android.os.Build;
@@ -17,10 +17,10 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.bignerdranch.android.main.R;
-import com.langamy.activities.DictationPagerActivity;
 import com.langamy.base.classes.Answer;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.Word;
+import com.langamy.ui.dictation.DictationPagerActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.langamy.activities;
+package com.langamy.ui.dictation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,9 +21,9 @@ import com.langamy.base.classes.Answer;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.Dictation;
 import com.langamy.base.classes.Word;
-import com.langamy.fragments.DefinitionTermStage;
-import com.langamy.fragments.QuizStage;
-import com.langamy.fragments.TermDefinitionStage;
+import com.langamy.ui.learning.stages.DefinitionTermStage;
+import com.langamy.ui.learning.stages.QuizStage;
+import com.langamy.ui.learning.stages.TermDefinitionStage;
 
 import java.util.ArrayList;
 import java.util.Collections;

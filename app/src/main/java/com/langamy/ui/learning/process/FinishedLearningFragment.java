@@ -1,13 +1,12 @@
-package com.langamy.fragments;
+package com.langamy.ui.learning.process;
 
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.fragment.app.Fragment;
 
 import com.bignerdranch.android.main.R;
 import com.google.android.material.button.MaterialButton;

@@ -1,18 +1,14 @@
 package com.langamy.adapters;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bignerdranch.android.main.R;
-import com.bumptech.glide.Glide;
 import com.langamy.base.classes.GreetingItem;
-import com.langamy.fragments.GreetingItemFragment;
 import com.smarteist.autoimageslider.SliderViewAdapter;
 
 import java.util.ArrayList;

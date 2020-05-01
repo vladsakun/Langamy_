@@ -1,11 +1,4 @@
-package com.langamy.activities;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
+package com.langamy.ui.dictation;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,21 +7,28 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.BounceInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.bignerdranch.android.main.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.button.MaterialButton;
+import com.langamy.activities.MainActivity;
 import com.langamy.api.LangamyAPI;
 import com.langamy.base.classes.Answer;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.Mark;
-import com.langamy.fragments.AnswerFragment;
+import com.langamy.ui.dictation.show.SpecificDictationActivity;
+import com.langamy.ui.learning.AnswerFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;

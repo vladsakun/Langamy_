@@ -1,4 +1,4 @@
-package com.langamy.activities
+package com.langamy.ui.learning
 
 import android.os.Bundle
 import android.os.Handler
@@ -16,7 +16,8 @@ import com.langamy.adapters.StagesAdapter
 import com.langamy.api.LangamyAPI
 import com.langamy.base.classes.*
 import com.langamy.base.kotlin.ScopedActivity
-import com.langamy.fragments.*
+import com.langamy.ui.learning.process.ContinueLearningFragment
+import com.langamy.ui.learning.stages.*
 import com.langamy.viewmodel.learn.LearnActivityViewModel
 import com.langamy.viewmodel.learn.LearnActivityViewModelFactory
 import kotlinx.coroutines.launch
@@ -208,8 +209,6 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         if (userAnswer.status) {
             val correctWord = words[correctWordIndex]
             correctWord.isFirstStage = true
-            firstStageWords_TV.text = (firstStageWords_TV.text.toString().toInt() + 1).toString()
-            restWords_TV.text = (restWords_TV.text.toString().toInt() - 1).toString()
             showCorrectAlertDialog()
         } else {
             showWrongAlertDialog(userAnswer.correctAnswer, correctWordIndex, "first")
@@ -225,9 +224,9 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         if (view.id == R.id.cannot_speak_BTN) {
             userAnswer.status = true
         }
-        val correctWordIndex = words!!.indexOf(audioStageFragment.word)
+        val correctWordIndex = words.indexOf(audioStageFragment.word)
         if (userAnswer.status) {
-            val correctWord = words!![correctWordIndex]
+            val correctWord = words[correctWordIndex]
             correctWord.isSecondStage = true
             showCorrectAlertDialog()
         } else {
@@ -246,7 +245,14 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         }
     }
 
-    fun checkAnswerTermTranslation(v: View) {
+    fun skipSpeechStage(view: View) {
+        val speechStage = stages[learnVP2.currentItem] as SpeechStageFragment
+        val correctWord = words[words.indexOf(speechStage.word)]
+        correctWord.isSecondStage = true
+        showCorrectAlertDialog()
+    }
+
+    private fun checkAnswerTermTranslation(v: View) {
         val parent = v.parent as RelativeLayout
         val child = parent.findViewById<View>(R.id.answer_ET) as EditText
         val text = child.text.toString().trim { it <= ' ' }.toLowerCase()
@@ -256,8 +262,6 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         if (userAnswer.status) {
             val correctWord = words[correctWordIndex]
             correctWord.isThirdStage = true
-            thirdStageWords_TV.text = (thirdStageWords_TV.text.toString().toInt() + 1).toString()
-            firstStageWords_TV.text = (firstStageWords_TV.text.toString().toInt() - 1).toString()
             showCorrectAlertDialog()
         } else {
             showWrongAlertDialog(userAnswer.correctAnswer, correctWordIndex, "third")
@@ -276,8 +280,6 @@ class LearnActivity : ScopedActivity(), KodeinAware {
             val correctWord = words!![correctWordIndex]
             correctWord.isForthStage = true
             masteredWords++
-            masteredWords_TV!!.text = (masteredWords_TV!!.text.toString().toInt() + 1).toString()
-            thirdStageWords_TV!!.text = (thirdStageWords_TV!!.text.toString().toInt() - 1).toString()
             showCorrectAlertDialog()
         } else {
             showWrongAlertDialog(userAnswer.term, correctWordIndex, "forth")
@@ -408,4 +410,5 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         }
         return super.onKeyUp(keyCode, event)
     }
+
 }

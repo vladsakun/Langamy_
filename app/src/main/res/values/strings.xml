@@ -13,7 +13,7 @@
     <string name="study_sets">Study sets</string>
     <string name="profile">Profile</string>
     <string name="amount">Amount of terms</string>
-
+    <string name="can_not_translate">Can\'t translate this word</string>
     <string name="action_settings">Settings</string>
     <string name="toolbar_title">Contacts</string>
     <string name="action_search">Search</string>
@@ -85,6 +85,7 @@
     <string name="fancy_translation">Show translation and ask term</string>
     <string name="fancy_mark_dication_word">Mark dictation word and it will be in dictation 100% \n All dictations are randomly mixed</string>
     <string name="can_not_listen">Can not listen</string>
+    <string name="can_not_speak">Can not speak</string>
     <string name="nice">Nice !</string>
     <string name="wrong">Wrong</string>
     <string name="you_need_an_internet_connection">You need an internet connection</string>
@@ -102,5 +103,6 @@
     <string name="you_have_not_passed_any_dictation">You have not passed any dictation.\nPress on roll dice and complete random one</string>
     <string name="code_must_be_numeric">Code must be numeric</string>
     <string name="connectivity_error">Connectivity error: %1$s\nMaybe the Internet is turned off</string>
+    <string name="say_this_word_in">Say this word in %1$s</string>
 
 </resources>

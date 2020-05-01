@@ -1,4 +1,4 @@
-package com.langamy.fragments
+package com.langamy.ui.studyset.show
 
 import android.app.AlertDialog
 import android.app.SearchManager
@@ -18,11 +18,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bignerdranch.android.main.R
 import com.google.android.gms.ads.AdRequest
-import com.langamy.activities.*
+import com.langamy.activities.MainActivity
 import com.langamy.adapters.StudySetsAdapter
 import com.langamy.base.classes.BaseVariables
 import com.langamy.base.classes.StudySet
 import com.langamy.base.kotlin.ScopedFragment
+import com.langamy.ui.dictation.show.MyDictationsActivity
+import com.langamy.ui.dictation.show.SpecificDictationActivity
+import com.langamy.ui.dictation.show.UserDoneDictationsActivity
 import com.langamy.viewmodel.list.StudySetsViewModel
 import com.langamy.viewmodel.list.StudySetsViewModelFactory
 import kotlinx.android.synthetic.main.custom_progress_bar.*

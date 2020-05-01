@@ -14,12 +14,13 @@
     <string name="study_sets">Учебные наборы</string>
     <string name="profile">Профиль</string>
     <string name="amount">Количество слово</string>
-
+    <string name="can_not_translate">Не можем перевести это слова</string>
     <string name="action_settings">Настройки</string>
     <string name="toolbar_title">Контакты</string>
     <string name="action_search">Поиск</string>
     <string name="search_hint">Введите имя …</string>
     <string name="no_internet_connection">Нет соединения с интернетом</string>
+    <string name="can_not_speak">Не могу говорить</string>
 
     <string name="account_title_text">Учетная запись</string>
     <string name="google_title_text">Войти в Google</string>
@@ -30,6 +31,7 @@
     <string name="scan_document">Сканирование документа</string>
     <string name="amount_of_words">Количество слов: %1$s</string>
     <string name="enable_auto_translate">Включить автоматический перевод</string>
+    <string name="say_this_word_in">Скажите это слово на %1$s</string>
 
     <string name="commit_words">Подтвердить слова</string>
     <string name="hello_blank_fragment">Привет пустой фрагмент</string>

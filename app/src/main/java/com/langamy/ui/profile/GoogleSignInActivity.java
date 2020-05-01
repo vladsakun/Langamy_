@@ -1,11 +1,9 @@
-package com.langamy.activities;
+package com.langamy.ui.profile;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,6 +22,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.langamy.activities.BaseActivity;
+import com.langamy.activities.MainActivity;
 import com.langamy.adapters.SliderAdapterExample;
 import com.langamy.api.LangamyAPI;
 import com.langamy.base.classes.BaseVariables;
@@ -48,10 +48,6 @@ public class GoogleSignInActivity extends BaseActivity implements
 
     //Retrofit
     public LangamyAPI mLangamyAPI = BaseVariables.retrofit.create(LangamyAPI.class);
-    private boolean help = true;
-    private SharedPreferences sf;
-    private ImageView fillBack;
-    private SliderView sliderView;
 
     private static final String TAG = "GoogleActivity";
     private static final int RC_SIGN_IN = 9001;
@@ -75,7 +71,7 @@ public class GoogleSignInActivity extends BaseActivity implements
 
         // Views
         setProgressBar(R.id.progressBar);
-        sliderView = findViewById(R.id.imageSlider);
+        SliderView sliderView = findViewById(R.id.imageSlider);
         sliderView.setSliderAdapter(new SliderAdapterExample(this, greetingItems));
         sliderView.setIndicatorAnimation(IndicatorAnimations.WORM);
         sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);

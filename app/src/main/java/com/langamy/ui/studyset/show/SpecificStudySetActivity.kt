@@ -1,4 +1,4 @@
-package com.langamy.activities
+package com.langamy.ui.studyset.show
 
 import android.content.Context
 import android.content.Intent
@@ -19,7 +19,9 @@ import com.langamy.base.classes.BaseVariables
 import com.langamy.base.classes.StudySet
 import com.langamy.base.classes.Word
 import com.langamy.base.kotlin.ScopedActivity
-import com.langamy.fragments.MarkedWordsFragment
+import com.langamy.ui.dictation.create.CreateDictationActivity
+import com.langamy.ui.learning.LearnActivity
+import com.langamy.ui.studyset.edit.EditStudySetActivity
 import com.langamy.viewmodel.detail.SpecificStudySetViewModel
 import com.langamy.viewmodel.detail.SpecificStudySetsViewModelFactory
 import kotlinx.coroutines.launch
@@ -91,7 +93,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         editStudySetActivityIntent = Intent(this@SpecificStudySetActivity, EditStudySetActivity::class.java)
         learnIntent = Intent(this@SpecificStudySetActivity, LearnActivity::class.java)
         cardIntent = Intent(this@SpecificStudySetActivity, CardModeActivity::class.java)
-        makeDictationIntent = Intent(this@SpecificStudySetActivity, MakeDictationActivity::class.java)
+        makeDictationIntent = Intent(this@SpecificStudySetActivity, CreateDictationActivity::class.java)
 
         //Views
         mProgressBar = findViewById(R.id.progressBar)

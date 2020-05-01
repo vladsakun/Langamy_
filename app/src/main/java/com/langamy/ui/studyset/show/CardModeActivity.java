@@ -1,4 +1,4 @@
-package com.langamy.activities;
+package com.langamy.ui.studyset.show;
 
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;

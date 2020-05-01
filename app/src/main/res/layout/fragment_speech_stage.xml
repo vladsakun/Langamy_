@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="20dp"
-    tools:context="com.langamy.fragments.SpeechStageFragment">
+    tools:context="com.langamy.ui.learning.LearnActivity">
 
     <ImageButton
         android:id="@+id/voiceBtn"
@@ -23,18 +23,29 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="10dp"
-        android:text="Translation"
+        android:text="@string/translation"
         android:textColor="@color/darkColor"
         android:textSize="20sp" />
 
     <TextView
-        android:id="@+id/termHint"
+        android:id="@+id/translationHint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/translation_TV"
         android:layout_centerHorizontal="true"
         android:letterSpacing="0.3"
-        android:text="Say this word in"
+        android:text="@string/say_this_word_in"
         android:textColor="@color/darkColor" />
 
+    <Button
+        android:id="@+id/cannot_speak_BTN"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/translationHint"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/green"
+        android:onClick="skipSpeechStage"
+        android:text="@string/can_not_speak"
+        android:textSize="12sp" />
 </RelativeLayout>

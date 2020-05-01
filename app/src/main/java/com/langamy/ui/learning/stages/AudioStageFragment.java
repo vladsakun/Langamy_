@@ -1,4 +1,4 @@
-package com.langamy.fragments;
+package com.langamy.ui.learning.stages;
 
 
 import android.os.Bundle;

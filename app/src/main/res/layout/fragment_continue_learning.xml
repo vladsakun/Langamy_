@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.langamy.fragments.ContinueLearningFragment">
+    tools:context="com.langamy.ui.learning.process.ContinueLearningFragment">
 
     <ImageView
         android:id="@+id/cool_emoji_IV"
@@ -30,5 +30,5 @@
         android:onClick="reloadViewPager"
         android:id="@+id/continue_learning_MBTN"
         android:text="@string/continue_text"
-        tools:context="com.langamy.activities.LearnActivity" />
+        tools:context="com.langamy.ui.learning.LearnActivity" />
 </RelativeLayout>

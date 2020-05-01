@@ -1,4 +1,4 @@
-package com.langamy.fragments
+package com.langamy.ui.learning.stages
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bignerdranch.android.main.R
-import com.langamy.activities.LearnActivity
 import com.langamy.base.classes.Answer
 import com.langamy.base.classes.Word
+import com.langamy.ui.learning.LearnActivity
 import kotlinx.android.synthetic.main.fragment_speech_stage.*
 
 /**
@@ -35,6 +35,7 @@ class SpeechStageFragment(
         super.onActivityCreated(savedInstanceState)
 
         translation_TV.text = word.translation
+        translationHint.text = getString(R.string.say_this_word_in, language)
 
         voiceBtn.setOnClickListener {
             speak()

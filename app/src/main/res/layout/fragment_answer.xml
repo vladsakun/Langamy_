@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    tools:context="com.langamy.fragments.AnswerFragment">
+    tools:context="com.langamy.ui.learning.AnswerFragment">
 
     <TextView
         android:id="@+id/term_TV"

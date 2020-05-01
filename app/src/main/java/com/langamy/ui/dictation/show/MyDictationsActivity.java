@@ -1,4 +1,4 @@
-package com.langamy.activities;
+package com.langamy.ui.dictation.show;
 
 import android.app.AlertDialog;
 import android.content.Intent;

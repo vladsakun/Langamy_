@@ -1,4 +1,4 @@
-package com.langamy.fragments
+package com.langamy.ui.profile
 
 import android.content.Intent
 import android.os.Bundle

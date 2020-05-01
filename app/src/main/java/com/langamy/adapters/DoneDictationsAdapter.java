@@ -12,9 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bignerdranch.android.main.R;
-import com.langamy.activities.SpecificDictationActivity;
 import com.langamy.base.classes.BaseVariables;
 import com.langamy.base.classes.Dictation;
+import com.langamy.ui.dictation.show.SpecificDictationActivity;
 
 import java.util.List;
 
