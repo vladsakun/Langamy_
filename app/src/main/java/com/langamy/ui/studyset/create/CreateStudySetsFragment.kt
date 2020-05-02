@@ -324,6 +324,8 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
         mResultCardView.visibility = View.GONE
 
         wordsModelArrayList.clear()
+        wordsModelArrayList.add(Word("", ""))
+        wordsModelArrayList.add(Word("", ""))
         mAdapter.notifyDataSetChanged()
     }
 
@@ -499,7 +501,7 @@ class CreateStudySetsFragment : ScopedFragment(), RewardedVideoAdListener, Kodei
                 }
                 insertLocalStudySet(response.body()!!)
                 val intent = Intent(context, SpecificStudySetActivity::class.java)
-                intent.putExtra(BaseVariables.STUDY_SET_ID_MESSAGE, response.body()!!.id)
+                intent.putExtra(BaseVariables.STUDY_SET_MESSAGE, response.body())
                 startActivity(intent)
             }
 
