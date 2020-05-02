@@ -109,7 +109,7 @@ class WordsAdapter(
             })
             translationEditText.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
-                    if(translationEditText.text.isNotEmpty()){
+                    if(termEditText.text.isNotEmpty()){
                         translate(termEditText.text.toString().trim { it <= ' ' }, translationSupport)
                     }
                     scrollView.post {

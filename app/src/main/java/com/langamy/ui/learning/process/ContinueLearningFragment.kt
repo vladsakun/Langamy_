@@ -111,36 +111,5 @@ class ContinueLearningFragment : ScopedFragment(), KodeinAware {
             })
         }
         updateStudySet(studysetId, learnMarked)
-//        val mDatabase = StudySetsBaseHelper(context).writableDatabase
-//        val cursor = BaseVariables.queryStudySets(Cols.id + "=?", arrayOf(studysetId.toString()), mDatabase)
-//        try {
-//            cursor.moveToFirst()
-//            val studySet = cursor.studySet
-//            val jsonArray: JSONArray
-//            jsonArray = if (learnMarked) {
-//                Toast.makeText(context, "MARKED", Toast.LENGTH_SHORT).show()
-//                JSONArray(studySet.marked_words)
-//            } else {
-//                JSONArray(studySet.words)
-//            }
-//            for (i in 0 until jsonArray.length()) {
-//                val jsonObject = jsonArray.getJSONObject(i)
-//                jsonObject.put("firstStage", true)
-//                jsonObject.put("secondStage", false)
-//                jsonObject.put("thirdStage", false)
-//                jsonObject.put("forthStage", false)
-//            }
-//            if (learnMarked) {
-//                studySet.marked_words = jsonArray.toString()
-//            } else {
-//                studySet.words = jsonArray.toString()
-//            }
-//            updateStudySet(studySet)
-//            mDatabase.update(StudySetsScheme.StudySetsTable.NAME,
-//                    BaseVariables.getContentValuesForStudyset(studySet, BaseVariables.checkNetworkConnection(context)),
-//                    Cols.id + " =?", arrayOf(studySet.id.toString()))
-//        } catch (e: JSONException) {
-//            e.printStackTrace()
-//        }
     }
 }
