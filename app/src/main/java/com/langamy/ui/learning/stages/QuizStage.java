@@ -25,6 +25,7 @@ import com.langamy.ui.dictation.DictationPagerActivity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Locale;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -124,7 +125,7 @@ public class QuizStage extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        BaseVariables.hideKeyboard(getActivity());
+        BaseVariables.hideKeyboard(Objects.requireNonNull(getActivity()));
         if (startTime != 0) {
 
             mChronometer.setBase(SystemClock.elapsedRealtime() + 1000 * startTime);

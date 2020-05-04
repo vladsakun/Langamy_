@@ -180,6 +180,10 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         }
     }
 
+    fun updateSupportToolBar(studySetName:String){
+        supportActionBar!!.title = studySetName
+    }
+
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
 
@@ -248,24 +252,15 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
                 })
                 .backgroundColor(getColor(R.color.blueForFancy))
                 .build()
-//        val edit = FancyShowCaseView.Builder(this)
-//                .focusOn(findViewById(R.id.edit_study_set))
-//                .customView(R.layout.fancyshowcase_with_image, object : OnViewInflateListener {
-//                    override fun onViewInflated(view: View) {
-//                        BaseVariables.setImage(view, getString(R.string.fancy_edit),
-//                                fq, getDrawable(R.drawable.ic_edit_white_24dp))
-//                    }
-//                })
-//                .backgroundColor(getColor(R.color.blueForFancy))
-//                .build()
         fq.add(makeDictation)
                 .add(studyMarked)
         fq.show()
     }
 
     fun initializeStudySetActivity(studySet: StudySet?) {
+        updateSupportToolBar(studySet!!.name)
         mWordList!!.clear()
-        mWordList!!.addAll(convertJsonArrayToArray(studySet!!.words))
+        mWordList!!.addAll(convertJsonArrayToArray(studySet.words))
         if (studySet.marked_words != null) {
             markedWords.addAll(convertJsonArrayToArray(studySet.marked_words))
         }

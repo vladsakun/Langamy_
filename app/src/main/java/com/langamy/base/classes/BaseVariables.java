@@ -63,6 +63,7 @@ public final class BaseVariables {
 
     public static final String AD_ID = "ca-app-pub-1867610337047797~1889776259";
     public static final String REWARDED_VIDEO_TEST = "ca-app-pub-3940256099942544/5224354917";
+    public static final String REWARDED_VIDEO = "ca-app-pub-1867610337047797/8527051382";
 
     public static final String HOST_URL = "http://vlad12.pythonanywhere.com/";
     public static final String LOCAL_URL = "http://192.168.1.108:8080/";
@@ -87,6 +88,8 @@ public final class BaseVariables {
 
     final public List<String> LANGUAGES = Arrays.asList(languages);
     final public List<String> LANGUAGES_SHORT = Arrays.asList(languagesShort);
+
+    public static final List<Integer> emojiList = Arrays.asList(R.drawable.anim_brows, R.drawable.anim_rich, R.drawable.anim_smart, R.drawable.anim_happy);
 
     public static OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .connectTimeout(1, TimeUnit.MINUTES)

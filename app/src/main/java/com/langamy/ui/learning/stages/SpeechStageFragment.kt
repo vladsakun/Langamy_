@@ -11,9 +11,11 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.bignerdranch.android.main.R
 import com.langamy.base.classes.Answer
+import com.langamy.base.classes.BaseVariables
 import com.langamy.base.classes.Word
 import com.langamy.ui.learning.LearnActivity
 import kotlinx.android.synthetic.main.fragment_speech_stage.*
+import java.util.*
 
 /**
  * A simple [Fragment] subclass.
@@ -57,6 +59,12 @@ class SpeechStageFragment(
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "" + e.message, Toast.LENGTH_SHORT).show()
         }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        BaseVariables.hideKeyboard(Objects.requireNonNull(activity))
 
     }
 

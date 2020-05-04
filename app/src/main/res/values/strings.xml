@@ -102,7 +102,13 @@
     <string name="recent_dictations">Recent dictations</string>
     <string name="you_have_not_passed_any_dictation">You have not passed any dictation.\nPress on roll dice and complete random one</string>
     <string name="code_must_be_numeric">Code must be numeric</string>
-    <string name="connectivity_error">Connectivity error: %1$s\nMaybe the Internet is turned off</string>
     <string name="say_this_word_in">Say this word in %1$s</string>
+    <string name="connectivity_error">Connectivity error: %1$s\nMaybe the Internet is turned off</string>
+    <string name="nice_job">Nice job!</string>
+    <string name="carry_on">Carry on!</string>
+    <string name="do_not_stop">Do not stop!</string>
+    <string name="learn_more_words">Learn more words!</string>
+    <string name="you_are_improving_yourself">You are improving yourself!</string>
+    <string name="retake_dictation">Retake\n dictation</string>
 
 </resources>

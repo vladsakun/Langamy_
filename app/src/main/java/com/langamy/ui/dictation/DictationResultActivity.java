@@ -1,6 +1,8 @@
 package com.langamy.ui.dictation;
 
 import android.content.Intent;
+import android.graphics.drawable.Animatable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -84,16 +86,21 @@ public class DictationResultActivity extends AppCompatActivity {
         mAnswers = (ArrayList<Answer>) getIntent().getSerializableExtra(BaseVariables.USER_ANSWERS_MESSAGE);
         typeOfQuestions = getIntent().getStringExtra(BaseVariables.TYPE_OF_QUESTIONS_MESSAGE);
 
-        int percentOfCorrect = (amountOfCorrectAnswers/amountOfQuestions)*100;
+        float percentOfCorrect = ((float)amountOfCorrectAnswers / (float)amountOfQuestions) * 100;
 
-        if(percentOfCorrect <=20){
-            emoji_IV.setImageDrawable(getDrawable(R.drawable.ic_sad_emoji));
-        }else if (percentOfCorrect >20 && percentOfCorrect <=40){
-            emoji_IV.setImageDrawable(getDrawable(R.drawable.ic_confused_emoji));
-        }else if(percentOfCorrect >40 && percentOfCorrect <=60){
-            emoji_IV.setImageDrawable(getDrawable(R.drawable.ic_smile_emoji));
-        }else if(percentOfCorrect > 60){
-            emoji_IV.setImageDrawable(getDrawable(R.drawable.ic_cool_emoji));
+        if (percentOfCorrect < 19) {
+            emoji_IV.setImageDrawable(getDrawable(R.drawable.sad_emoji));
+        } else if (percentOfCorrect >= 20 && percentOfCorrect < 40) {
+            emoji_IV.setImageDrawable(getDrawable(R.drawable.anim_surprised));
+        } else if (percentOfCorrect >= 40 && percentOfCorrect < 60) {
+            emoji_IV.setImageDrawable(getDrawable(R.drawable.anim_happy));
+        } else if (percentOfCorrect >= 60) {
+            emoji_IV.setImageDrawable(getDrawable(R.drawable.anim_brows));
+        }
+
+        Drawable drawable = emoji_IV.getDrawable();
+        if (drawable instanceof Animatable) {
+            ((Animatable) drawable).start();
         }
 
         String resultText = getString(R.string.dictation_result, String.valueOf(amountOfCorrectAnswers), String.valueOf(amountOfQuestions));
@@ -110,9 +117,10 @@ public class DictationResultActivity extends AppCompatActivity {
             }
         });
 
+        assert acct != null;
         updateUserMark(acct.getEmail(), amountOfCorrectAnswers, dictationId);
 
-        for (Answer answer: mAnswers) {
+        for (Answer answer : mAnswers) {
             mAnswerFragments.add(new AnswerFragment(answer, typeOfQuestions));
         }
 
@@ -137,7 +145,7 @@ public class DictationResultActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_home_item,menu);
+        menuInflater.inflate(R.menu.menu_home_item, menu);
 
         return true;
     }
@@ -145,7 +153,7 @@ public class DictationResultActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.home){
+        if (id == R.id.home) {
 
             Intent intent = new Intent(DictationResultActivity.this, MainActivity.class);
             startActivity(intent);

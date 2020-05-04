@@ -183,8 +183,7 @@ public class SpecificDictationActivity extends AppCompatActivity {
     }
 
     private void updateActionBar(String dictationName) {
-        Objects.requireNonNull(getSupportActionBar()).setTitle(getString(R.string.dictation));
-        getSupportActionBar().setSubtitle(dictationName);
+        Objects.requireNonNull(getSupportActionBar()).setTitle(dictationName);
     }
 
     @Override

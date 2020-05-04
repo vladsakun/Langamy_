@@ -126,21 +126,6 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         account = GoogleSignIn.getLastSignedInAccount(this)
     }
 
-//    fun textScaleAnimation(textView: TextView?) {
-//        val startSize = 14f // Size in pixels
-//        val endSize = 20f
-//        val animationDuration: Long = 450 // Animation duration in ms
-//        val animator = ValueAnimator.ofFloat(startSize, endSize)
-//        animator.duration = animationDuration
-//        animator.addUpdateListener { valueAnimator ->
-//            val animatedValue = valueAnimator.animatedValue as Float
-//            textView!!.textSize = animatedValue
-//        }
-//        animator.repeatCount = 1
-//        animator.repeatMode = ObjectAnimator.REVERSE
-//        animator.start()
-//    }
-
     fun reloadViewPager(view: View?) {
         stages.clear()
         wordsForLearning.clear()
@@ -188,11 +173,11 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         }
         im_right_TV.setOnClickListener { v: View? ->
             when (stage) {
-                "first" -> words!![wordId].isFirstStage = true
-                "second" -> words!![wordId].isSecondStage = true
-                "third" -> words!![wordId].isThirdStage = true
+                "first" -> words[wordId].isFirstStage = true
+                "second" -> words[wordId].isSecondStage = true
+                "third" -> words[wordId].isThirdStage = true
                 "forth" -> {
-                    words!![wordId].isForthStage = true
+                    words[wordId].isForthStage = true
                     masteredWords++
                 }
             }
@@ -269,15 +254,15 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         parent.visibility = View.INVISIBLE
     }
 
-    fun checkAnswerTranslationTerm(v: View) {
+    private fun checkAnswerTranslationTerm(v: View) {
         val parent = v.parent as RelativeLayout
         val child = parent.findViewById<View>(R.id.answer_ET) as EditText
         val text = child.text.toString().trim { it <= ' ' }.toLowerCase()
-        val definitionTermStage = stages[learnVP2!!.currentItem] as DefinitionTermStage
+        val definitionTermStage = stages[learnVP2.currentItem] as DefinitionTermStage
         val userAnswer = definitionTermStage.checkAnswer(text)
-        val correctWordIndex = words!!.indexOf(definitionTermStage.word)
+        val correctWordIndex = words.indexOf(definitionTermStage.word)
         if (userAnswer.status) {
-            val correctWord = words!![correctWordIndex]
+            val correctWord = words[correctWordIndex]
             correctWord.isForthStage = true
             masteredWords++
             showCorrectAlertDialog()
@@ -286,7 +271,7 @@ class LearnActivity : ScopedActivity(), KodeinAware {
         }
     }
 
-    fun goToNextPage() {
+    private fun goToNextPage() {
         learnVP2.currentItem = learnVP2.currentItem + 1
         val currentFragment = stages[learnVP2.currentItem]
         if (currentFragment.javaClass.simpleName == "ContinueLearningFragment") {
@@ -330,7 +315,7 @@ class LearnActivity : ScopedActivity(), KodeinAware {
             } else if (!wordsForGenerating[i].isSecondStage) {
                 val random = Random()
                 val randomBool = random.nextBoolean()
-                if (randomBool) {
+                if (randomBool && BaseVariables.checkNetworkConnection(this)) {
                     generatedStages.add(SpeechStageFragment(wordsForGenerating[i], fromLang!!))
                 } else {
                     generatedStages.add(AudioStageFragment(wordsForGenerating[i], fromLang))
@@ -342,6 +327,11 @@ class LearnActivity : ScopedActivity(), KodeinAware {
             }
         }
         generatedStages.add(ContinueLearningFragment())
+        if(generatedStages.size == 1){
+            val fragment = generatedStages[0] as ContinueLearningFragment
+            fragment.setStudysetId(studysetId, learnMarked)
+            fragment.finishStudySet = true
+        }
         learnVP2.currentItem = learnVP2.currentItem + 1
         return generatedStages
     }
