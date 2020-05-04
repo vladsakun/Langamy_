@@ -116,7 +116,7 @@ public class SpecificDictationActivity extends AppCompatActivity {
             Uri data = intent.getData();
 
             String stringData = data.toString();
-            stringData = stringData.replace(BaseVariables.HOST_URL + "/get/dictation/", "").replace("/", "");
+            stringData = stringData.replace(BaseVariables.HOST_URL + "get/dictation/", "").replace("/", "");
             code = Integer.parseInt(stringData);
 
         } catch (NullPointerException ignored) {

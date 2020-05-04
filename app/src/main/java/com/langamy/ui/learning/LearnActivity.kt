@@ -226,7 +226,7 @@ class LearnActivity : ScopedActivity(), KodeinAware {
             correctWord.isSecondStage = true
             showCorrectAlertDialog()
         } else {
-            showWrongAlertDialog(answer.correctAnswer, correctWordIndex, "second")
+            showWrongAlertDialog(answer.term, correctWordIndex, "second")
         }
     }
 

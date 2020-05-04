@@ -46,7 +46,7 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
 
     private var studySetId = 0
     private var studyMarked = false
-    private var mWordList: ArrayList<Word>? = null
+    private var mWordList: ArrayList<Word> = arrayListOf()
     private val markedWords = ArrayList<Word>()
     private var editStudySetActivityIntent: Intent? = null
     private var learnIntent: Intent? = null
@@ -78,22 +78,23 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         //Set window not touchable
         window.setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction = fragmentManager.beginTransaction()
-
-        studySet = intent.getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE) as StudySet
-
-        mWordList = convertJsonArrayToArray(studySet.words)
-
-        //MarkedWords Fragment initializing
-        fragment = MarkedWordsFragment(mWordList)
-        fragmentTransaction.add(R.id.container_for_recycler, fragment!!)
-        fragmentTransaction.commit()
 
         editStudySetActivityIntent = Intent(this@SpecificStudySetActivity, EditStudySetActivity::class.java)
         learnIntent = Intent(this@SpecificStudySetActivity, LearnActivity::class.java)
         cardIntent = Intent(this@SpecificStudySetActivity, CardModeActivity::class.java)
         makeDictationIntent = Intent(this@SpecificStudySetActivity, CreateDictationActivity::class.java)
+
+        try {
+            val data = intent.data
+            studySetId = data.toString().replace("http://vlad12.pythonanywhere.com/studyset/", "")
+                    .replace("/", "").toInt()
+            viewModel = ViewModelProvider(this, viewModelFactory(studySetId)).get(SpecificStudySetViewModel::class.java)
+            bindUI(true)
+        } catch (e: Exception) {
+            studySet = intent.getSerializableExtra(BaseVariables.STUDY_SET_MESSAGE) as StudySet
+            viewModel = ViewModelProvider(this, viewModelFactory(studySet.id)).get(SpecificStudySetViewModel::class.java)
+            bindUI(false)
+        }
 
         //Views
         mProgressBar = findViewById(R.id.progressBar)
@@ -112,72 +113,6 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
         val adRequest = AdRequest.Builder().build()
         mAdView.loadAd(adRequest)
 
-        inizializeRecyclerView(mWordList as List<Word>)
-
-        learnBtn.setOnClickListener(View.OnClickListener {
-            if (studyMarked) {
-                val markedWordsForIntent = ArrayList<Word>()
-                for (word in mWordList!!) {
-                    if (word.isMarked) {
-                        markedWordsForIntent.add(word)
-                    }
-                }
-                if (markedWordsForIntent.size < 4) {
-                    Toast.makeText(this@SpecificStudySetActivity, "You have to mark more than 4 words", Toast.LENGTH_SHORT).show()
-                    return@OnClickListener
-                }
-                learnIntent!!.putExtra(BaseVariables.MARKED_MESSAGE, true)
-                learnIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, markedWordsForIntent)
-            } else {
-                learnIntent!!.putExtra(BaseVariables.MARKED_MESSAGE, false)
-                learnIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, mWordList)
-            }
-            startActivity(learnIntent)
-        })
-
-        cardMode_BTN.setOnClickListener {
-            cardIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, mWordList)
-            startActivity(cardIntent)
-        }
-        createDictationBtn.setOnClickListener {
-            makeDictationIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, mWordList)
-            makeDictationIntent!!.putExtra(BaseVariables.TITLE_MESSAGE, studySetName)
-            startActivity(makeDictationIntent)
-            finish()
-        }
-        studyAll_MBTN.setOnClickListener {
-            studyMarked = false
-            studyAll_MBTN.setBackgroundColor(getColor(R.color.blue))
-            studyAll_MBTN.setTextColor(getColor(R.color.white))
-            studyMarked_MBTN.setBackgroundColor(getColor(R.color.white))
-            studyMarked_MBTN.setTextColor(getColor(R.color.blue))
-            studyAll_MBTN.isClickable = false
-            studyMarked_MBTN.isClickable = true
-            parentForContainer.visibility = View.GONE
-            wordsRecyclerView.visibility = View.VISIBLE
-        }
-        studyMarked_MBTN.setOnClickListener {
-            studyMarked = true
-            studyMarked_MBTN.setBackgroundColor(getColor(R.color.blue))
-            studyMarked_MBTN.setTextColor(getColor(R.color.white))
-            studyAll_MBTN.setBackgroundColor(getColor(R.color.white))
-            studyAll_MBTN.setTextColor(getColor(R.color.blue))
-            studyMarked_MBTN.setClickable(false)
-            studyAll_MBTN.setClickable(true)
-            parentForContainer.setVisibility(View.VISIBLE)
-            wordsRecyclerView.setVisibility(View.GONE)
-            fragment!!.words = mWordList
-        }
-        try {
-            val data = intent.data
-            studySetId = data.toString().replace("http://vlad12.pythonanywhere.com/studyset/", "")
-                    .replace("/", "").toInt()
-            viewModel = ViewModelProvider(this, viewModelFactory(studySetId)).get(SpecificStudySetViewModel::class.java)
-
-            bindUI(true)
-        } catch (e: Exception) {
-            initializeStudySetActivity(studySet)
-        }
     }
 
     fun updateSupportToolBar(studySetName:String){
@@ -258,9 +193,76 @@ class SpecificStudySetActivity : ScopedActivity(), KodeinAware {
     }
 
     fun initializeStudySetActivity(studySet: StudySet?) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+
         updateSupportToolBar(studySet!!.name)
+
         mWordList!!.clear()
         mWordList!!.addAll(convertJsonArrayToArray(studySet.words))
+
+        //MarkedWords Fragment initializing
+        fragment = MarkedWordsFragment(mWordList)
+        fragmentTransaction.add(R.id.container_for_recycler, fragment!!)
+        fragmentTransaction.commit()
+
+        inizializeRecyclerView(mWordList as List<Word>)
+
+        learnBtn.setOnClickListener(View.OnClickListener {
+            if (studyMarked) {
+                val markedWordsForIntent = ArrayList<Word>()
+                for (word in mWordList!!) {
+                    if (word.isMarked) {
+                        markedWordsForIntent.add(word)
+                    }
+                }
+                if (markedWordsForIntent.size < 4) {
+                    Toast.makeText(this@SpecificStudySetActivity, "You have to mark more than 4 words", Toast.LENGTH_SHORT).show()
+                    return@OnClickListener
+                }
+                learnIntent!!.putExtra(BaseVariables.MARKED_MESSAGE, true)
+                learnIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, markedWordsForIntent)
+            } else {
+                learnIntent!!.putExtra(BaseVariables.MARKED_MESSAGE, false)
+                learnIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, mWordList)
+            }
+            startActivity(learnIntent)
+        })
+
+        cardMode_BTN.setOnClickListener {
+            cardIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, mWordList)
+            startActivity(cardIntent)
+        }
+        createDictationBtn.setOnClickListener {
+            makeDictationIntent!!.putExtra(BaseVariables.WORDS_MESSAGE, mWordList)
+            makeDictationIntent!!.putExtra(BaseVariables.TITLE_MESSAGE, studySetName)
+            startActivity(makeDictationIntent)
+            finish()
+        }
+        studyAll_MBTN.setOnClickListener {
+            studyMarked = false
+            studyAll_MBTN.setBackgroundColor(getColor(R.color.blue))
+            studyAll_MBTN.setTextColor(getColor(R.color.white))
+            studyMarked_MBTN.setBackgroundColor(getColor(R.color.white))
+            studyMarked_MBTN.setTextColor(getColor(R.color.blue))
+            studyAll_MBTN.isClickable = false
+            studyMarked_MBTN.isClickable = true
+            parentForContainer.visibility = View.GONE
+            wordsRecyclerView.visibility = View.VISIBLE
+        }
+        studyMarked_MBTN.setOnClickListener {
+            studyMarked = true
+            studyMarked_MBTN.setBackgroundColor(getColor(R.color.blue))
+            studyMarked_MBTN.setTextColor(getColor(R.color.white))
+            studyAll_MBTN.setBackgroundColor(getColor(R.color.white))
+            studyAll_MBTN.setTextColor(getColor(R.color.blue))
+            studyMarked_MBTN.setClickable(false)
+            studyAll_MBTN.setClickable(true)
+            parentForContainer.setVisibility(View.VISIBLE)
+            wordsRecyclerView.setVisibility(View.GONE)
+            fragment!!.words = mWordList
+        }
+
         if (studySet.marked_words != null) {
             markedWords.addAll(convertJsonArrayToArray(studySet.marked_words))
         }
