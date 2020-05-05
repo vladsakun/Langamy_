@@ -41,6 +41,7 @@ public class QuizStage extends Fragment {
     private Chronometer mChronometer;
     private TextView term_tv, firstAnswer_tv, secondAnswer_tv, thirdAnswer_tv, forthAnswer_tv;
     private ImageButton speak;
+    private CountDownTimer timer;
 
     public QuizStage(Word word, String firstIncorrectAnswer, String secondIncorrectAnswer, String thirdIncorrectAnswer,
                      String speakLang, int time) {
@@ -121,6 +122,15 @@ public class QuizStage extends Fragment {
         return word;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(timer != null){
+
+            timer.cancel();
+        }
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void onResume() {
@@ -133,7 +143,7 @@ public class QuizStage extends Fragment {
             mChronometer.setVisibility(View.VISIBLE);
 
             mChronometer.start();
-            new CountDownTimer(1000 * startTime, 1000) {
+            timer = new CountDownTimer(1000 * startTime, 1000) {
 
                 public void onTick(long millisUntilFinished) {
                 }

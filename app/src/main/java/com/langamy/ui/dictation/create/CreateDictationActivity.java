@@ -435,6 +435,7 @@ public class CreateDictationActivity extends AppCompatActivity{
             @Override
             public void onClick(View v) {
                 if(numberPickerName.equals("questionTime")){
+                    timerStatus = true;
                     questionTime_TV.setText(String.valueOf(questionTime));
                 }
                 d.dismiss();

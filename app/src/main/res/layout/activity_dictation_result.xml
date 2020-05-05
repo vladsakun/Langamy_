@@ -24,27 +24,26 @@
         android:layout_marginBottom="20dp">
 
     </TextView>
-
-    <com.google.android.material.button.MaterialButton
+    
+    <ImageButton
         android:layout_centerHorizontal="true"
-        android:id="@+id/retake_dictation_BTN"
-        style="@style/WhiteButtonWithBlueBorder"
+        android:layout_below="@+id/dictation_result_TV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dictation_result_TV"
-        android:text="@string/retake_dictation"
-        android:textSize="20sp">
-
-    </com.google.android.material.button.MaterialButton>
+        android:padding="10dp"
+        android:id="@+id/retake_dictation_BTN"
+        android:src="@drawable/ic_refresh_white"
+        android:background="@color/blue"/>
 
     <RelativeLayout
+        android:layout_marginTop="10dp"
         android:id="@+id/answers_RL"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/retake_dictation_BTN">
 
         <androidx.viewpager.widget.ViewPager
-
+            android:padding="10dp"
             android:id="@+id/answers_VP"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

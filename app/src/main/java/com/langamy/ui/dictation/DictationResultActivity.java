@@ -7,8 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.animation.Animation;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,12 +22,10 @@ import androidx.viewpager.widget.ViewPager;
 import com.bignerdranch.android.main.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.material.button.MaterialButton;
 import com.langamy.activities.MainActivity;
 import com.langamy.api.LangamyAPI;
 import com.langamy.base.classes.Answer;
 import com.langamy.base.classes.BaseVariables;
-import com.langamy.base.classes.Mark;
 import com.langamy.ui.dictation.show.SpecificDictationActivity;
 import com.langamy.ui.learning.AnswerFragment;
 
@@ -45,18 +42,16 @@ import retrofit2.Retrofit;
 public class DictationResultActivity extends AppCompatActivity {
 
     private int amountOfQuestions = 0, amountOfCorrectAnswers = 0, dictationId;
-    private ArrayList<Mark> marks;
     private ArrayList<Answer> mAnswers;
     private ArrayList<Fragment> mAnswerFragments;
     private String typeOfQuestions;
 
-    public Retrofit retrofit = new BaseVariables().retrofit;
+    public Retrofit retrofit = BaseVariables.retrofit;
     public LangamyAPI mLangamyAPI = retrofit.create(LangamyAPI.class);
 
     private TextView dictationResult_TV;
-    private MaterialButton retakeDictation_BTN;
+    private ImageButton retakeDictation_BTN;
     private ViewPager mAnswers_VP;
-    private Animation mEnlargeAnimation, mShrinkAnimation;
     private ImageView emoji_IV;
 
     @Override
@@ -72,7 +67,6 @@ public class DictationResultActivity extends AppCompatActivity {
 
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
 
-        marks = new ArrayList<>();
         mAnswerFragments = new ArrayList<>();
 
         dictationResult_TV = findViewById(R.id.dictation_result_TV);
@@ -107,14 +101,11 @@ public class DictationResultActivity extends AppCompatActivity {
 
         dictationResult_TV.setText(resultText);
 
-        retakeDictation_BTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DictationResultActivity.this, SpecificDictationActivity.class);
-                intent.putExtra(BaseVariables.DICTATION_ID_MESSAGE, dictationId);
-                startActivity(intent);
-                finish();
-            }
+        retakeDictation_BTN.setOnClickListener(view -> {
+            Intent intent = new Intent(DictationResultActivity.this, SpecificDictationActivity.class);
+            intent.putExtra(BaseVariables.DICTATION_ID_MESSAGE, dictationId);
+            startActivity(intent);
+            finish();
         });
 
         assert acct != null;

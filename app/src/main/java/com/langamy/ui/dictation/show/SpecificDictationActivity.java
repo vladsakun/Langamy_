@@ -141,37 +141,25 @@ public class SpecificDictationActivity extends AppCompatActivity {
         inizializeRecyclerView(mWords);
         inizializeMarksRecyclerView(marks);
 
-        startDictationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                intent.putExtra(BaseVariables.WORDS_MESSAGE, (Serializable) mWords);
-                intent.putExtra(BaseVariables.MARKED_WORDS_MESSAGE, (Serializable) globalMarkedWordsList);
-                intent.putExtra(BaseVariables.OTHER_WORDS_MESSAGE, (Serializable) globalOtherWordsList);
-                intent.putExtra(BaseVariables.QUESTION_AMOUNT_MESSAGE, Integer.parseInt(questionAmount.getText().toString()));
-                intent.putExtra(BaseVariables.TYPE_OF_QUESTIONS_MESSAGE, typeOfQuestions.getText());
-                startActivity(intent);
+        startDictationBtn.setOnClickListener(view -> {
+            intent.putExtra(BaseVariables.WORDS_MESSAGE, (Serializable) mWords);
+            intent.putExtra(BaseVariables.MARKED_WORDS_MESSAGE, (Serializable) globalMarkedWordsList);
+            intent.putExtra(BaseVariables.OTHER_WORDS_MESSAGE, (Serializable) globalOtherWordsList);
+            intent.putExtra(BaseVariables.QUESTION_AMOUNT_MESSAGE, Integer.parseInt(questionAmount.getText().toString()));
+            intent.putExtra(BaseVariables.TYPE_OF_QUESTIONS_MESSAGE, typeOfQuestions.getText());
+            startActivity(intent);
+        });
+
+        showMarks_BTN.setOnClickListener(view -> {
+            getDictationMarks(dictationDataForAPI, mode);
+            if (marks_RV.getVisibility() == View.VISIBLE) {
+                marks_RV.setVisibility(View.GONE);
+            } else {
+                marks_RV.setVisibility(View.VISIBLE);
             }
         });
 
-        showMarks_BTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getDictationMarks(dictationDataForAPI, mode);
-                if (marks_RV.getVisibility() == View.VISIBLE) {
-                    marks_RV.setVisibility(View.GONE);
-                } else {
-                    marks_RV.setVisibility(View.VISIBLE);
-                }
-
-            }
-        });
-
-        updateMarks_BTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getDictationMarks(dictationDataForAPI, mode);
-            }
-        });
+        updateMarks_BTN.setOnClickListener(view -> getDictationMarks(dictationDataForAPI, mode));
 
     }
 

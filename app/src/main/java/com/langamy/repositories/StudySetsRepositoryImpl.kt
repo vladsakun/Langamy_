@@ -3,7 +3,6 @@ package com.langamy.repositories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.langamy.base.classes.StudySet
-import com.langamy.base.classes.User
 import com.langamy.database.DaoStudySet
 import com.langamy.database.UserDao
 import com.langamy.datasource.LangamyNetworkDataSource
@@ -67,7 +66,7 @@ class StudySetsRepositoryImpl(
     private fun persistFetchedStudySetsList(fetchedStudySetsList: List<StudySet>) {
         GlobalScope.launch(Dispatchers.IO) {
             daoStudySet.upsert(fetchedStudySetsList)
-            userDao.upsert(User(userProvider.getUserEmail()))
+
         }
     }
 
