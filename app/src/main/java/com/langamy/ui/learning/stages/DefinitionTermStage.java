@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.bignerdranch.android.main.R;
@@ -25,6 +26,7 @@ public class DefinitionTermStage extends Fragment {
     private EditText term_ET;
     private TextToSpeech textToSpeech;
     private String fromLang;
+    private ImageButton speak;
 
     public DefinitionTermStage(Word word, String fromLang) {
         this.fromLang = fromLang;
@@ -46,28 +48,26 @@ public class DefinitionTermStage extends Fragment {
 
         TextView mDefinition_TV = view.findViewById(R.id.definition_TV);
         term_ET = view.findViewById(R.id.answer_ET);
-        ImageButton speak = view.findViewById(R.id.volume_up_IB);
+        speak = view.findViewById(R.id.volume_up_IB);
 
         term_ET.requestFocus();
         mDefinition_TV.setText(word.getTranslation());
 
-        textToSpeech = new TextToSpeech(getActivity(), new TextToSpeech.OnInitListener() {
-            @Override
-            public void onInit(int status) {
-                textToSpeech.setLanguage(Locale.forLanguageTag(fromLang));
-                textToSpeech.setSpeechRate(0.8f);
-            }
-        });
-
-        speak.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CharSequence c = word.getTranslation();
-                textToSpeech.speak(c, TextToSpeech.QUEUE_FLUSH, null, null);
-            }
-        });
-
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        textToSpeech = new TextToSpeech(getActivity(), status -> {
+            textToSpeech.setLanguage(Locale.forLanguageTag(fromLang));
+            textToSpeech.setSpeechRate(0.8f);
+        });
+
+        speak.setOnClickListener(v -> {
+            CharSequence c = word.getTranslation();
+            textToSpeech.speak(c, TextToSpeech.QUEUE_FLUSH, null, null);
+        });
     }
 
     public Answer checkAnswer(String userAnswer) {

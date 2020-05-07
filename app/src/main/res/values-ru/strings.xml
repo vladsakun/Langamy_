@@ -68,10 +68,10 @@
     <string name="to">Язык на</string>
     <string name="dictation">Диктант</string>
     <string name="fancy_create_studyset">Создадим первый studyset</string>
-    <string name="fancy_done_dictations">Здесь храняться последние 20 диктантов, которые Вы прошли</string>
+    <string name="fancy_done_dictations">Здесь хранятся последние 20 диктантов, которые Вы прошли</string>
     <string name="fancy_my_dictations">Тут будут сохраняться все созданные Вами диктанты</string>
     <string name="fancy_help_btn">Вы можете найти кнопку помощи на каждом экране</string>
-    <string name="fancy_title">Сначала задайте имя</string>
+    <string name="fancy_title">Для начала задайте имя</string>
     <string name="fancy_from_lang">Выбирите язык _С_  которого переводить</string>
     <string name="fancy_to_lang">Выбирите язык  _НА_  какой переводить</string>
     <string name="fancy_scan_btn">Отсканируйте документы с камеры или галереи</string>
@@ -83,7 +83,7 @@
     <string name="fancy_question_count">Задайте количество вопросов</string>
     <string name="fancy_types_of_questions">Выбирите тип вопросов на диктанте</string>
     <string name="fancy_quiz">Спрашивает перевод и показывает 4 варианта ответов</string>
-    <string name="fancy_term">Показывает термин и справшивает перевод</string>
+    <string name="fancy_term">Показывает термин и спрашивает перевод</string>
     <string name="fancy_translation">Показывает перевод и спрашивает термин</string>
     <string name="fancy_mark_dication_word">Отметьте слово и оно 100% будет в диктанте \n Все диктанты случайно перемешаны</string>
     <string name="nice">Отлично !</string>
@@ -104,5 +104,11 @@
     <string name="recent_dictations">Последние диктанты</string>
     <string name="you_have_not_passed_any_dictation">Пока здесь нету диктантов.\nНажмите на кубик и пройдите случайный</string>
     <string name="code_must_be_numeric">Код должен состоять только из цифр</string>
-
+    <string name="connectivity_error">Connectivity error: %1$s\nMaybe the Internet is turned off</string>
+    <string name="nice_job">Хорошая работа!</string>
+    <string name="carry_on">Продолжай!</string>
+    <string name="do_not_stop">Не останавливайся!</string>
+    <string name="learn_more_words">Изучай больше слов!</string>
+    <string name="you_are_improving_yourself">Ты совершенствуешься!</string>
+    <string name="retake_dictation">Пройти\n заново</string>
 </resources>
