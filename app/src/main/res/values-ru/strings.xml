@@ -99,7 +99,7 @@
     <string name="add_timer">Таймер</string>
     <string name="add_timer_dictation_mode">Вы можете добавлять таймер только в викторины</string>
     <string name="your_dictations">Ваши диктанты</string>
-    <string name="fancy_random_dictations">Испытай себе и пройди случайный диктант</string>
+    <string name="fancy_random_dictations">Испытай себя и пройди случайный диктант</string>
     <string name="fancy_timer">Установить временной лимит для ответа (только для викторины)</string>
     <string name="recent_dictations">Последние диктанты</string>
     <string name="you_have_not_passed_any_dictation">Пока здесь нету диктантов.\nНажмите на кубик и пройдите случайный</string>

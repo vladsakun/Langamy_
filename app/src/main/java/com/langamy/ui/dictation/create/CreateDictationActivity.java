@@ -364,16 +364,14 @@ public class CreateDictationActivity extends AppCompatActivity{
 
                 checkedStudySetsNames = new boolean[studySetsNames.size()];
 
-                addStudySetAlertBuilder.setMultiChoiceItems(studySetsNames.toArray(new CharSequence[studySetsNames.size()]), checkedStudySetsNames, new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        if (isChecked) {
-                            checkedStudySets.add(studySets.get(which));
-                        } else {
-                            checkedStudySets.remove(studySets.get(which));
-                        }
-                        checkedStudySetsNames[which] = isChecked;
+                addStudySetAlertBuilder.setMultiChoiceItems(studySetsNames.toArray(new CharSequence[studySetsNames.size()]), checkedStudySetsNames,
+                        (dialog, which, isChecked) -> {
+                    if (isChecked) {
+                        checkedStudySets.add(studySets.get(which));
+                    } else {
+                        checkedStudySets.remove(studySets.get(which));
                     }
+                    checkedStudySetsNames[which] = isChecked;
                 });
 
                 SharedPreferences sf = getPreferences(MODE_PRIVATE);
