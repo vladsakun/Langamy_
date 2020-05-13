@@ -103,7 +103,6 @@
                 android:id="@+id/recycler_view_parent_RL"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/adView"
                 android:layout_below="@+id/buttons_card">
 
                 <FrameLayout
